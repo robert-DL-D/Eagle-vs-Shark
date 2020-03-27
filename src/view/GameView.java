@@ -47,19 +47,17 @@ public class GameView
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Up":
-                gameController.move(0, 0);
-                //boardView.moveImage(0,0);
-                System.out.println("Up");
+                gameController.move(turnPanel.getSharkJListSelectedItem(), 0);
                 break;
-            /*case "Down":
-                gameController.move(0, 1);
+            case "Down":
+                gameController.move(turnPanel.getSharkJListSelectedItem(), 1);
                 break;
             case "Left":
-                gameController.move(0, 2);
+                gameController.move(turnPanel.getSharkJListSelectedItem(), 2);
                 break;
             case "Right":
-                gameController.move(0, 3);
-                break;*/
+                gameController.move(turnPanel.getSharkJListSelectedItem(), 3);
+                break;
         }
     }
 

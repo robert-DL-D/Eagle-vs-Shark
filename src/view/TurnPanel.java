@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 import model.GameModel;
 
@@ -16,38 +18,51 @@ public class TurnPanel
         extends JPanel
         implements ActionListener {
 
-    private final String[] wideSnakeButtons = {"Up", "Down"};
-    private final String[] longSnakeButtons = {"Left", "Right"};
+    private final String[] upDownButtons = {"Up", "Down"};
+    private final String[] leftRightButtons = {"Left", "Right"};
 
-    private final List<JButton> sButtons = new ArrayList<>();
+    private final List<JButton> JButtons = new ArrayList<>();
+
+    private JList<String> sharkJList;
 
     private ActionListener listener;
 
     TurnPanel(ActionListener listener, GameModel gameModel, Color background) {
         this.listener = listener;
 
-        setSize(160, 150);
+        setSize(160, 300);
 
-        //showSnakeButtons();
+        sharkJList = new JList<>();
+        sharkJList.setBackground(background);
+        sharkJList.setBorder(new LineBorder(Color.BLACK));
 
-        String moveUp = wideSnakeButtons[0];
+        final int sharkListSize = gameModel.getSharkList().size();
+        String[] snakePosArray = new String[sharkListSize];
+        for (int i = 0; i < sharkListSize; i++) {
+            snakePosArray[i] = ("Shark " + (i + 1) + ": " + gameModel.getSharkList().get(i).getX() + " " + gameModel.getSharkList().get(i).getY());
+        }
+
+        sharkJList.setListData(snakePosArray);
+        add(sharkJList);
+
+        String moveUp = upDownButtons[0];
         JButton moveUpButton = new JButton(moveUp);
-        sButtons.add(moveUpButton);
+        JButtons.add(moveUpButton);
         moveUpButton.setPreferredSize(new Dimension(140, 30));
         moveUpButton.addActionListener(this);
         add(moveUpButton);
 
-        for (String longSnakeString : longSnakeButtons) {
+        for (String longSnakeString : leftRightButtons) {
             JButton longSnakeButton = new JButton(longSnakeString);
-            sButtons.add(longSnakeButton);
+            JButtons.add(longSnakeButton);
             longSnakeButton.setPreferredSize(new Dimension(65, 50));
             longSnakeButton.addActionListener(this);
             add(longSnakeButton);
         }
 
-        String moveDown = wideSnakeButtons[1];
+        String moveDown = upDownButtons[1];
         JButton moveDownButton = new JButton(moveDown);
-        sButtons.add(moveDownButton);
+        JButtons.add(moveDownButton);
         moveDownButton.setPreferredSize(new Dimension(140, 30));
         moveDownButton.addActionListener(this);
         add(moveDownButton);
@@ -62,32 +77,8 @@ public class TurnPanel
         listener.actionPerformed(e);
     }
 
-    private void showSnakeButtons() {
+    public int getSharkJListSelectedItem() {
+        return sharkJList.getSelectedIndex();
 
-        String moveUp = wideSnakeButtons[0];
-        JButton moveUpButton = new JButton(moveUp);
-        sButtons.add(moveUpButton);
-        moveUpButton.setPreferredSize(new Dimension(140, 30));
-        moveUpButton.addActionListener(this);
-        add(moveUpButton);
-
-        for (String longSnakeString : longSnakeButtons) {
-            JButton longSnakeButton = new JButton(longSnakeString);
-            sButtons.add(longSnakeButton);
-            longSnakeButton.setPreferredSize(new Dimension(65, 50));
-            longSnakeButton.addActionListener(this);
-            add(longSnakeButton);
-        }
-
-        String moveDown = wideSnakeButtons[1];
-        JButton moveDownButton = new JButton(moveDown);
-        sButtons.add(moveDownButton);
-        moveDownButton.setPreferredSize(new Dimension(140, 30));
-        moveDownButton.addActionListener(this);
-        add(moveDownButton);
-
-        revalidate();
-        repaint();
     }
-
 }

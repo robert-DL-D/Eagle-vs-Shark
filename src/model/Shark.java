@@ -19,7 +19,7 @@ public class Shark extends Piece {
             if (moveUp(squares, currSquare)) {
                 return null;
             }
-        } /*else if (steps == DOWN) {
+        } else if (steps == DOWN) {
             if (moveDown(squares, currSquare)) {
                 return null;
             }
@@ -33,7 +33,7 @@ public class Shark extends Piece {
             if (moveRight(squares, currSquare)) {
                 return null;
             }
-        }*/
+        }
 
         return "";
     }
@@ -52,50 +52,49 @@ public class Shark extends Piece {
         //}
     }
 
-    /*private boolean moveDown(Square[][] squares, Square currSquare) {
+    private boolean moveDown(Square[][] squares, Square currSquare) {
         int headRow = currSquare.getRow();
         int headCol = currSquare.getColumn();
-        Square tail = getSquare(squares, getConnectedPosition());
         Square newHeadSquare;
-        int initialLength = getLength();
 
-        if (headRow - 1 < 0) {
+        /*if (headRow - 1 < 0) {
             throw new SnakeMoveOutOfBoundsException();
-        } else {
-            newHeadSquare = squares[headCol][headRow - 1];
-            return moveSnake(squares, currSquare, tail, newHeadSquare, initialLength);
-        }
+        } else {*/
+        newHeadSquare = squares[headCol][headRow - 1];
+        setY(getY() + 1);
+
+        return moveShark(squares, currSquare, newHeadSquare);
+        //}
     }
 
-    private boolean moveRight(Square[][] squares, Square currSquare) throws SnakeMoveOutOfBoundsException, SnakeMoveToGuardedSquareException {
+    private boolean moveRight(Square[][] squares, Square currSquare) {
         int headRow = currSquare.getRow();
         int headCol = currSquare.getColumn();
-        Square tail = getSquare(squares, getConnectedPosition());
         Square newHeadSquare;
-        int initialLength = getLength();
 
-        if ((headCol + 1 > 9)) {
+        /*if ((headCol + 1 > 9)) {
             throw new SnakeMoveOutOfBoundsException();
-        } else {
-            newHeadSquare = squares[headCol + 1][headRow];
-            return moveSnake(squares, currSquare, tail, newHeadSquare, initialLength);
-        }
+        } else {*/
+        newHeadSquare = squares[headCol + 1][headRow];
+        setX(getX() + 1);
+
+        return moveShark(squares, currSquare, newHeadSquare);
+        //}
     }
 
-    private boolean moveLeft(Square[][] squares, Square currSquare) throws SnakeMoveOutOfBoundsException, SnakeMoveToGuardedSquareException {
+    private boolean moveLeft(Square[][] squares, Square currSquare) {
         int headCol = currSquare.getColumn();
         int headRow = currSquare.getRow();
-        Square tail = getSquare(squares, getConnectedPosition());
         Square newHeadSquare = squares[headCol - 1][headRow];
-        int initialLength = getLength();
 
-        if ((headCol - 1 < 0)) {
+       /* if ((headCol - 1 < 0)) {
             throw new SnakeMoveOutOfBoundsException();
-        } else {
+        } else {*/
+        setX(getX() - 1);
 
-            return moveSnake(squares, currSquare, tail, newHeadSquare, initialLength);
-        }
-    }*/
+        return moveShark(squares, currSquare, newHeadSquare);
+        //}
+    }
 
     private boolean moveShark(Square[][] squares, Square currSquare, Square newSquare) {
 

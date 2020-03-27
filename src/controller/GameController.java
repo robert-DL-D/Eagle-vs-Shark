@@ -19,8 +19,8 @@ public class GameController {
 
     }
 
-    public void move(int snake, int steps) {
-        String errorMsg = gameModel.moveSnake(snake, steps);
+    public void move(int shark, int direction) {
+        String errorMsg = gameModel.moveSnake(shark, direction);
 
         /*if (errorMsg != null) {
             gameView.showErrorDialog(errorMsg);

@@ -78,11 +78,26 @@ public class BoardView
 
         drawShark(graphics, gameModel.getSharkList());
 
+        // Draw the square number
         for (int i = 0; i < localSquares.length; i++) {
             for (int j = 0; j < localSquares[0].length; j++) {
                 graphics.setColor(Color.BLACK);
                 graphics.drawString(Integer.toString(localSquares[i][j].getSquareNo()), i * 60 + 25, j * 60 + 35);
             }
+        }
+
+        // Draw the Y-axis number
+        for (int i = 0; i < localSquares.length + 1; i++) {
+            graphics.setColor(Color.BLACK);
+            graphics.drawString(Integer.toString(i + 1), 5, i * 60 + 35);
+
+        }
+
+        // Draw the X-axis number
+
+        for (int i = 0; i < localSquares[0].length - 1; i++) {
+            graphics.setColor(Color.BLACK);
+            graphics.drawString(Integer.toString(i + 1), i * 60 + 35, 15);
         }
 
     }

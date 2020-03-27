@@ -75,11 +75,9 @@ public class GameModel {
     public String moveSnake(int index, int steps) {
 
         final Shark piece = sharkPlayer.getPiece(index);
-        System.out.println("y:" + piece.getY() + " x:" + piece.getX());
 
         try {
             String temp = piece.move(squares, steps, index);
-            System.out.println("y:" + piece.getY() + " x:" + piece.getX());
             return temp;
         } catch (NullPointerException nullEx) {
             return "Please select a snake";
