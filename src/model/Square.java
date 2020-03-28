@@ -6,11 +6,11 @@ import java.util.List;
 public class Square {
 
     private int squareNo;
-    private int column;
     private int row;
+    private int column;
     private List<Piece> pieceList = new ArrayList<>();
 
-    public Square(int squareNo, int column, int row) {
+    public Square(int squareNo, int row, int column) {
         this.squareNo = squareNo;
         this.row = row;
         this.column = column;
@@ -18,6 +18,14 @@ public class Square {
 
     public void addPiece(Piece piece) {
         pieceList.add(piece);
+    }
+
+    public void removePiece() {
+        pieceList.clear();
+    }
+
+    public Piece getPiece() {
+        return pieceList.get(0);
     }
 
     public List<Piece> getPieceList() {

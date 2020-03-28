@@ -5,14 +5,20 @@ import java.util.List;
 
 public class Player<T> {
 
+    private Flag flag;
+
+    public Flag getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Flag flag) {
+        this.flag = flag;
+    }
+
     private List<T> pieceList;
 
     public Player() {
         pieceList = new ArrayList<>();
-    }
-
-    public boolean isSnake() {
-        return pieceList.get(0) instanceof Shark;
     }
 
     public List<T> getPieceList() {

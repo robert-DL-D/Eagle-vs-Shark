@@ -6,9 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        GameModel gameModel = new GameModel();
-        GameView gameView = new GameView(gameModel);
-        GameController gameController = new GameController(gameView, gameModel);
+        new GameController(new GameView(), new GameModel());
     }
 
 }

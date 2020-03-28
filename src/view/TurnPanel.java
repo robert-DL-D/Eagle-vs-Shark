@@ -2,59 +2,67 @@ package view;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-import model.GameModel;
+import model.Eagle;
+import model.Shark;
 
 public class TurnPanel
         extends JPanel
         implements ActionListener {
 
-    private final String[] upDownButtons = {"Up", "Down"};
-    private final String[] leftRightButtons = {"Left", "Right"};
+    private JLabel playerTurnJLabel;
 
-    private final List<JButton> JButtons = new ArrayList<>();
+    private JList<String> pieceJList;
 
-    private JList<String> sharkJList;
+    private boolean isEaglePlayer;
 
+    private GameView gameView;
     private ActionListener listener;
 
-    TurnPanel(ActionListener listener, GameModel gameModel, Color background) {
+    TurnPanel(GameView gameView, ActionListener listener, Color background) {
+        this.gameView = gameView;
         this.listener = listener;
 
-        setSize(160, 300);
+        setSize(160, 500);
 
-        sharkJList = new JList<>();
-        sharkJList.setBackground(background);
-        sharkJList.setBorder(new LineBorder(Color.BLACK));
+        playerTurnJLabel = new JLabel();
+        playerTurnJLabel.setPreferredSize(new Dimension(150, 20));
+        playerTurnJLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        playerTurnJLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(playerTurnJLabel);
 
-        final int sharkListSize = gameModel.getSharkList().size();
-        String[] snakePosArray = new String[sharkListSize];
-        for (int i = 0; i < sharkListSize; i++) {
-            snakePosArray[i] = ("Shark " + (i + 1) + ": " + gameModel.getSharkList().get(i).getX() + " " + gameModel.getSharkList().get(i).getY());
-        }
+        pieceJList = new JList<>();
+        pieceJList.setBackground(background);
+        pieceJList.setBorder(new LineBorder(Color.BLACK));
+        pieceJList.setFont(new Font("Arial", Font.PLAIN, 18));
+        pieceJList.setLocation(10, 50);
+        add(pieceJList);
 
-        sharkJList.setListData(snakePosArray);
-        add(sharkJList);
-
+        String[] upDownButtons = {"Up", "Down"};
         String moveUp = upDownButtons[0];
         JButton moveUpButton = new JButton(moveUp);
-        JButtons.add(moveUpButton);
-        moveUpButton.setPreferredSize(new Dimension(140, 30));
+        List<JButton> JButtonsList = new ArrayList<>();
+        JButtonsList.add(moveUpButton);
+        moveUpButton.setPreferredSize(new Dimension(135, 30));
         moveUpButton.addActionListener(this);
         add(moveUpButton);
 
+        String[] leftRightButtons = {"Left", "Right"};
         for (String longSnakeString : leftRightButtons) {
             JButton longSnakeButton = new JButton(longSnakeString);
-            JButtons.add(longSnakeButton);
+            JButtonsList.add(longSnakeButton);
             longSnakeButton.setPreferredSize(new Dimension(65, 50));
             longSnakeButton.addActionListener(this);
             add(longSnakeButton);
@@ -62,13 +70,57 @@ public class TurnPanel
 
         String moveDown = upDownButtons[1];
         JButton moveDownButton = new JButton(moveDown);
-        JButtons.add(moveDownButton);
-        moveDownButton.setPreferredSize(new Dimension(140, 30));
+        JButtonsList.add(moveDownButton);
+        moveDownButton.setPreferredSize(new Dimension(135, 30));
         moveDownButton.addActionListener(this);
         add(moveDownButton);
 
+        JButton nextTurnButton = new JButton("Next Turn");
+        JButtonsList.add(nextTurnButton);
+        nextTurnButton.setPreferredSize(new Dimension(135, 50));
+        nextTurnButton.addActionListener(this);
+        add(nextTurnButton);
+
         revalidate();
         repaint();
+
+    }
+
+    private String currentPlayerName() {
+
+        if (isEaglePlayer) {
+            return "Eagle";
+        } else {
+            return "Shark";
+        }
+    }
+
+    public void updatePieceJList() {
+        playerTurnJLabel.setText(currentPlayerName() + "'s turn");
+
+        if (isEaglePlayer) {
+            final List<Eagle> eagleList = gameView.getEagleList();
+            final int eagleListSize = eagleList.size();
+            String[] pieceCoordArray = new String[eagleListSize];
+            for (int i = 0; i < eagleListSize; i++) {
+                final Eagle eagle = eagleList.get(i);
+                pieceCoordArray[i] = ("Eagle " + (i + 1) + ": " + (eagle.getRow() + 1) + " " + (eagle.getColumn() + 1));
+            }
+
+            pieceJList.setListData(pieceCoordArray);
+
+        } else {
+
+            final List<Shark> sharkList = gameView.getSharkList();
+            final int sharkListSize = sharkList.size();
+            String[] pieceCoordArray = new String[sharkListSize];
+            for (int i = 0; i < sharkListSize; i++) {
+                final Shark shark = sharkList.get(i);
+                pieceCoordArray[i] = ("Shark " + (i + 1) + ": " + (shark.getRow() + 1) + " " + (shark.getColumn() + 1));
+            }
+
+            pieceJList.setListData(pieceCoordArray);
+        }
 
     }
 
@@ -77,8 +129,12 @@ public class TurnPanel
         listener.actionPerformed(e);
     }
 
-    public int getSharkJListSelectedItem() {
-        return sharkJList.getSelectedIndex();
+    public int getPieceJListSelectedItem() {
+        return pieceJList.getSelectedIndex();
 
+    }
+
+    public void setCurrentPlayer(boolean isEaglePlayer) {
+        this.isEaglePlayer = isEaglePlayer;
     }
 }
