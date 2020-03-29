@@ -5,22 +5,19 @@ import java.util.List;
 
 public class Square {
 
-    private int squareNo;
-    private int row;
-    private int column;
-    private List<Piece> pieceList = new ArrayList<>();
+    private final int squareNo;
+    private final List<Piece> pieceList = new ArrayList<>();
 
-    public Square(int squareNo, int row, int column) {
+    public Square(int squareNo) {
         this.squareNo = squareNo;
-        this.row = row;
-        this.column = column;
+
     }
 
     public void addPiece(Piece piece) {
         pieceList.add(piece);
     }
 
-    public void removePiece() {
+    void removePiece() {
         pieceList.clear();
     }
 
@@ -36,11 +33,4 @@ public class Square {
         return squareNo;
     }
 
-    public int getColumn() {
-        return column;
-    }
-
-    public int getRow() {
-        return row;
-    }
 }

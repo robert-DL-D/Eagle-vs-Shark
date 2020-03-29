@@ -19,8 +19,8 @@ public class GameView
         extends JFrame
         implements ActionListener {
 
-    private BoardView boardView;
-    private TurnPanel turnPanel;
+    private final BoardView boardView;
+    private final TurnPanel turnPanel;
     private GameController gameController;
 
     private List<Shark> sharkList;
@@ -41,7 +41,7 @@ public class GameView
         boardView.setLocation(0, 0);
         contentPane.add(boardView);
 
-        turnPanel = new TurnPanel(this, this, this.getBackground());
+        turnPanel = new TurnPanel(this, this, getBackground());
         turnPanel.setLocation(650, 20);
         turnPanel.setBorder(new LineBorder(Color.BLACK));
         contentPane.add(turnPanel);
@@ -52,22 +52,12 @@ public class GameView
     }
 
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "Up":
-                gameController.movePiece(turnPanel.getPieceJListSelectedItem(), 0);
-                break;
-            case "Down":
-                gameController.movePiece(turnPanel.getPieceJListSelectedItem(), 1);
-                break;
-            case "Left":
-                gameController.movePiece(turnPanel.getPieceJListSelectedItem(), 2);
-                break;
-            case "Right":
-                gameController.movePiece(turnPanel.getPieceJListSelectedItem(), 3);
-                break;
-            case "Next Turn":
-                gameController.nextTurn();
-                break;
+        String actionCommand = e.getActionCommand();
+
+        if ("Next Turn".equals(actionCommand)) {
+            gameController.nextTurn();
+        } else {
+            gameController.movePiece(turnPanel.getPieceJListSelectedItem(), actionCommand);
         }
     }
 
@@ -79,7 +69,7 @@ public class GameView
         return turnPanel;
     }
 
-    public List<Shark> getSharkList() {
+    List<Shark> getSharkList() {
         return sharkList;
     }
 
@@ -88,7 +78,7 @@ public class GameView
 
     }
 
-    public List<Eagle> getEagleList() {
+    List<Eagle> getEagleList() {
         return eagleList;
     }
 
@@ -97,7 +87,7 @@ public class GameView
 
     }
 
-    public List<Flag> getFlagList() {
+    List<Flag> getFlagList() {
         return flagList;
     }
 

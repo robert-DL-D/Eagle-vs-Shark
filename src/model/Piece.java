@@ -1,125 +1,128 @@
 package model;
 
-public abstract class Piece {
-    private int position;
-    private static final int UP = 0;
-    private static final int DOWN = 1;
-    private static final int LEFT = 2;
-    private static final int RIGHT = 3;
+public class Piece {
+
     private int row;
     private int column;
 
     Piece(int position) {
-        this.position = position;
 
         row = position / 9;
         column = (position - (row) * 9) - 1;
     }
 
-    // TODO add check for moving to same team flag
-    public boolean moveDirection(GameModel gameModel, Square[][] squares, int steps, int index) {
-        Square currSquare = getSquare(squares, getPosition());
+    // TODO simplify move methods
+    public boolean moveDirection(GameModel gameModel, Square[][] squares, String directions) {
+        Square currentSquare = squares[row][column];
 
-        int pieceRow = currSquare.getRow();
-        int pieceColumn = currSquare.getColumn();
-        Square newSquare = null;
-
-        if (steps == UP) {
-            if (moveUp(gameModel, squares, pieceRow, pieceColumn, currSquare, newSquare)) {
-                return true;
-            }
-        } else if (steps == DOWN) {
-            if (moveDown(gameModel, squares, pieceRow, pieceColumn, currSquare, newSquare)) {
-                return true;
-            }
-
-        } else if (steps == LEFT) {
-            if (moveLeft(gameModel, squares, pieceRow, pieceColumn, currSquare, newSquare)) {
-                return true;
-            }
-
-        } else if (steps == RIGHT) {
-            if (moveRight(gameModel, squares, pieceRow, pieceColumn, currSquare, newSquare)) {
-                return true;
-            }
+        switch (directions) {
+            case "Up":
+                if (row != 0) {
+                    return moveUp(gameModel, squares, currentSquare);
+                }
+                break;
+            case "Down":
+                if (row != 9) {
+                    return moveDown(gameModel, squares, currentSquare);
+                }
+                break;
+            case "Left":
+                if (column != 0) {
+                    return moveLeft(gameModel, squares, currentSquare);
+                }
+                break;
+            case "Right":
+                if (column != 8) {
+                    return moveRight(gameModel, squares, currentSquare);
+                }
+                break;
         }
 
         return false;
-
     }
 
-    private boolean moveUp(GameModel gameModel, Square[][] squares, int pieceRow, int pieceColumn, Square currSquare, Square newSquare) {
+    private boolean moveUp(GameModel gameModel, Square[][] squares, Square currentSquare) {
 
-        newSquare = squares[pieceRow - 1][pieceColumn];
+        Square newSquare = squares[row - 1][column];
 
-        if (pieceRow == 0
-                || (!newSquare.getPieceList().isEmpty()
-                && currSquare.getPiece().getClass() == newSquare.getPiece().getClass())) {
+        if (validSquare(currentSquare, newSquare)) {
 
-            return false;
-        } else {
-            setRow(getRow() - 1);
+            row -= 1;
+            changePieceOnSquare(gameModel, currentSquare, newSquare);
 
-            return move(gameModel, squares, currSquare, newSquare);
-        }
-    }
-
-    private boolean moveDown(GameModel gameModel, Square[][] squares, int pieceRow, int pieceColumn, Square currSquare, Square newSquare) {
-
-        newSquare = squares[pieceRow + 1][pieceColumn];
-
-        if (pieceRow == 9
-                || (!newSquare.getPieceList().isEmpty()
-                && currSquare.getPiece().getClass() == newSquare.getPiece().getClass())) {
-
-            return false;
-        } else {
-            setRow(getRow() + 1);
-
-            return move(gameModel, squares, currSquare, newSquare);
-        }
-    }
-
-    private boolean moveLeft(GameModel gameModel, Square[][] squares, int pieceRow, int pieceColumn, Square currSquare, Square newSquare) {
-
-        newSquare = squares[pieceRow][pieceColumn - 1];
-
-        if (pieceColumn == 0
-                || (!newSquare.getPieceList().isEmpty()
-                && currSquare.getPiece().getClass() == newSquare.getPiece().getClass())) {
-            return false;
-        } else {
-
-            setColumn(getColumn() - 1);
-
-            return move(gameModel, squares, currSquare, newSquare);
-        }
-    }
-
-    private boolean moveRight(GameModel gameModel, Square[][] squares, int pieceRow, int pieceColumn, Square currSquare, Square newSquare) {
-
-        newSquare = squares[pieceRow][pieceColumn + 1];
-
-        if (pieceColumn == 8
-                || (!newSquare.getPieceList().isEmpty()
-                && currSquare.getPiece().getClass() == newSquare.getPiece().getClass())) {
-            return false;
-        } else {
-            setColumn(getColumn() + 1);
-
-            return move(gameModel, squares, currSquare, newSquare);
+            return true;
         }
 
+        return false;
     }
 
-    private boolean move(GameModel gameModel, Square[][] squares, Square currSquare, Square
-            newSquare) {
+    private boolean moveDown(GameModel gameModel, Square[][] squares, Square currentSquare) {
+
+        Square newSquare = squares[row + 1][column];
+
+        if (validSquare(currentSquare, newSquare)) {
+
+            row += 1;
+            changePieceOnSquare(gameModel, currentSquare, newSquare);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean moveLeft(GameModel gameModel, Square[][] squares, Square currentSquare) {
+
+        Square newSquare = squares[row][column - 1];
+
+        if (validSquare(currentSquare, newSquare)) {
+
+            column -= 1;
+            changePieceOnSquare(gameModel, currentSquare, newSquare);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean moveRight(GameModel gameModel, Square[][] squares, Square currentSquare) {
+
+        Square newSquare = squares[row][column + 1];
+
+        if (validSquare(currentSquare, newSquare)) {
+
+            column += 1;
+            changePieceOnSquare(gameModel, currentSquare, newSquare);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean validSquare(Square currentSquare, Square newSquare) {
+
+        if (newSquare.getPieceList().isEmpty()) {
+            return true;
+
+        } else if (newSquare.getPiece() instanceof Flag) {
+            return !((Flag) newSquare.getPiece()).getOwner().getPieceList().contains(currentSquare.getPiece());
+
+        } else if (currentSquare.getPiece().getClass() != newSquare.getPiece().getClass()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void changePieceOnSquare(GameModel gameModel, Square currentSquare, Square newSquare) {
 
         if (!newSquare.getPieceList().isEmpty()
-                && (currSquare.getPiece().getClass() != newSquare.getPiece().getClass())
+                && (currentSquare.getPiece().getClass() != newSquare.getPiece().getClass())
                 && !(newSquare.getPiece() instanceof Flag)) {
 
-            if (currSquare.getPiece() instanceof Eagle) {
+            if (currentSquare.getPiece() instanceof Eagle) {
                 gameModel.getSharkPlayer().getPieceList().remove(newSquare.getPiece());
             } else {
                 gameModel.getEaglePlayer().getPieceList().remove(newSquare.getPiece());
@@ -127,43 +130,18 @@ public abstract class Piece {
             }
 
             newSquare.removePiece();
-
         }
 
-        currSquare.removePiece();
-        setPosition(newSquare.getSquareNo());
+        currentSquare.removePiece();
         newSquare.addPiece(this);
-
-        return true;
-
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
-    public Square getSquare(Square[][] squares, int squareNo) {
-        return squares[row][column];
     }
 
     public int getRow() {
         return row;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
-
     public int getColumn() {
         return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
     }
 
 }

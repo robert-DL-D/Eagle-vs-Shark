@@ -7,16 +7,12 @@ public class GameModel {
 
     private static final int ROW = 10;
     private static final int COLUMN = 9;
-    private Square[][] squares = new Square[ROW][COLUMN];
+    private final Square[][] squares = new Square[ROW][COLUMN];
 
     private Player<Eagle> eaglePlayer;
     private Player<Shark> sharkPlayer;
-    private List<Flag> flagList = new LinkedList<>();
-
-    private boolean isEaglePlayerTurn;
-
-    public GameModel() {
-    }
+    private final List<Flag> flagList = new LinkedList<>();
+    private boolean isEagleTurn;
 
     public Player<Eagle> getEaglePlayer() {
         return eaglePlayer;
@@ -38,6 +34,10 @@ public class GameModel {
         return squares;
     }
 
+    public void setEaglePlayer(Player<Eagle> eaglePlayer) {
+        this.eaglePlayer = eaglePlayer;
+    }
+
     public void setSharkPlayer(Player<Shark> sharkPlayer) {
         this.sharkPlayer = sharkPlayer;
     }
@@ -46,15 +46,11 @@ public class GameModel {
         return flagList;
     }
 
-    public boolean isEaglePlayerTurn() {
-        return isEaglePlayerTurn;
+    public boolean isEagleTurn() {
+        return isEagleTurn;
     }
 
-    public void setEaglePlayerTurn(Player<Eagle> eaglePlayerTurn) {
-        this.eaglePlayer = eaglePlayerTurn;
-    }
-
-    public void setIsEaglePlayerTurn(boolean isEaglePlayerTurn) {
-        this.isEaglePlayerTurn = isEaglePlayerTurn;
+    public void setIsEagleTurn(boolean isEagleTurn) {
+        this.isEagleTurn = isEagleTurn;
     }
 }

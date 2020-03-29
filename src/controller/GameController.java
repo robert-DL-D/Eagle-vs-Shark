@@ -3,7 +3,6 @@ package controller;
 import model.Eagle;
 import model.Flag;
 import model.GameModel;
-import model.Piece;
 import model.Player;
 import model.Shark;
 import model.Square;
@@ -27,20 +26,20 @@ public class GameController {
         initPlayers();
         setCurrentPlayer();
 
-        autoAddEagle(38);
-        autoAddEagle(41);
-        autoAddEagle(44);
-        autoAddEagle(77);
-        autoAddEagle(4);
+        addEagle(38);
+        addEagle(41);
+        addEagle(44);
+        addEagle(77);
+        addEagle(4);
 
-        autoAddShark(47);
-        autoAddShark(50);
-        autoAddShark(53);
-        autoAddShark(14);
-        autoAddShark(85);
+        addShark(47);
+        addShark(50);
+        addShark(53);
+        addShark(14);
+        addShark(85);
 
-        autoAddEagleFlag(5);
-        autoAddSharkFlag(86);
+        addFlag(5, gameModel.getEaglePlayer());
+        addFlag(86, gameModel.getSharkPlayer());
 
         gameView.setSharkList(gameModel.getSharkPlayer().getPieceList());
         gameView.setEagleList(gameModel.getEaglePlayer().getPieceList());
@@ -50,36 +49,38 @@ public class GameController {
         //printArray();
     }
 
-    private void setCurrentPlayer() {
-        gameView.getTurnPanel().setCurrentPlayer(gameModel.isEaglePlayerTurn());
-
-    }
-
     private void initSquare() {
 
         int increment = 1;
 
-        for (int i = 0; i < GameModel.getROW(); i++) {
-            for (int j = 0; j < GameModel.getCOLUMN(); j++) {
+        int row = GameModel.getROW();
+        int column = GameModel.getCOLUMN();
+        Square[][] squares = gameModel.getSquares();
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
                 //System.out.print(increment + " ");
 
-                gameModel.getSquares()[i][j] = new Square(increment, i, j);
+                squares[i][j] = new Square(increment);
                 increment++;
-
             }
-
             // System.out.print("\n");
         }
     }
 
-    public void initPlayers() {
-        gameModel.setEaglePlayerTurn(new Player<>());
+    private void initPlayers() {
+        gameModel.setEaglePlayer(new Player<>());
         gameModel.setSharkPlayer(new Player<>());
-        gameModel.setIsEaglePlayerTurn(true);
+        gameModel.setIsEagleTurn(true);
 
     }
 
-    public void autoAddShark(int position) {
+    private void setCurrentPlayer() {
+        gameView.getTurnPanel().setIsEaglePlayer(gameModel.isEagleTurn());
+
+    }
+
+    private void addShark(int position) {
 
         Shark shark = new Shark(position);
         gameModel.getSharkPlayer().addPiece(shark);
@@ -89,7 +90,7 @@ public class GameController {
 
     }
 
-    public void autoAddEagle(int position) {
+    private void addEagle(int position) {
 
         Eagle eagle = new Eagle(position);
         gameModel.getEaglePlayer().addPiece(eagle);
@@ -99,54 +100,39 @@ public class GameController {
 
     }
 
-    public void autoAddEagleFlag(int position) {
+    private void addFlag(int position, Player owner) {
 
-        Flag flag = new Flag(position);
+        Flag flag = new Flag(position, owner);
+
         gameModel.getFlagList().add(flag);
-
-        gameModel.getEaglePlayer().setFlag(flag);
 
         Square square = gameModel.getSquares()[flag.getRow()][flag.getColumn()];
         square.addPiece(flag);
     }
 
-    public void autoAddSharkFlag(int position) {
+    public void movePiece(int index, String direction) {
 
-        Flag flag = new Flag(position);
-        gameModel.getFlagList().add(flag);
+        boolean moved;
 
-        gameModel.getSharkPlayer().setFlag(flag);
+        if (index != -1) {
 
-        Square square = gameModel.getSquares()[flag.getRow()][flag.getColumn()];
-        square.addPiece(flag);
-    }
+            Player<Eagle> eaglePlayer = gameModel.getEaglePlayer();
+            Player<Shark> sharkPlayer = gameModel.getSharkPlayer();
 
-    /*public void addShark() {
+            if (gameModel.isEagleTurn()) {
+                moved = eaglePlayer.getPiece(index).moveDirection(gameModel, gameModel.getSquares(), direction);
+            } else {
+                moved = sharkPlayer.getPiece(index).moveDirection(gameModel, gameModel.getSquares(), direction);
+            }
 
-        Shark shark = new Shark(71);
+            if (moved) {
 
-        gameModel.getSharkPlayer().addPiece(shark);
-
-        Square square = gameModel.getSquares()[shark.getRow()][shark.getColumn()];
-        square.addPiece(shark);
-
-    }*/
-
-    public void movePiece(int index, int steps) {
-
-        if (gameModel.isEaglePlayerTurn()) {
-
-            gameModel.getEaglePlayer().getPiece(index).moveDirection(gameModel, gameModel.getSquares(), steps, index);
-
-        } else {
-
-            gameModel.getSharkPlayer().getPiece(index).moveDirection(gameModel, gameModel.getSquares(), steps, index);
+                gameView.setEagleList(eaglePlayer.getPieceList());
+                gameView.setSharkList(sharkPlayer.getPieceList());
+                gameView.getTurnPanel().setButtonStatus(false);
+                gameView.getTurnPanel().updatePieceJList();
+            }
         }
-
-        gameView.setEagleList(gameModel.getEaglePlayer().getPieceList());
-        gameView.setSharkList(gameModel.getSharkPlayer().getPieceList());
-
-        gameView.getTurnPanel().updatePieceJList();
 
         //printArray();
 
@@ -170,28 +156,34 @@ public class GameController {
 
     public void nextTurn() {
 
-        for (Square[] square : gameModel.getSquares()) {
-            for (Square square1 : square) {
-                if (square1.getPieceList().size() == 2) {
-                    for (Piece piece : square1.getPieceList()) {
-                        if (piece instanceof Eagle) {
-                            System.out.println("Eagle Won");
-                        }
-                    }
-                }
-            }
-        }
+        victoryCondition();
 
-        if (gameModel.isEaglePlayerTurn()) {
-            gameModel.setIsEaglePlayerTurn(false);
+        if (gameModel.isEagleTurn()) {
+            gameModel.setIsEagleTurn(false);
         } else {
-            gameModel.setIsEaglePlayerTurn(true);
+            gameModel.setIsEagleTurn(true);
         }
 
         setCurrentPlayer();
 
         gameView.getTurnPanel().updatePieceJList();
+        gameView.getTurnPanel().setButtonStatus(true);
 
+    }
+
+    private void victoryCondition() {
+
+        for (Square[] squareArray : gameModel.getSquares()) {
+            for (Square square : squareArray) {
+                if (square.getPieceList().size() == 2) {
+                    if (square.getPieceList().get(1) instanceof Eagle) {
+                        System.out.println("Eagle Won");
+                    } else {
+                        System.out.println("Shark Won");
+                    }
+                }
+            }
+        }
     }
 
 }
