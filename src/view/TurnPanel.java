@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -49,9 +50,7 @@ public class TurnPanel
         pieceJList.setLocation(10, 50);
         add(pieceJList);
 
-        String[] upDownButtons = {"Up", "Down"};
-        String moveUp = upDownButtons[0];
-        JButton moveUpButton = new JButton(moveUp);
+        JButton moveUpButton = new JButton("Up");
         jButtonsList.add(moveUpButton);
         moveUpButton.setPreferredSize(new Dimension(135, 30));
         moveUpButton.addActionListener(this);
@@ -59,28 +58,38 @@ public class TurnPanel
 
         String[] leftRightButtons = {"Left", "Right"};
         for (String longSnakeString : leftRightButtons) {
-            JButton longSnakeButton = new JButton(longSnakeString);
-            jButtonsList.add(longSnakeButton);
-            longSnakeButton.setPreferredSize(new Dimension(65, 50));
-            longSnakeButton.addActionListener(this);
-            add(longSnakeButton);
+            JButton jButton = new JButton(longSnakeString);
+            jButtonsList.add(jButton);
+            jButton.setPreferredSize(new Dimension(65, 50));
+            jButton.addActionListener(this);
+            add(jButton);
         }
 
-        String moveDown = upDownButtons[1];
-        JButton moveDownButton = new JButton(moveDown);
+        JButton moveDownButton = new JButton("Down");
         jButtonsList.add(moveDownButton);
         moveDownButton.setPreferredSize(new Dimension(135, 30));
         moveDownButton.addActionListener(this);
         add(moveDownButton);
 
+        /*JLabel abilityLabel = new JLabel("Abilities");
+        abilityLabel.setPreferredSize(new Dimension(150, 20));
+        abilityLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        abilityLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(abilityLabel);*/
+
+        //for (int i = 0; i < 3; i++) {
+
+           /* JButton jButton = new JButton("Stun");
+            jButtonsList.add(jButton);
+            jButton.setPreferredSize(new Dimension(135, 30));
+            jButton.addActionListener(this);
+            add(jButton);*/
+        //}
+
         JButton nextTurnButton = new JButton("Next Turn");
         nextTurnButton.setPreferredSize(new Dimension(135, 50));
         nextTurnButton.addActionListener(this);
         add(nextTurnButton);
-
-        revalidate();
-        repaint();
-
     }
 
     @Override

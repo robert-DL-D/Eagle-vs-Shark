@@ -21,6 +21,7 @@ public class GameView
 
     private final BoardView boardView;
     private final TurnPanel turnPanel;
+    private final AbilityPanel abilityPanel;
     private GameController gameController;
 
     private List<Shark> sharkList;
@@ -33,7 +34,7 @@ public class GameView
         setLayout(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 850);
+        setSize(1100, 800);
 
         Container contentPane = getContentPane();
 
@@ -42,9 +43,14 @@ public class GameView
         contentPane.add(boardView);
 
         turnPanel = new TurnPanel(this, this, getBackground());
-        turnPanel.setLocation(650, 20);
+        turnPanel.setLocation(625, 20);
         turnPanel.setBorder(new LineBorder(Color.BLACK));
         contentPane.add(turnPanel);
+
+        abilityPanel = new AbilityPanel(this, this, getBackground());
+        abilityPanel.setLocation(800, 20);
+        abilityPanel.setBorder(new LineBorder(Color.BLACK));
+        contentPane.add(abilityPanel);
 
         setVisible(true);
     }
@@ -54,6 +60,8 @@ public class GameView
 
         if ("Next Turn".equals(actionCommand)) {
             gameController.nextTurn();
+        } else if ("Stun".equals(actionCommand)) {
+            gameController.useAbility(abilityPanel.getPieceJListSelectedItem(), e.getActionCommand());
         } else {
             gameController.movePiece(turnPanel.getPieceJListSelectedItem(), actionCommand);
         }
@@ -67,6 +75,10 @@ public class GameView
 
     public TurnPanel getTurnPanel() {
         return turnPanel;
+    }
+
+    public AbilityPanel getAbilityPanel() {
+        return abilityPanel;
     }
 
     List<Shark> getSharkList() {

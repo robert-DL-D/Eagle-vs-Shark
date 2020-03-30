@@ -20,7 +20,6 @@ public class GameController {
         gameView.setGameController(this);
         gameView.getBoardView().setBoardSize(GameModel.getROW(), GameModel.getCOLUMN());
 
-        initSquare();
         gameView.getBoardView().setSquares(gameModel.getSquares());
 
         gameModel.setIsEagleTurn(true);
@@ -45,31 +44,14 @@ public class GameController {
         gameView.setEagleList(gameModel.getEaglePlayer().getPieceList());
         gameView.setFlagList(gameModel.getFlagList());
         gameView.getTurnPanel().updatePieceJList();
+        gameView.getAbilityPanel().updatePieceJList();
 
         //printArray();
     }
 
-    private void initSquare() {
-
-        int increment = 1;
-
-        int row = GameModel.getROW();
-        int column = GameModel.getCOLUMN();
-        Square[][] squares = gameModel.getSquares();
-
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < column; j++) {
-                //System.out.print(increment + " ");
-
-                squares[i][j] = new Square(increment);
-                increment++;
-            }
-            // System.out.print("\n");
-        }
-    }
-
     private void setCurrentPlayer() {
         gameView.getTurnPanel().setIsEaglePlayer(gameModel.isEagleTurn());
+        gameView.getAbilityPanel().setIsEaglePlayer(gameModel.isEagleTurn());
 
     }
 
@@ -126,9 +108,32 @@ public class GameController {
                 gameView.getTurnPanel().updatePieceJList();
             }
         }
-
         //printArray();
+    }
 
+    public void useAbility(int index, String actionCommand) {
+
+        switch (actionCommand) {
+            case "Stun":
+                stun(index);
+                break;
+        }
+
+    }
+
+    public void stun(int index) {
+
+        if (gameModel.isEagleTurn()) {
+            gameModel.getSharkPlayer().getPieceList().get(index).setStunned(true);
+        } else {
+            gameModel.getEaglePlayer().getPieceList().get(index).setStunned(true);
+        }
+
+        for (int i = 0; i < gameModel.getSharkPlayer().getPieceList().size(); i++) {
+            if (gameModel.getSharkPlayer().getPieceList().get(i).isStunned()) {
+                System.out.println("Shark " + i + " is stunned");
+            }
+        }
     }
 
     private void printArray() {
@@ -161,6 +166,7 @@ public class GameController {
 
         gameView.getTurnPanel().updatePieceJList();
         gameView.getTurnPanel().setButtonStatus(true);
+        gameView.getAbilityPanel().updatePieceJList();
 
     }
 

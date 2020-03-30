@@ -10,9 +10,30 @@ public class GameModel {
     private final Square[][] squares = new Square[ROW][COLUMN];
 
     private final List<Flag> flagList = new ArrayList<>();
-    private Player<Eagle> eaglePlayer = new Player<>();
-    private Player<Shark> sharkPlayer = new Player<>();
+    private final Player<Eagle> eaglePlayer = new Player<>();
+    private final Player<Shark> sharkPlayer = new Player<>();
     private boolean isEagleTurn;
+
+    public GameModel() {
+        initSquare();
+    }
+
+    private void initSquare() {
+
+        int increment = 1;
+
+        Square[][] squares = getSquares();
+
+        for (int i = 0; i < ROW; i++) {
+            for (int j = 0; j < COLUMN; j++) {
+                //System.out.print(increment + " ");
+
+                squares[i][j] = new Square(increment);
+                increment++;
+            }
+            // System.out.print("\n");
+        }
+    }
 
     public Player<Eagle> getEaglePlayer() {
         return eaglePlayer;

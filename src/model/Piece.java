@@ -5,13 +5,22 @@ public class Piece {
     private int row;
     private int column;
 
+    private boolean stunned = false;
+
+    public boolean isStunned() {
+        return stunned;
+    }
+
+    public void setStunned(boolean stunned) {
+        this.stunned = stunned;
+    }
+
     Piece(int position) {
 
         row = position / 9;
         column = (position - (row) * 9) - 1;
     }
 
-    // TODO simplify move methods
     public boolean moveDirection(GameModel gameModel, Square[][] squares, String directions) {
         Square currentSquare = squares[row][column];
 
