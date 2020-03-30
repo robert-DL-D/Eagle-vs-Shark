@@ -23,7 +23,7 @@ public class GameController {
         initSquare();
         gameView.getBoardView().setSquares(gameModel.getSquares());
 
-        initPlayers();
+        gameModel.setIsEagleTurn(true);
         setCurrentPlayer();
 
         addEagle(38);
@@ -66,13 +66,6 @@ public class GameController {
             }
             // System.out.print("\n");
         }
-    }
-
-    private void initPlayers() {
-        gameModel.setEaglePlayer(new Player<>());
-        gameModel.setSharkPlayer(new Player<>());
-        gameModel.setIsEagleTurn(true);
-
     }
 
     private void setCurrentPlayer() {

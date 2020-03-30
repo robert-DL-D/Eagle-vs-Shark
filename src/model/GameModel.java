@@ -1,6 +1,6 @@
 package model;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameModel {
@@ -9,9 +9,9 @@ public class GameModel {
     private static final int COLUMN = 9;
     private final Square[][] squares = new Square[ROW][COLUMN];
 
-    private Player<Eagle> eaglePlayer;
-    private Player<Shark> sharkPlayer;
-    private final List<Flag> flagList = new LinkedList<>();
+    private final List<Flag> flagList = new ArrayList<>();
+    private Player<Eagle> eaglePlayer = new Player<>();
+    private Player<Shark> sharkPlayer = new Player<>();
     private boolean isEagleTurn;
 
     public Player<Eagle> getEaglePlayer() {
@@ -32,14 +32,6 @@ public class GameModel {
 
     public Square[][] getSquares() {
         return squares;
-    }
-
-    public void setEaglePlayer(Player<Eagle> eaglePlayer) {
-        this.eaglePlayer = eaglePlayer;
-    }
-
-    public void setSharkPlayer(Player<Shark> sharkPlayer) {
-        this.sharkPlayer = sharkPlayer;
     }
 
     public List<Flag> getFlagList() {

@@ -47,8 +47,6 @@ public class GameView
         contentPane.add(turnPanel);
 
         setVisible(true);
-        revalidate();
-        repaint();
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -59,6 +57,8 @@ public class GameView
         } else {
             gameController.movePiece(turnPanel.getPieceJListSelectedItem(), actionCommand);
         }
+
+        repaint();
     }
 
     public BoardView getBoardView() {

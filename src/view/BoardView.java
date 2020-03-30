@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.List;
 
@@ -25,11 +26,17 @@ public class BoardView
     private static final int PIC_SIZE = 58;
     private static final Color SKY_COLOR = new Color(255, 255, 255);
     private static final Color OCEAN_COLOR = new Color(0, 119, 190);
+    private static final int axisNumberMargin = 40;
     private final Toolkit t = Toolkit.getDefaultToolkit();
+    private final Image flagImage = t.getImage("src/images/flag.png");
+    private final Image eagleImage = t.getImage("src/images/eagle.png");
+    private final Image sharkImage = t.getImage("src/images/shark.png");
     private final GameView gameView;
     private Square[][] squares;
     private int row;
     private int column;
+    private int numberOfRows;
+    private int numberOfColumns;
 
     BoardView(GameView gameView) {
         this.gameView = gameView;
@@ -38,7 +45,6 @@ public class BoardView
     }
 
     private static int gridCoord(int i) {
-
         return i * SQUARE_SIZE + BOARD_MARGIN;
     }
 
@@ -50,15 +56,20 @@ public class BoardView
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        int numberOfRows = squares.length;
-        int numberOfColumns = squares[0].length;
+        drawSquare(g, numberOfRows, numberOfColumns);
+        drawLines(g);
+        drawEagle(g, gameView.getEagleList());
+        drawShark(g, gameView.getSharkList());
+        drawFlag(g, gameView.getFlagList());
+        drawNumber(g, numberOfRows, numberOfColumns);
 
+    }
+
+    private void drawSquare(Graphics g, int numberOfRows, int numberOfColumns) {
         for (int i = 0; i < numberOfRows; i++) {
             for (int j = 0; j < numberOfColumns; j++) {
 
-                Square square = squares[i][j];
-
-                if (square.getSquareNo() - 1 < GameModel.getROW() / 2 * GameModel.getCOLUMN()) {
+                if (squares[i][j].getSquareNo() - 1 < GameModel.getROW() / 2 * GameModel.getCOLUMN()) {
                     g.setColor(SKY_COLOR);
                 } else {
                     g.setColor(OCEAN_COLOR);
@@ -68,7 +79,33 @@ public class BoardView
 
             }
         }
+    }
 
+    private void drawEagle(Graphics g, List<Eagle> eagleList) {
+
+        for (Eagle eagle : eagleList) {
+            g.drawImage(eagleImage, picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+        }
+    }
+
+    private void drawShark(Graphics g, List<Shark> sharkList) {
+
+        for (Shark shark : sharkList) {
+            g.drawImage(sharkImage, picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+
+        }
+    }
+
+    private void drawFlag(Graphics g, List<Flag> flagList) {
+        int flagNo = gameView.getFlagList().size();
+
+        for (int i = 0; i < flagNo; i++) {
+
+            g.drawImage(flagImage, picGridCoord(flagList.get(i).getColumn()), picGridCoord(flagList.get(i).getRow()), PIC_SIZE, PIC_SIZE, this);
+        }
+    }
+
+    private void drawLines(Graphics g) {
         g.setColor(Color.BLACK);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
 
@@ -81,11 +118,9 @@ public class BoardView
         for (int i = 0; i < column + 1; i++) {
             g.drawLine(gridCoord(i), BOARD_MARGIN, gridCoord(i), HEIGHT - BOARD_MARGIN);
         }
+    }
 
-        drawEagle(g, gameView.getEagleList());
-        drawShark(g, gameView.getSharkList());
-        drawFlag(g, gameView.getFlagList());
-
+    private void drawNumber(Graphics g, int numberOfRows, int numberOfColumns) {
         // Draw the square number
         for (int i = 0; i < numberOfRows; i++) {
             for (int j = 0; j < numberOfColumns; j++) {
@@ -95,7 +130,7 @@ public class BoardView
 
         // Draw the Y-axis number
         for (int i = 0; i < numberOfRows; i++) {
-            g.drawString(Integer.toString(i + 1), 5, i * SQUARE_SIZE + 40);
+            g.drawString(Integer.toString(i + 1), 5, i * SQUARE_SIZE + axisNumberMargin);
 
         }
 
@@ -103,39 +138,15 @@ public class BoardView
 
         for (int i = 0; i < numberOfColumns; i++) {
             g.setColor(Color.BLACK);
-            g.drawString(Integer.toString(i + 1), i * SQUARE_SIZE + 40, 18);
-        }
-
-        repaint();
-
-    }
-
-    private void drawEagle(Graphics g, List<Eagle> eagleList) {
-
-        for (Eagle eagle : eagleList) {
-            g.drawImage(t.getImage("src/images/eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
-        }
-    }
-
-    private void drawShark(Graphics g, List<Shark> sharkList) {
-
-        for (Shark shark : sharkList) {
-            g.drawImage(t.getImage("src/images/shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
-
-        }
-    }
-
-    private void drawFlag(Graphics g, List<Flag> flagList) {
-        int flagNo = gameView.getFlagList().size();
-
-        for (int i = 0; i < flagNo; i++) {
-
-            g.drawImage(t.getImage("src/images/flag.png"), picGridCoord(flagList.get(i).getColumn()), picGridCoord(flagList.get(i).getRow()), PIC_SIZE, PIC_SIZE, this);
+            g.drawString(Integer.toString(i + 1), i * SQUARE_SIZE + axisNumberMargin, 18);
         }
     }
 
     public void setSquares(Square[][] squares) {
         this.squares = squares;
+
+        numberOfRows = squares.length;
+        numberOfColumns = squares[0].length;
     }
 
     public void setBoardSize(int row, int column) {

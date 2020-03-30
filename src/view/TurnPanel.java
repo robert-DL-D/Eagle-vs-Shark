@@ -127,13 +127,9 @@ public class TurnPanel
     }
 
     public void setButtonStatus(boolean status) {
-        for (JButton button : gameView.getTurnPanel().getjButtonsList()) {
+        for (JButton button : jButtonsList) {
             button.setEnabled(status);
         }
-    }
-
-    public List<JButton> getjButtonsList() {
-        return jButtonsList;
     }
 
     public void setIsEaglePlayer(boolean isEaglePlayer) {
