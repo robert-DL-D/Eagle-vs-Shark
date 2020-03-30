@@ -57,7 +57,7 @@ public class Piece {
         if (validSquare(currentSquare, newSquare)) {
 
             row -= 1;
-            changePieceOnSquare(gameModel, currentSquare, newSquare);
+            removePieceFromGame(gameModel, currentSquare, newSquare);
 
             return true;
         }
@@ -72,7 +72,7 @@ public class Piece {
         if (validSquare(currentSquare, newSquare)) {
 
             row += 1;
-            changePieceOnSquare(gameModel, currentSquare, newSquare);
+            removePieceFromGame(gameModel, currentSquare, newSquare);
 
             return true;
         }
@@ -87,7 +87,7 @@ public class Piece {
         if (validSquare(currentSquare, newSquare)) {
 
             column -= 1;
-            changePieceOnSquare(gameModel, currentSquare, newSquare);
+            removePieceFromGame(gameModel, currentSquare, newSquare);
 
             return true;
         }
@@ -102,7 +102,7 @@ public class Piece {
         if (validSquare(currentSquare, newSquare)) {
 
             column += 1;
-            changePieceOnSquare(gameModel, currentSquare, newSquare);
+            removePieceFromGame(gameModel, currentSquare, newSquare);
 
             return true;
         }
@@ -125,7 +125,7 @@ public class Piece {
         return false;
     }
 
-    private void changePieceOnSquare(GameModel gameModel, Square currentSquare, Square newSquare) {
+    private void removePieceFromGame(GameModel gameModel, Square currentSquare, Square newSquare) {
 
         if (!newSquare.getPieceList().isEmpty()
                 && (currentSquare.getPiece().getClass() != newSquare.getPiece().getClass())
