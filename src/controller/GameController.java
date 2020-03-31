@@ -1,8 +1,11 @@
 package controller;
 
+import java.util.List;
+
 import model.Eagle;
 import model.Flag;
 import model.GameModel;
+import model.Piece;
 import model.Player;
 import model.Shark;
 import model.Square;
@@ -174,14 +177,15 @@ public class GameController {
 
     private void victoryCondition() {
 
-        for (Square[] squareArray : gameModel.getSquares()) {
-            for (Square square : squareArray) {
-                if (square.getPieceList().size() == 2) {
-                    if (square.getPieceList().get(1) instanceof Eagle) {
-                        System.out.println("Eagle Won");
-                    } else {
-                        System.out.println("Shark Won");
-                    }
+        for (Flag flag : gameModel.getFlagList()) {
+
+            List<Piece> pieceList = gameModel.getSquares()[flag.getRow()][flag.getColumn()].getPieceList();
+
+            if (pieceList.size() == 2) {
+                if (pieceList.get(1) instanceof Eagle) {
+                    System.out.println("Eagle Won");
+                } else {
+                    System.out.println("Shark Won");
                 }
             }
         }
