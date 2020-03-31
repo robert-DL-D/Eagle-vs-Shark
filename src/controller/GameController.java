@@ -45,6 +45,7 @@ public class GameController {
         gameView.setFlagList(gameModel.getFlagList());
         gameView.getTurnPanel().updatePieceJList();
         gameView.getAbilityPanel().updatePieceJList();
+        gameView.getTimePanel().setGameController(this);
 
         //printArray();
     }
@@ -167,6 +168,7 @@ public class GameController {
         gameView.getTurnPanel().updatePieceJList();
         gameView.getTurnPanel().setButtonStatus(true);
         gameView.getAbilityPanel().updatePieceJList();
+        gameView.getTimePanel().resetTimer();
 
     }
 

@@ -22,6 +22,7 @@ public class GameView
     private final BoardView boardView;
     private final TurnPanel turnPanel;
     private final AbilityPanel abilityPanel;
+    private final TimePanel timePanel;
     private GameController gameController;
 
     private List<Shark> sharkList;
@@ -52,6 +53,11 @@ public class GameView
         abilityPanel.setBorder(new LineBorder(Color.BLACK));
         contentPane.add(abilityPanel);
 
+        timePanel = new TimePanel();
+        timePanel.setLocation(625, 550);
+        timePanel.setBorder(new LineBorder(Color.BLACK));
+        contentPane.add(timePanel);
+
         setVisible(true);
     }
 
@@ -79,6 +85,10 @@ public class GameView
 
     public AbilityPanel getAbilityPanel() {
         return abilityPanel;
+    }
+
+    public TimePanel getTimePanel() {
+        return timePanel;
     }
 
     List<Shark> getSharkList() {
