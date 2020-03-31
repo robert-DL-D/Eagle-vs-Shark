@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import model.Eagle;
 import model.Flag;
@@ -25,7 +26,7 @@ public class GameController {
 
         gameView.getBoardView().setSquares(gameModel.getSquares());
 
-        gameModel.setIsEagleTurn(true);
+        randomStartingPlayer();
         setCurrentPlayer();
 
         addEagle(38);
@@ -51,6 +52,17 @@ public class GameController {
         gameView.getTimePanel().setGameController(this);
 
         //printArray();
+    }
+
+    private void randomStartingPlayer() {
+
+        if (ThreadLocalRandom.current().nextInt(0, 2) == 0) {
+            gameModel.setIsEagleTurn(true);
+        } else {
+            gameModel.setIsEagleTurn(false);
+
+        }
+
     }
 
     private void setCurrentPlayer() {
