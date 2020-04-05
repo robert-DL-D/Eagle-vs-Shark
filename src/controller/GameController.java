@@ -24,29 +24,27 @@ public class GameController {
 
     private GameView gameView;
     private GameModel gameModel;
-    private Player player;
 
     public GameController(GameView gameView, GameModel gameModel) {
         this.gameView = gameView;
         this.gameModel = gameModel;
 
         gameView.setGameController(this);
-        gameView.getBoardView().setBoardSize(GameModel.getROW(), GameModel.getCOLUMN());
 
-        gameView.getBoardView().setSquares(gameModel.getSquares());
+        gameView.getBOARDVIEW().setSquares(gameModel.getSQUARE_ARRAY());
 
         randomStartingPlayer();
         setCurrentPlayer();
 
         autoAddPieces();
 
-        gameView.setSharkList(gameModel.getSharkPlayer().getPieceList());
-        gameView.setEagleList(gameModel.getEaglePlayer().getPieceList());
-        gameView.setFlagList(gameModel.getFlagList());
-        gameView.getTurnPanel().updateTurnText();
-        gameView.getTurnPanel().setButtonText();
-        gameView.getAbilityPanel().updatePieceJList();
-        gameView.getTimePanel().setGameController(this);
+        gameView.setSharkList(gameModel.getSHARK_PLAYER().getPIECE_LIST());
+        gameView.setEagleList(gameModel.getEAGLE_PLAYER().getPIECE_LIST());
+        gameView.setFlagList(gameModel.getFLAG_LIST());
+        gameView.getTURN_PANEL().updateTurnText();
+        gameView.getTURN_PANEL().setButtonText();
+        gameView.getABILITY_PANEL().updatePieceJList();
+        gameView.getTIME_PANEL().setGameController(this);
 
     }
 
@@ -66,8 +64,8 @@ public class GameController {
         addShark(85, Type.BLUE);
         addShark(61, Type.BLUE);
 
-        addFlag(5, gameModel.getEaglePlayer(), Type.FLAG);
-        addFlag(86, gameModel.getSharkPlayer(), Type.FLAG);
+        addFlag(5, gameModel.getEAGLE_PLAYER(), Type.FLAG);
+        addFlag(86, gameModel.getSHARK_PLAYER(), Type.FLAG);
     }
 
     private void randomStartingPlayer() {
@@ -82,8 +80,8 @@ public class GameController {
     }
 
     private void setCurrentPlayer() {
-        gameView.getTurnPanel().setIsEaglePlayer(gameModel.isEagleTurn());
-        gameView.getAbilityPanel().setIsEaglePlayer(gameModel.isEagleTurn());
+        gameView.getTURN_PANEL().setIsEaglePlayer(gameModel.isEagleTurn());
+        gameView.getABILITY_PANEL().setIsEaglePlayer(gameModel.isEagleTurn());
 
     }
 
@@ -91,21 +89,21 @@ public class GameController {
 
         if (type == Type.RED) {
             SharkRed shark = new SharkRed(position, Type.RED);
-            gameModel.getSharkPlayer().addPiece(shark);
+            gameModel.getSHARK_PLAYER().addPiece(shark);
 
-            Square square = gameModel.getSquares()[shark.getRow()][shark.getColumn()];
+            Square square = gameModel.getSQUARE_ARRAY()[shark.getRow()][shark.getColumn()];
             square.addPiece(shark);
         } else if (type == Type.GREEN) {
             SharkGreen shark = new SharkGreen(position, Type.GREEN);
-            gameModel.getSharkPlayer().addPiece(shark);
+            gameModel.getSHARK_PLAYER().addPiece(shark);
 
-            Square square = gameModel.getSquares()[shark.getRow()][shark.getColumn()];
+            Square square = gameModel.getSQUARE_ARRAY()[shark.getRow()][shark.getColumn()];
             square.addPiece(shark);
         } else if (type == Type.BLUE) {
             SharkBlue shark = new SharkBlue(position, Type.BLUE);
-            gameModel.getSharkPlayer().addPiece(shark);
+            gameModel.getSHARK_PLAYER().addPiece(shark);
 
-            Square square = gameModel.getSquares()[shark.getRow()][shark.getColumn()];
+            Square square = gameModel.getSQUARE_ARRAY()[shark.getRow()][shark.getColumn()];
             square.addPiece(shark);
         }
     }
@@ -114,21 +112,21 @@ public class GameController {
 
         if (type == Type.RED) {
             EagleRed eagle = new EagleRed(position, Type.RED);
-            gameModel.getEaglePlayer().addPiece(eagle);
+            gameModel.getEAGLE_PLAYER().addPiece(eagle);
 
-            Square square = gameModel.getSquares()[eagle.getRow()][eagle.getColumn()];
+            Square square = gameModel.getSQUARE_ARRAY()[eagle.getRow()][eagle.getColumn()];
             square.addPiece(eagle);
         } else if (type == Type.GREEN) {
             EagleGreen eagle = new EagleGreen(position, Type.GREEN);
-            gameModel.getEaglePlayer().addPiece(eagle);
+            gameModel.getEAGLE_PLAYER().addPiece(eagle);
 
-            Square square = gameModel.getSquares()[eagle.getRow()][eagle.getColumn()];
+            Square square = gameModel.getSQUARE_ARRAY()[eagle.getRow()][eagle.getColumn()];
             square.addPiece(eagle);
         } else if (type == Type.BLUE) {
             Eagle eagle = new EagleBlue(position, Type.BLUE);
-            gameModel.getEaglePlayer().addPiece(eagle);
+            gameModel.getEAGLE_PLAYER().addPiece(eagle);
 
-            Square square = gameModel.getSquares()[eagle.getRow()][eagle.getColumn()];
+            Square square = gameModel.getSQUARE_ARRAY()[eagle.getRow()][eagle.getColumn()];
             square.addPiece(eagle);
         }
 
@@ -138,9 +136,9 @@ public class GameController {
 
         Flag flag = new Flag(position, owner, type);
 
-        gameModel.getFlagList().add(flag);
+        gameModel.getFLAG_LIST().add(flag);
 
-        Square square = gameModel.getSquares()[flag.getRow()][flag.getColumn()];
+        Square square = gameModel.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
         square.addPiece(flag);
     }
 
@@ -149,24 +147,24 @@ public class GameController {
         // -1 index means nothing is selected
         if (index != -1) {
 
-            Player<Eagle> eaglePlayer = gameModel.getEaglePlayer();
-            Player<Shark> sharkPlayer = gameModel.getSharkPlayer();
+            Player<Eagle> eaglePlayer = gameModel.getEAGLE_PLAYER();
+            Player<Shark> sharkPlayer = gameModel.getSHARK_PLAYER();
             boolean moved;
 
             if (gameModel.isEagleTurn()) {
-                moved = eaglePlayer.getPiece(index).moveDirection(gameModel, gameModel.getSquares(), movementCoord);
+                moved = eaglePlayer.getPiece(index).moveDirection(gameModel, gameModel.getSQUARE_ARRAY(), movementCoord);
             } else {
-                moved = sharkPlayer.getPiece(index).moveDirection(gameModel, gameModel.getSquares(), movementCoord);
+                moved = sharkPlayer.getPiece(index).moveDirection(gameModel, gameModel.getSQUARE_ARRAY(), movementCoord);
             }
 
             if (moved) {
                 gameView.repaint();
 
-                gameView.setEagleList(eaglePlayer.getPieceList());
-                gameView.setSharkList(sharkPlayer.getPieceList());
-                gameView.getTurnPanel().setEnabledButton(false);
-                gameView.getTurnPanel().updateTurnText();
-                gameView.getTurnPanel().setButtonText();
+                gameView.setEagleList(eaglePlayer.getPIECE_LIST());
+                gameView.setSharkList(sharkPlayer.getPIECE_LIST());
+                gameView.getTURN_PANEL().setEnabledButton(false);
+                gameView.getTURN_PANEL().updateTurnText();
+                gameView.getTURN_PANEL().setButtonText();
 
                 victoryCondition();
             }
@@ -186,13 +184,13 @@ public class GameController {
     public void stun(int index) {
 
         if (gameModel.isEagleTurn()) {
-            gameModel.getSharkPlayer().getPieceList().get(index).setStunned(true);
+            gameModel.getSHARK_PLAYER().getPIECE_LIST().get(index).setStunned(true);
         } else {
-            gameModel.getEaglePlayer().getPieceList().get(index).setStunned(true);
+            gameModel.getEAGLE_PLAYER().getPIECE_LIST().get(index).setStunned(true);
         }
 
-        for (int i = 0; i < gameModel.getSharkPlayer().getPieceList().size(); i++) {
-            if (gameModel.getSharkPlayer().getPieceList().get(i).isStunned()) {
+        for (int i = 0; i < gameModel.getSHARK_PLAYER().getPIECE_LIST().size(); i++) {
+            if (gameModel.getSHARK_PLAYER().getPIECE_LIST().get(i).isStunned()) {
                 System.out.println("Shark " + i + " is stunned");
             }
         }
@@ -208,19 +206,19 @@ public class GameController {
 
         setCurrentPlayer();
 
-        gameView.getTurnPanel().updateTurnText();
-        gameView.getTurnPanel().setButtonText();
-        gameView.getTurnPanel().setEnabledButton(true);
-        gameView.getAbilityPanel().updatePieceJList();
-        gameView.getTimePanel().resetTimer();
+        gameView.getTURN_PANEL().updateTurnText();
+        gameView.getTURN_PANEL().setButtonText();
+        gameView.getTURN_PANEL().setEnabledButton(true);
+        gameView.getABILITY_PANEL().updatePieceJList();
+        gameView.getTIME_PANEL().resetTimer();
 
     }
 
     private void victoryCondition() {
 
-        for (Flag flag : gameModel.getFlagList()) {
+        for (Flag flag : gameModel.getFLAG_LIST()) {
 
-            List<Piece> pieceList = gameModel.getSquares()[flag.getRow()][flag.getColumn()].getPieceList();
+            List<Piece> pieceList = gameModel.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()].getPIECE_LIST();
 
             if (pieceList.size() == 2) {
                 if (pieceList.get(1) instanceof Eagle) {
@@ -234,13 +232,13 @@ public class GameController {
 
     public Movable getEaglePiece(int selectedPieceIndex) {
 
-        return gameModel.getEaglePlayer().getPiece(selectedPieceIndex);
+        return gameModel.getEAGLE_PLAYER().getPiece(selectedPieceIndex);
 
     }
 
     public Movable getSharkPiece(int selectedPieceIndex) {
 
-        return gameModel.getSharkPlayer().getPiece(selectedPieceIndex);
+        return gameModel.getSHARK_PLAYER().getPiece(selectedPieceIndex);
 
     }
 }

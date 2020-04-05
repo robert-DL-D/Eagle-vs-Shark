@@ -5,32 +5,32 @@ import java.util.List;
 
 public class Square {
 
-    private final int squareNo;
-    private final List<Piece> pieceList = new ArrayList<>();
+    private final int SQUARE_NUMBER;
+    private final List<Piece> PIECE_LIST = new ArrayList<>();
 
-    public Square(int squareNo) {
-        this.squareNo = squareNo;
+    Square(int SQUARE_NUMBER) {
+        this.SQUARE_NUMBER = SQUARE_NUMBER;
 
     }
 
     public void addPiece(Piece piece) {
-        pieceList.add(piece);
+        PIECE_LIST.add(piece);
     }
 
     void removePiece() {
-        pieceList.clear();
+        PIECE_LIST.clear();
     }
 
-    public Piece getPiece() {
-        return pieceList.get(0);
+    Piece getPiece() {
+        return PIECE_LIST.get(0);
     }
 
-    public List<Piece> getPieceList() {
-        return pieceList;
+    public List<Piece> getPIECE_LIST() {
+        return PIECE_LIST;
     }
 
-    public int getSquareNo() {
-        return squareNo;
+    public int getSQUARE_NUMBER() {
+        return SQUARE_NUMBER;
     }
 
 }

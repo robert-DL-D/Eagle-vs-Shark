@@ -5,13 +5,11 @@ import java.util.List;
 
 public class GameModel {
 
-    private static final int ROW = 10;
-    private static final int COLUMN = 9;
-    private final Square[][] squares = new Square[ROW][COLUMN];
+    private final Square[][] SQUARE_ARRAY = new Square[BoardSize.BOARD_ROWS][BoardSize.BOARD_COLUMNS];
 
-    private final List<Flag> flagList = new ArrayList<>();
-    private final Player<Eagle> eaglePlayer = new Player<>();
-    private final Player<Shark> sharkPlayer = new Player<>();
+    private final Player<Eagle> EAGLE_PLAYER = new Player<>();
+    private final Player<Shark> SHARK_PLAYER = new Player<>();
+    private final List<Flag> FLAG_LIST = new ArrayList<>();
     private boolean isEagleTurn;
 
     public GameModel() {
@@ -22,39 +20,28 @@ public class GameModel {
 
         int increment = 1;
 
-        for (int i = 0; i < ROW; i++) {
-            for (int j = 0; j < COLUMN; j++) {
-                //System.out.print(increment + " ");
-
-                squares[i][j] = new Square(increment);
+        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
+            for (int j = 0; j < BoardSize.BOARD_COLUMNS; j++) {
+                SQUARE_ARRAY[i][j] = new Square(increment);
                 increment++;
             }
-            // System.out.print("\n");
         }
     }
 
-    public Player<Eagle> getEaglePlayer() {
-        return eaglePlayer;
+    public Player<Eagle> getEAGLE_PLAYER() {
+        return EAGLE_PLAYER;
     }
 
-    public Player<Shark> getSharkPlayer() {
-        return sharkPlayer;
+    public Player<Shark> getSHARK_PLAYER() {
+        return SHARK_PLAYER;
     }
 
-    public static int getROW() {
-        return ROW;
+    public Square[][] getSQUARE_ARRAY() {
+        return SQUARE_ARRAY;
     }
 
-    public static int getCOLUMN() {
-        return COLUMN;
-    }
-
-    public Square[][] getSquares() {
-        return squares;
-    }
-
-    public List<Flag> getFlagList() {
-        return flagList;
+    public List<Flag> getFLAG_LIST() {
+        return FLAG_LIST;
     }
 
     public boolean isEagleTurn() {

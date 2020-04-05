@@ -21,22 +21,21 @@ public class MovementPanel
         extends JPanel
         implements ActionListener {
 
-    private final JList<String> moveJList;
-    private final GameView gameView;
-    private final ActionListener listener;
-    private List<int[]> movementCoordArray = new LinkedList<>();
-    private int[] movementCoord;
+    private final JList<String> MOVE_JLIST;
+    private final GameView GAMEVIEW;
+    private final ActionListener ACTIONLISTENER;
+    private final List<int[]> MOVEMENT_COORD_LIST = new LinkedList<>();
 
-    MovementPanel(GameView gameView, ActionListener listener, Color background) {
-        this.gameView = gameView;
-        this.listener = listener;
+    MovementPanel(GameView GAMEVIEW, ActionListener ACTIONLISTENER, Color background) {
+        this.GAMEVIEW = GAMEVIEW;
+        this.ACTIONLISTENER = ACTIONLISTENER;
 
-        moveJList = new JList<>();
-        moveJList.setBackground(background);
-        moveJList.setBorder(new LineBorder(Color.BLACK));
-        moveJList.setFont(new Font("Arial", Font.PLAIN, 18));
-        moveJList.setLocation(10, 50);
-        add(moveJList);
+        MOVE_JLIST = new JList<>();
+        MOVE_JLIST.setBackground(background);
+        MOVE_JLIST.setBorder(new LineBorder(Color.BLACK));
+        MOVE_JLIST.setFont(new Font("Arial", Font.PLAIN, 18));
+        MOVE_JLIST.setLocation(10, 50);
+        add(MOVE_JLIST);
 
         JButton moveButton = new JButton("Move");
         moveButton.setSize(80, 180);
@@ -47,17 +46,15 @@ public class MovementPanel
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //movementCoord = movementType[moveJList.getSelectedIndex()];
-
-        listener.actionPerformed(e);
+        ACTIONLISTENER.actionPerformed(e);
     }
 
-    public void updateMoveJList(int index, Movable piece) {
+    void updateMoveJList(int index, Movable piece) {
 
         List<String> pieceCoordList = new LinkedList<>();
 
         if (piece instanceof Eagle) {
-            Eagle eagle = gameView.getEagleList().get(index);
+            Eagle eagle = GAMEVIEW.getEagleList().get(index);
 
             for (int[] movablecoord : piece.getMovableCoords()) {
 
@@ -67,12 +64,12 @@ public class MovementPanel
 
                 if (!(validCoord[0] < 1 || validCoord[0] > BoardSize.BOARD_ROWS || validCoord[1] < 1 || validCoord[1] > BoardSize.BOARD_COLUMNS)) {
                     pieceCoordList.add(validCoord[0] + " " + validCoord[1]);
-                    movementCoordArray.add(movablecoord);
+                    MOVEMENT_COORD_LIST.add(movablecoord);
                 }
 
             }
         } else {
-            Shark shark = gameView.getSharkList().get(index);
+            Shark shark = GAMEVIEW.getSharkList().get(index);
 
             for (int[] movablecoord : piece.getMovableCoords()) {
 
@@ -82,7 +79,7 @@ public class MovementPanel
 
                 if (!(validCoord[0] < 1 || validCoord[0] > BoardSize.BOARD_ROWS || validCoord[1] < 1 || validCoord[1] > BoardSize.BOARD_COLUMNS)) {
                     pieceCoordList.add(validCoord[0] + " " + validCoord[1]);
-                    movementCoordArray.add(movablecoord);
+                    MOVEMENT_COORD_LIST.add(movablecoord);
                 }
             }
 
@@ -91,18 +88,13 @@ public class MovementPanel
         // Must use variable here
         String[] pieceCoordArray = pieceCoordList.toArray(new String[pieceCoordList.size()]);
 
-        moveJList.setListData(pieceCoordArray);
-        moveJList.setVisible(true);
-    }
-
-    int getMoveJListSelectedItem() {
-        return moveJList.getSelectedIndex();
-
+        MOVE_JLIST.setListData(pieceCoordArray);
+        MOVE_JLIST.setVisible(true);
     }
 
     int[] getMovementCoord() {
 
-        return movementCoordArray.get(moveJList.getSelectedIndex());
+        return MOVEMENT_COORD_LIST.get(MOVE_JLIST.getSelectedIndex());
     }
 
 }

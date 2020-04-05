@@ -5,29 +5,29 @@ import java.util.List;
 
 public class SharkGreen extends Shark {
 
-    private final List<int[]> bishopCoords = new LinkedList<>();
+    private final List<int[]> BISHOP_COORD = new LinkedList<>();
 
     public SharkGreen(int position, Enum type) {
         super(position, type);
 
         // Upper-Left
-        bishopCoords.add(new int[]{-1, -1});
-        bishopCoords.add(new int[]{-2, -2});
+        BISHOP_COORD.add(new int[]{-1, -1});
+        BISHOP_COORD.add(new int[]{-2, -2});
 
         // Upper-Right
-        bishopCoords.add(new int[]{1, 1});
-        bishopCoords.add(new int[]{2, 2});
+        BISHOP_COORD.add(new int[]{1, 1});
+        BISHOP_COORD.add(new int[]{2, 2});
 
         // Lower-Left
-        bishopCoords.add(new int[]{1, -1});
-        bishopCoords.add(new int[]{2, -2});
+        BISHOP_COORD.add(new int[]{1, -1});
+        BISHOP_COORD.add(new int[]{2, -2});
 
         // Lower-Right
-        bishopCoords.add(new int[]{-1, 1});
-        bishopCoords.add(new int[]{-2, 2});
+        BISHOP_COORD.add(new int[]{-1, 1});
+        BISHOP_COORD.add(new int[]{-2, 2});
     }
 
     public List<int[]> getMovableCoords() {
-        return bishopCoords;
+        return BISHOP_COORD;
     }
 }

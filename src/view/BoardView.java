@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import model.BoardSize;
 import model.Eagle;
 import model.Flag;
 import model.GameModel;
@@ -30,14 +31,12 @@ public class BoardView
     private static final Color SKY_COLOR = new Color(255, 255, 255);
     private static final Color OCEAN_COLOR = new Color(0, 119, 190);
     private static final String FOLDER_PATH = "src/images";
-    private final Toolkit t = Toolkit.getDefaultToolkit();
-    private final GameView gameView;
+    private final Toolkit TOOLKIT = Toolkit.getDefaultToolkit();
+    private final GameView GAMEVIEW;
     private Square[][] squares;
-    private int row;
-    private int column;
 
-    BoardView(GameView gameView) {
-        this.gameView = gameView;
+    BoardView(GameView GAMEVIEW) {
+        this.GAMEVIEW = GAMEVIEW;
     }
 
     private static int gridCoord(int i) {
@@ -48,23 +47,27 @@ public class BoardView
         return BOARD_MARGIN + SQUARE_SIZE * i + PIC_MARGIN;
     }
 
+    static int getBoardMargin() {
+        return BOARD_MARGIN;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        drawSquare(g, row, column);
+        drawSquare(g, BoardSize.BOARD_ROWS, BoardSize.BOARD_COLUMNS);
         drawLines(g);
-        drawEagle(g, gameView.getEagleList());
-        drawShark(g, gameView.getSharkList());
-        drawFlag(g, gameView.getFlagList());
-        drawNumber(g, row, column);
+        drawEagle(g, GAMEVIEW.getEagleList());
+        drawShark(g, GAMEVIEW.getSharkList());
+        drawFlag(g, GAMEVIEW.getFlagList());
+        drawNumber(g, BoardSize.BOARD_ROWS, BoardSize.BOARD_COLUMNS);
     }
 
     private void drawSquare(Graphics g, int numberOfRows, int numberOfColumns) {
         for (int i = 0; i < numberOfRows; i++) {
             for (int j = 0; j < numberOfColumns; j++) {
 
-                if (squares[i][j].getSquareNo() - 1 < GameModel.getROW() / 2 * GameModel.getCOLUMN()) {
+                if (squares[i][j].getSQUARE_NUMBER() - 1 < BoardSize.BOARD_ROWS / 2 * BoardSize.BOARD_COLUMNS) {
                     g.setColor(SKY_COLOR);
                 } else {
                     g.setColor(OCEAN_COLOR);
@@ -76,19 +79,23 @@ public class BoardView
         }
     }
 
-    public static int getBoardMargin() {
-        return BOARD_MARGIN;
+    private void drawFlag(Graphics g, List<Flag> flagList) {
+        int numberOfFlag = GAMEVIEW.getFlagList().size();
+
+        for (int i = 0; i < numberOfFlag; i++) {
+            g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/flag.png"), picGridCoord(flagList.get(i).getColumn()), picGridCoord(flagList.get(i).getRow()), PIC_SIZE, PIC_SIZE, this);
+        }
     }
 
     private void drawEagle(Graphics g, List<Eagle> eagleList) {
 
         for (Eagle eagle : eagleList) {
             if (eagle.getType() == Type.RED) {
-                g.drawImage(t.getImage(FOLDER_PATH + "/red_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+                g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/red_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
             } else if (eagle.getType() == Type.GREEN) {
-                g.drawImage(t.getImage(FOLDER_PATH + "/green_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+                g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/green_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
             } else if (eagle.getType() == Type.BLUE) {
-                g.drawImage(t.getImage(FOLDER_PATH + "/blue_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+                g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/blue_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
             }
         }
     }
@@ -97,11 +104,11 @@ public class BoardView
 
         for (Shark shark : sharkList) {
             if (shark.getType() == Type.RED) {
-                g.drawImage(t.getImage(FOLDER_PATH + "/red_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+                g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/red_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
             } else if (shark.getType() == Type.GREEN) {
-                g.drawImage(t.getImage(FOLDER_PATH + "/green_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+                g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/green_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
             } else if (shark.getType() == Type.BLUE) {
-                g.drawImage(t.getImage(FOLDER_PATH + "/blue_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+                g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/blue_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
             }
         }
     }
@@ -111,12 +118,12 @@ public class BoardView
         g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
 
         // draw the rows
-        for (int i = 0; i < row + 1; i++) {
+        for (int i = 0; i < BoardSize.BOARD_ROWS + 1; i++) {
             g.drawLine(BOARD_MARGIN, gridCoord(i), WIDTH - BOARD_MARGIN, gridCoord(i));
         }
 
         // draw the columns
-        for (int i = 0; i < column + 1; i++) {
+        for (int i = 0; i < BoardSize.BOARD_COLUMNS + 1; i++) {
             g.drawLine(gridCoord(i), BOARD_MARGIN, gridCoord(i), HEIGHT - BOARD_MARGIN);
         }
     }
@@ -125,7 +132,7 @@ public class BoardView
         // Draw the square number
         for (int i = 0; i < numberOfRows; i++) {
             for (int j = 0; j < numberOfColumns; j++) {
-                g.drawString(Integer.toString(squares[i][j].getSquareNo()), j * SQUARE_SIZE + 30, i * SQUARE_SIZE + 40);
+                g.drawString(Integer.toString(squares[i][j].getSQUARE_NUMBER()), j * SQUARE_SIZE + 30, i * SQUARE_SIZE + 40);
             }
         }
 
@@ -145,19 +152,6 @@ public class BoardView
 
     public void setSquares(Square[][] squares) {
         this.squares = squares;
-    }
-
-    public void setBoardSize(int row, int column) {
-        this.row = row;
-        this.column = column;
-    }
-
-    private void drawFlag(Graphics g, List<Flag> flagList) {
-        int numberOfFlag = gameView.getFlagList().size();
-
-        for (int i = 0; i < numberOfFlag; i++) {
-            g.drawImage(t.getImage(FOLDER_PATH + "/flag.png"), picGridCoord(flagList.get(i).getColumn()), picGridCoord(flagList.get(i).getRow()), PIC_SIZE, PIC_SIZE, this);
-        }
     }
 
     @Override

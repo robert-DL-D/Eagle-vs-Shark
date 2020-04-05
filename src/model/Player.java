@@ -5,23 +5,23 @@ import java.util.List;
 
 public class Player<T> {
 
-    private final List<T> pieceList;
+    private final List<T> PIECE_LIST;
 
-    public Player() {
-        pieceList = new ArrayList<>();
+    Player() {
+        PIECE_LIST = new ArrayList<>();
     }
 
-    public List<T> getPieceList() {
-        return pieceList;
+    public List<T> getPIECE_LIST() {
+        return PIECE_LIST;
     }
 
     public void addPiece(T piece) {
-        pieceList.add(piece);
+        PIECE_LIST.add(piece);
     }
 
     public T getPiece(int index) {
 
-        return pieceList.get(index);
+        return PIECE_LIST.get(index);
     }
 
 }

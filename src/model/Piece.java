@@ -43,11 +43,11 @@ public class Piece {
 
     private boolean validSquare(Square currentSquare, Square newSquare) {
 
-        if (newSquare.getPieceList().isEmpty()) {
+        if (newSquare.getPIECE_LIST().isEmpty()) {
             return true;
 
         } else if (newSquare.getPiece() instanceof Flag) {
-            return !((Flag) newSquare.getPiece()).getOwner().getPieceList().contains(currentSquare.getPiece());
+            return !((Flag) newSquare.getPiece()).getOwner().getPIECE_LIST().contains(currentSquare.getPiece());
 
         } else if (currentSquare.getPiece().getClass() != newSquare.getPiece().getClass()) {
             return true;
@@ -58,14 +58,14 @@ public class Piece {
 
     private void changePieceOnSquare(GameModel gameModel, Square currentSquare, Square newSquare) {
 
-        if (!newSquare.getPieceList().isEmpty()
+        if (!newSquare.getPIECE_LIST().isEmpty()
                 && (currentSquare.getPiece().getClass() != newSquare.getPiece().getClass())
                 && !(newSquare.getPiece() instanceof Flag)) {
 
             if (currentSquare.getPiece() instanceof Eagle) {
-                gameModel.getSharkPlayer().getPieceList().remove(newSquare.getPiece());
+                gameModel.getSHARK_PLAYER().getPIECE_LIST().remove(newSquare.getPiece());
             } else {
-                gameModel.getEaglePlayer().getPieceList().remove(newSquare.getPiece());
+                gameModel.getEAGLE_PLAYER().getPIECE_LIST().remove(newSquare.getPiece());
 
             }
 
