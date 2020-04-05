@@ -5,6 +5,7 @@ public class Piece {
     private int row;
     private int column;
 
+    private Enum type;
     private boolean stunned = false;
 
     public boolean isStunned() {
@@ -15,99 +16,29 @@ public class Piece {
         this.stunned = stunned;
     }
 
-    Piece(int position) {
+    Piece(int position, Enum type) {
+        this.type = type;
 
         row = position / 9;
         column = (position - (row) * 9) - 1;
     }
 
-    public boolean moveDirection(GameModel gameModel, Square[][] squares, String directions) {
+    public boolean moveDirection(GameModel gameModel, Square[][] squares, int[] movementCoord) {
         Square currentSquare = squares[row][column];
 
-        switch (directions) {
-            case "Up":
-                if (row != 0) {
-                    return moveUp(gameModel, squares, currentSquare);
-                }
-                break;
-            case "Down":
-                if (row != 9) {
-                    return moveDown(gameModel, squares, currentSquare);
-                }
-                break;
-            case "Left":
-                if (column != 0) {
-                    return moveLeft(gameModel, squares, currentSquare);
-                }
-                break;
-            case "Right":
-                if (column != 8) {
-                    return moveRight(gameModel, squares, currentSquare);
-                }
-                break;
-        }
-
-        return false;
-    }
-
-    private boolean moveUp(GameModel gameModel, Square[][] squares, Square currentSquare) {
-
-        Square newSquare = squares[row - 1][column];
+        Square newSquare = squares[row + movementCoord[0]][column + movementCoord[1]];
 
         if (validSquare(currentSquare, newSquare)) {
 
-            row -= 1;
+            row += movementCoord[0];
+            column += movementCoord[1];
             changePieceOnSquare(gameModel, currentSquare, newSquare);
 
             return true;
         }
 
         return false;
-    }
 
-    private boolean moveDown(GameModel gameModel, Square[][] squares, Square currentSquare) {
-
-        Square newSquare = squares[row + 1][column];
-
-        if (validSquare(currentSquare, newSquare)) {
-
-            row += 1;
-            changePieceOnSquare(gameModel, currentSquare, newSquare);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean moveLeft(GameModel gameModel, Square[][] squares, Square currentSquare) {
-
-        Square newSquare = squares[row][column - 1];
-
-        if (validSquare(currentSquare, newSquare)) {
-
-            column -= 1;
-            changePieceOnSquare(gameModel, currentSquare, newSquare);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean moveRight(GameModel gameModel, Square[][] squares, Square currentSquare) {
-
-        Square newSquare = squares[row][column + 1];
-
-        if (validSquare(currentSquare, newSquare)) {
-
-            column += 1;
-            changePieceOnSquare(gameModel, currentSquare, newSquare);
-
-            return true;
-        }
-
-        return false;
     }
 
     private boolean validSquare(Square currentSquare, Square newSquare) {
@@ -153,4 +84,7 @@ public class Piece {
         return column;
     }
 
+    public Enum getType() {
+        return type;
+    }
 }

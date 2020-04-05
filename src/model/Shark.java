@@ -1,9 +1,9 @@
 package model;
 
-public class Shark extends Piece {
+public abstract class Shark extends Movable {
 
-    public Shark(int position) {
-        super(position);
+    protected Shark(int position, Enum type) {
+        super(position, type);
 
     }
 }

@@ -33,8 +33,6 @@ public class AbilityPanel
         this.gameView = gameView;
         this.listener = listener;
 
-        setSize(160, 500);
-
         JLabel abilityLabel = new JLabel("Abilities");
         abilityLabel.setPreferredSize(new Dimension(150, 20));
         abilityLabel.setFont(new Font("Arial", Font.PLAIN, 18));

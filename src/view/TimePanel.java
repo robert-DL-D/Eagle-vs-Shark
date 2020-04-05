@@ -21,8 +21,6 @@ public class TimePanel
 
     TimePanel() {
 
-        setSize(100, 50);
-
         JLabel turnTimerLabel = new JLabel("Turn Timer");
         turnTimerLabel.setPreferredSize(new Dimension(150, 20));
         turnTimerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -49,7 +47,7 @@ public class TimePanel
             int turnTimerLimit = Integer.parseInt("30");
 
             public void run() {
-                timerLabel.setText(String.valueOf(turnTimerLimit--));
+                //timerLabel.setText(String.valueOf(turnTimerLimit--));
 
                 if (turnTimerLimit < 0) {
                     gameController.nextTurn();

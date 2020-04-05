@@ -22,8 +22,6 @@ public class GameModel {
 
         int increment = 1;
 
-        Square[][] squares = getSquares();
-
         for (int i = 0; i < ROW; i++) {
             for (int j = 0; j < COLUMN; j++) {
                 //System.out.print(increment + " ");

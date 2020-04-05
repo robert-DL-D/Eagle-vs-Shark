@@ -3,8 +3,9 @@ package view;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -14,24 +15,22 @@ import model.Flag;
 import model.GameModel;
 import model.Shark;
 import model.Square;
+import model.Type;
 
 public class BoardView
-        extends JPanel {
+        extends JPanel implements MouseListener {
 
     private static final int BOARD_MARGIN = 25;
     private static final int WIDTH = 590;
     private static final int HEIGHT = 650;
-    private static final int SQUARE_MARGIN = 2;
     private static final int SQUARE_SIZE = 60;
     private static final int PIC_SIZE = 58;
+    private static final int PIC_MARGIN = 2;
     private static final int AXIS_NUMBER_MARGIN = 40;
     private static final Color SKY_COLOR = new Color(255, 255, 255);
     private static final Color OCEAN_COLOR = new Color(0, 119, 190);
     private static final String FOLDER_PATH = "src/images";
     private final Toolkit t = Toolkit.getDefaultToolkit();
-    private final Image FLAG_IMAGE = t.getImage(FOLDER_PATH + "/flag.png");
-    private final Image EAGLE_IMAGE = t.getImage(FOLDER_PATH + "/eagle.png");
-    private final Image sharkImage = t.getImage(FOLDER_PATH + "/shark.png");
     private final GameView gameView;
     private Square[][] squares;
     private int row;
@@ -39,8 +38,6 @@ public class BoardView
 
     BoardView(GameView gameView) {
         this.gameView = gameView;
-
-        setSize(WIDTH, HEIGHT);
     }
 
     private static int gridCoord(int i) {
@@ -48,7 +45,7 @@ public class BoardView
     }
 
     private static int picGridCoord(int i) {
-        return BOARD_MARGIN + SQUARE_SIZE * i + SQUARE_MARGIN;
+        return BOARD_MARGIN + SQUARE_SIZE * i + PIC_MARGIN;
     }
 
     @Override
@@ -79,26 +76,33 @@ public class BoardView
         }
     }
 
+    public static int getBoardMargin() {
+        return BOARD_MARGIN;
+    }
+
     private void drawEagle(Graphics g, List<Eagle> eagleList) {
 
         for (Eagle eagle : eagleList) {
-            g.drawImage(EAGLE_IMAGE, picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+            if (eagle.getType() == Type.RED) {
+                g.drawImage(t.getImage(FOLDER_PATH + "/red_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+            } else if (eagle.getType() == Type.GREEN) {
+                g.drawImage(t.getImage(FOLDER_PATH + "/green_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+            } else if (eagle.getType() == Type.BLUE) {
+                g.drawImage(t.getImage(FOLDER_PATH + "/blue_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+            }
         }
     }
 
     private void drawShark(Graphics g, List<Shark> sharkList) {
 
         for (Shark shark : sharkList) {
-            g.drawImage(sharkImage, picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
-
-        }
-    }
-
-    private void drawFlag(Graphics g, List<Flag> flagList) {
-        int numberOfFlag = gameView.getFlagList().size();
-
-        for (int i = 0; i < numberOfFlag; i++) {
-            g.drawImage(FLAG_IMAGE, picGridCoord(flagList.get(i).getColumn()), picGridCoord(flagList.get(i).getRow()), PIC_SIZE, PIC_SIZE, this);
+            if (shark.getType() == Type.RED) {
+                g.drawImage(t.getImage(FOLDER_PATH + "/red_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+            } else if (shark.getType() == Type.GREEN) {
+                g.drawImage(t.getImage(FOLDER_PATH + "/green_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+            } else if (shark.getType() == Type.BLUE) {
+                g.drawImage(t.getImage(FOLDER_PATH + "/blue_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+            }
         }
     }
 
@@ -148,4 +152,37 @@ public class BoardView
         this.column = column;
     }
 
+    private void drawFlag(Graphics g, List<Flag> flagList) {
+        int numberOfFlag = gameView.getFlagList().size();
+
+        for (int i = 0; i < numberOfFlag; i++) {
+            g.drawImage(t.getImage(FOLDER_PATH + "/flag.png"), picGridCoord(flagList.get(i).getColumn()), picGridCoord(flagList.get(i).getRow()), PIC_SIZE, PIC_SIZE, this);
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        System.out.println("mouseClicked");
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        System.out.println("mousePressed");
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }

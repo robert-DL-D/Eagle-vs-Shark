@@ -1,9 +1,9 @@
 package model;
 
-public class Eagle extends Piece {
+public abstract class Eagle extends Movable {
 
-    public Eagle(int position) {
-        super(position);
+    protected Eagle(int position, Enum type) {
+        super(position, type);
     }
 
 }

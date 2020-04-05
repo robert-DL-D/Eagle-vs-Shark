@@ -4,18 +4,27 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import model.Eagle;
+import model.EagleBlue;
+import model.EagleGreen;
+import model.EagleRed;
 import model.Flag;
 import model.GameModel;
+import model.Movable;
 import model.Piece;
 import model.Player;
 import model.Shark;
+import model.SharkBlue;
+import model.SharkGreen;
+import model.SharkRed;
 import model.Square;
+import model.Type;
 import view.GameView;
 
 public class GameController {
 
     private GameView gameView;
     private GameModel gameModel;
+    private Player player;
 
     public GameController(GameView gameView, GameModel gameModel) {
         this.gameView = gameView;
@@ -29,29 +38,36 @@ public class GameController {
         randomStartingPlayer();
         setCurrentPlayer();
 
-        addEagle(38);
-        addEagle(41);
-        addEagle(44);
-        addEagle(77);
-        addEagle(4);
-
-        addShark(47);
-        addShark(50);
-        addShark(53);
-        addShark(14);
-        addShark(85);
-
-        addFlag(5, gameModel.getEaglePlayer());
-        addFlag(86, gameModel.getSharkPlayer());
+        autoAddPieces();
 
         gameView.setSharkList(gameModel.getSharkPlayer().getPieceList());
         gameView.setEagleList(gameModel.getEaglePlayer().getPieceList());
         gameView.setFlagList(gameModel.getFlagList());
-        gameView.getTurnPanel().updatePieceJList();
+        gameView.getTurnPanel().updateTurnText();
+        gameView.getTurnPanel().setButtonText();
         gameView.getAbilityPanel().updatePieceJList();
         gameView.getTimePanel().setGameController(this);
 
-        //printArray();
+    }
+
+    private void autoAddPieces() {
+
+        addEagle(38, Type.RED);
+        addEagle(41, Type.RED);
+        addEagle(44, Type.GREEN);
+        addEagle(77, Type.GREEN);
+        addEagle(4, Type.BLUE);
+        addEagle(21, Type.BLUE);
+
+        addShark(47, Type.RED);
+        addShark(50, Type.RED);
+        addShark(53, Type.GREEN);
+        addShark(14, Type.GREEN);
+        addShark(85, Type.BLUE);
+        addShark(61, Type.BLUE);
+
+        addFlag(5, gameModel.getEaglePlayer(), Type.FLAG);
+        addFlag(86, gameModel.getSharkPlayer(), Type.FLAG);
     }
 
     private void randomStartingPlayer() {
@@ -71,29 +87,56 @@ public class GameController {
 
     }
 
-    private void addShark(int position) {
+    private void addShark(int position, Enum type) {
 
-        Shark shark = new Shark(position);
-        gameModel.getSharkPlayer().addPiece(shark);
+        if (type == Type.RED) {
+            SharkRed shark = new SharkRed(position, Type.RED);
+            gameModel.getSharkPlayer().addPiece(shark);
 
-        Square square = gameModel.getSquares()[shark.getRow()][shark.getColumn()];
-        square.addPiece(shark);
+            Square square = gameModel.getSquares()[shark.getRow()][shark.getColumn()];
+            square.addPiece(shark);
+        } else if (type == Type.GREEN) {
+            SharkGreen shark = new SharkGreen(position, Type.GREEN);
+            gameModel.getSharkPlayer().addPiece(shark);
+
+            Square square = gameModel.getSquares()[shark.getRow()][shark.getColumn()];
+            square.addPiece(shark);
+        } else if (type == Type.BLUE) {
+            SharkBlue shark = new SharkBlue(position, Type.BLUE);
+            gameModel.getSharkPlayer().addPiece(shark);
+
+            Square square = gameModel.getSquares()[shark.getRow()][shark.getColumn()];
+            square.addPiece(shark);
+        }
+    }
+
+    private void addEagle(int position, Enum type) {
+
+        if (type == Type.RED) {
+            EagleRed eagle = new EagleRed(position, Type.RED);
+            gameModel.getEaglePlayer().addPiece(eagle);
+
+            Square square = gameModel.getSquares()[eagle.getRow()][eagle.getColumn()];
+            square.addPiece(eagle);
+        } else if (type == Type.GREEN) {
+            EagleGreen eagle = new EagleGreen(position, Type.GREEN);
+            gameModel.getEaglePlayer().addPiece(eagle);
+
+            Square square = gameModel.getSquares()[eagle.getRow()][eagle.getColumn()];
+            square.addPiece(eagle);
+        } else if (type == Type.BLUE) {
+            Eagle eagle = new EagleBlue(position, Type.BLUE);
+            gameModel.getEaglePlayer().addPiece(eagle);
+
+            Square square = gameModel.getSquares()[eagle.getRow()][eagle.getColumn()];
+            square.addPiece(eagle);
+        }
 
     }
 
-    private void addEagle(int position) {
+    private void addFlag(int position, Player owner, Enum type) {
 
-        Eagle eagle = new Eagle(position);
-        gameModel.getEaglePlayer().addPiece(eagle);
-
-        Square square = gameModel.getSquares()[eagle.getRow()][eagle.getColumn()];
-        square.addPiece(eagle);
-
-    }
-
-    private void addFlag(int position, Player owner) {
-
-        Flag flag = new Flag(position, owner);
+        Flag flag = new Flag(position, owner, type);
 
         gameModel.getFlagList().add(flag);
 
@@ -101,30 +144,33 @@ public class GameController {
         square.addPiece(flag);
     }
 
-    public void movePiece(int index, String direction) {
+    public void movePiece(int index, int[] movementCoord) {
 
-        boolean moved;
-
+        // -1 index means nothing is selected
         if (index != -1) {
 
             Player<Eagle> eaglePlayer = gameModel.getEaglePlayer();
             Player<Shark> sharkPlayer = gameModel.getSharkPlayer();
+            boolean moved;
 
             if (gameModel.isEagleTurn()) {
-                moved = eaglePlayer.getPiece(index).moveDirection(gameModel, gameModel.getSquares(), direction);
+                moved = eaglePlayer.getPiece(index).moveDirection(gameModel, gameModel.getSquares(), movementCoord);
             } else {
-                moved = sharkPlayer.getPiece(index).moveDirection(gameModel, gameModel.getSquares(), direction);
+                moved = sharkPlayer.getPiece(index).moveDirection(gameModel, gameModel.getSquares(), movementCoord);
             }
 
             if (moved) {
+                gameView.repaint();
 
                 gameView.setEagleList(eaglePlayer.getPieceList());
                 gameView.setSharkList(sharkPlayer.getPieceList());
-                gameView.getTurnPanel().setButtonStatus(false);
-                gameView.getTurnPanel().updatePieceJList();
+                gameView.getTurnPanel().setEnabledButton(false);
+                gameView.getTurnPanel().updateTurnText();
+                gameView.getTurnPanel().setButtonText();
+
+                victoryCondition();
             }
         }
-        //printArray();
     }
 
     public void useAbility(int index, String actionCommand) {
@@ -152,25 +198,7 @@ public class GameController {
         }
     }
 
-    private void printArray() {
-        for (int i = 0; i < GameModel.getROW(); i++) {
-            for (int j = 0; j < GameModel.getCOLUMN(); j++) {
-                if (gameModel.getSquares()[i][j].getPiece() == null) {
-                    System.out.print("0");
-                } else {
-                    /*System.out.println("i: "+i+" j: "+j
-                            +" x: "+gameModel.getSquares()[i][j].getPiece().getX()
-                            +" y: "+gameModel.getSquares()[i][j].getPiece().getY());*/
-                    System.out.print("1");
-                }
-            }
-            System.out.print("\n");
-        }
-    }
-
     public void nextTurn() {
-
-        victoryCondition();
 
         if (gameModel.isEagleTurn()) {
             gameModel.setIsEagleTurn(false);
@@ -180,8 +208,9 @@ public class GameController {
 
         setCurrentPlayer();
 
-        gameView.getTurnPanel().updatePieceJList();
-        gameView.getTurnPanel().setButtonStatus(true);
+        gameView.getTurnPanel().updateTurnText();
+        gameView.getTurnPanel().setButtonText();
+        gameView.getTurnPanel().setEnabledButton(true);
         gameView.getAbilityPanel().updatePieceJList();
         gameView.getTimePanel().resetTimer();
 
@@ -203,4 +232,15 @@ public class GameController {
         }
     }
 
+    public Movable getEaglePiece(int selectedPieceIndex) {
+
+        return gameModel.getEaglePlayer().getPiece(selectedPieceIndex);
+
+    }
+
+    public Movable getSharkPiece(int selectedPieceIndex) {
+
+        return gameModel.getSharkPlayer().getPiece(selectedPieceIndex);
+
+    }
 }
