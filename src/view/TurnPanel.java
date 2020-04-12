@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -24,14 +23,13 @@ public class TurnPanel
 
     private final GameView GAMEVIEW;
     private final ActionListener ACTIONLISTENER;
-    private boolean isEaglePlayer;
-    private final List<JButton> JBUTTON_LIST = new ArrayList<>();
+    private boolean isEaglePlayerTurn;
     private final List<JButton> PIECE_BUTTON_LIST = new ArrayList<>();
     private int pressedButton;
 
-    TurnPanel(GameView GAMEVIEW, ActionListener ACTIONLISTENER) {
-        this.GAMEVIEW = GAMEVIEW;
-        this.ACTIONLISTENER = ACTIONLISTENER;
+    TurnPanel(GameView gameView, ActionListener actionListener) {
+        GAMEVIEW = gameView;
+        ACTIONLISTENER = actionListener;
 
         turnLabel = new JLabel();
         turnLabel.setPreferredSize(new Dimension(200, 20));
@@ -59,7 +57,7 @@ public class TurnPanel
 
     public void updateTurnText() {
 
-        turnLabel.setText((isEaglePlayer ? "Eagle" : "Shark") + "'s turn");
+        turnLabel.setText((isEaglePlayerTurn ? "Eagle" : "Shark") + "'s turn");
     }
 
     int getSelectedPieceIndex() {
@@ -67,9 +65,33 @@ public class TurnPanel
 
     }
 
-    public void setEnabledButton(boolean enabled) {
-        for (JButton button : JBUTTON_LIST) {
-            button.setEnabled(enabled);
+    public void disableAllPieceButton() {
+        for (JButton button : PIECE_BUTTON_LIST) {
+            button.setEnabled(false);
+        }
+    }
+
+    public void setEnabledButton() {
+        int size = PIECE_BUTTON_LIST.size();
+
+        for (int i = 0; i < size; i++) {
+
+            if (isEaglePlayerTurn) {
+                List<Eagle> eagleList = GAMEVIEW.getEagleList();
+                Eagle eagle = eagleList.get(i);
+
+                if (eagle.isStunned()) {
+                    PIECE_BUTTON_LIST.get(i).setEnabled(false);
+                }
+
+            } else {
+                List<Shark> sharkList = GAMEVIEW.getSharkList();
+                Shark shark = sharkList.get(i);
+
+                if (shark.isStunned()) {
+                    PIECE_BUTTON_LIST.get(i).setEnabled(false);
+                }
+            }
         }
     }
 
@@ -79,26 +101,35 @@ public class TurnPanel
         for (int i = 0; i < size; i++) {
             JButton button = PIECE_BUTTON_LIST.get(i);
 
-            if (isEaglePlayer) {
-
+            if (isEaglePlayerTurn) {
                 List<Eagle> eagleList = GAMEVIEW.getEagleList();
-
                 Eagle eagle = eagleList.get(i);
-                button.setText(eagle.getType() + " Eagle " + (i + 1) + ": " + (eagle.getRow() + 1) + " " + (eagle.getColumn() + 1));
+
+                String s = eagle.getType() + " Eagle " + (i + 1) + ": " + (eagle.getRow() + 1) + " " + (eagle.getColumn() + 1);
+
+                if (eagle.isStunned()) {
+                    s += " STUNNED";
+                }
+
+                button.setText(s);
 
             } else {
-
                 List<Shark> sharkList = GAMEVIEW.getSharkList();
-
                 Shark shark = sharkList.get(i);
-                button.setText(shark.getType() + " Shark " + (i + 1) + ": " + (shark.getRow() + 1) + " " + (shark.getColumn() + 1));
 
+                String s = shark.getType() + " Shark " + (i + 1) + ": " + (shark.getRow() + 1) + " " + (shark.getColumn() + 1);
+
+                if (shark.isStunned()) {
+                    s += " STUNNED";
+                }
+
+                button.setText(s);
             }
         }
     }
 
     public void setIsEaglePlayer(boolean isEaglePlayer) {
-        this.isEaglePlayer = isEaglePlayer;
+        this.isEaglePlayerTurn = isEaglePlayer;
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 public class SharkGreen extends Shark {
 
     private final List<int[]> BISHOP_COORD = new LinkedList<>();
+    private Enum ability = Abilities.STUN;
 
     public SharkGreen(int position, Enum type) {
         super(position, type);
@@ -27,7 +28,13 @@ public class SharkGreen extends Shark {
         BISHOP_COORD.add(new int[]{-2, 2});
     }
 
+    @Override
     public List<int[]> getMovableCoords() {
         return BISHOP_COORD;
+    }
+
+    @Override
+    public Enum getAbility() {
+        return ability;
     }
 }

@@ -94,7 +94,9 @@ public class GameView
 
         if ("Next Turn".equals(actionCommand)) {
             gameController.updateNextTurn();
-        } else if ("Stun".equals(actionCommand)) {
+        } else if ("STUN".equals(actionCommand)) {
+            getABILITY_PANEL().updatePieceJList();
+        } else if ("Use Ability".equals(actionCommand)) {
             gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem(), e.getActionCommand());
         } else if (actionCommand.contains("Eagle")) {
             MOVEMENT_PANEL.updateMoveJList(TURN_PANEL.getSelectedPieceIndex(), gameController.getEaglePiece(TURN_PANEL.getSelectedPieceIndex()));

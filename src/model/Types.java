@@ -1,6 +1,6 @@
 package model;
 
-public enum Type {
+public enum Types {
 
     RED, GREEN, BLUE, FLAG;
 
@@ -21,9 +21,7 @@ public enum Type {
                 return "FLAG";
 
             default:
-                return "";
-
+                return "NONE";
         }
     }
-
 }

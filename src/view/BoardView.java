@@ -13,10 +13,9 @@ import javax.swing.JPanel;
 import model.BoardSize;
 import model.Eagle;
 import model.Flag;
-import model.GameModel;
 import model.Shark;
 import model.Square;
-import model.Type;
+import model.Types;
 
 public class BoardView
         extends JPanel implements MouseListener {
@@ -90,11 +89,11 @@ public class BoardView
     private void drawEagle(Graphics g, List<Eagle> eagleList) {
 
         for (Eagle eagle : eagleList) {
-            if (eagle.getType() == Type.RED) {
+            if (eagle.getType() == Types.RED) {
                 g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/red_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
-            } else if (eagle.getType() == Type.GREEN) {
+            } else if (eagle.getType() == Types.GREEN) {
                 g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/green_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
-            } else if (eagle.getType() == Type.BLUE) {
+            } else if (eagle.getType() == Types.BLUE) {
                 g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/blue_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
             }
         }
@@ -103,11 +102,11 @@ public class BoardView
     private void drawShark(Graphics g, List<Shark> sharkList) {
 
         for (Shark shark : sharkList) {
-            if (shark.getType() == Type.RED) {
+            if (shark.getType() == Types.RED) {
                 g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/red_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
-            } else if (shark.getType() == Type.GREEN) {
+            } else if (shark.getType() == Types.GREEN) {
                 g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/green_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
-            } else if (shark.getType() == Type.BLUE) {
+            } else if (shark.getType() == Types.BLUE) {
                 g.drawImage(TOOLKIT.getImage(FOLDER_PATH + "/blue_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
             }
         }

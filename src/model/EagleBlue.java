@@ -6,6 +6,7 @@ import java.util.List;
 public class EagleBlue extends Eagle {
 
     private final List<int[]> QUEEN_COORD = new LinkedList<>();
+    private Enum ability = Abilities.PH1;
 
     public EagleBlue(int position, Enum type) {
         super(position, type);
@@ -35,7 +36,13 @@ public class EagleBlue extends Eagle {
         QUEEN_COORD.add(new int[]{-1, 1});
     }
 
+    @Override
     public List<int[]> getMovableCoords() {
         return QUEEN_COORD;
+    }
+
+    @Override
+    public Enum getAbility() {
+        return ability;
     }
 }

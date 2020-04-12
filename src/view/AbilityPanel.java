@@ -1,5 +1,7 @@
 package view;
 
+import com.sun.istack.internal.NotNull;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -23,11 +25,11 @@ public class AbilityPanel
         implements ActionListener {
 
     private final JList<String> PIECE_JLIST;
+    private final List<JButton> ABILITIES_JBUTTON_LIST;
 
     private final GameView GAMEVIEW;
     private final ActionListener ACTIONLISTENER;
-    private final List<JButton> JBUTTON_LIST = new ArrayList<>();
-    private boolean isEaglePlayer;
+    private boolean isEaglePlayerTurn;
 
     AbilityPanel(GameView GAMEVIEW, ActionListener ACTIONLISTENER, Color background) {
         this.GAMEVIEW = GAMEVIEW;
@@ -39,15 +41,25 @@ public class AbilityPanel
         abilityLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(abilityLabel);
 
+        ABILITIES_JBUTTON_LIST = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            JButton jButton = new JButton();
+            ABILITIES_JBUTTON_LIST.add(jButton);
+            jButton.setPreferredSize(new Dimension(135, 30));
+            jButton.addActionListener(this);
+            add(jButton);
+        }
+
         PIECE_JLIST = new JList<>();
         PIECE_JLIST.setBackground(background);
         PIECE_JLIST.setBorder(new LineBorder(Color.BLACK));
         PIECE_JLIST.setFont(new Font("Arial", Font.PLAIN, 18));
         PIECE_JLIST.setLocation(10, 50);
+        //PIECE_JLIST.setVisible(false);
+        PIECE_JLIST.setVisible(true);
         add(PIECE_JLIST);
 
-        JButton jButton = new JButton("Stun");
-        JBUTTON_LIST.add(jButton);
+        JButton jButton = new JButton("Use Ability");
         jButton.setPreferredSize(new Dimension(135, 30));
         jButton.addActionListener(this);
         add(jButton);
@@ -58,9 +70,35 @@ public class AbilityPanel
         ACTIONLISTENER.actionPerformed(e);
     }
 
+    public void setButtonText() {
+
+        int size = ABILITIES_JBUTTON_LIST.size();
+        for (int i = 0; i < size; i++) {
+            JButton button = ABILITIES_JBUTTON_LIST.get(i);
+
+            if (isEaglePlayerTurn) {
+                List<Eagle> eagleList = GAMEVIEW.getEagleList();
+                Eagle eagle = eagleList.get(i * 2);
+
+                String s = eagle.getAbility().toString();
+
+                button.setText(s);
+
+            } else {
+                List<Shark> sharkList = GAMEVIEW.getSharkList();
+                Shark shark = sharkList.get(i * 2);
+
+                @NotNull
+                String s = shark.getAbility().toString();
+
+                button.setText(s);
+            }
+        }
+    }
+
     public void updatePieceJList() {
 
-        if (isEaglePlayer) {
+        if (isEaglePlayerTurn) {
 
             List<Shark> sharkList = GAMEVIEW.getSharkList();
             int sharkListSize = sharkList.size();
@@ -94,7 +132,7 @@ public class AbilityPanel
     }
 
     public void setIsEaglePlayer(boolean isEaglePlayer) {
-        this.isEaglePlayer = isEaglePlayer;
+        this.isEaglePlayerTurn = isEaglePlayer;
     }
 
 }

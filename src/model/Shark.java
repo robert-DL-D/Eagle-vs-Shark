@@ -6,4 +6,5 @@ public abstract class Shark extends MovablePiece {
         super(position, type);
 
     }
+
 }
