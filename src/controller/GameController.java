@@ -9,7 +9,7 @@ import model.EagleGreen;
 import model.EagleRed;
 import model.Flag;
 import model.GameModel;
-import model.Movable;
+import model.MovablePiece;
 import model.Piece;
 import model.Player;
 import model.Shark;
@@ -45,7 +45,6 @@ public class GameController {
         gameView.getTURN_PANEL().setButtonText();
         gameView.getABILITY_PANEL().updatePieceJList();
         gameView.getTIME_PANEL().setGameController(this);
-
     }
 
     private void autoAddPieces() {
@@ -66,6 +65,7 @@ public class GameController {
 
         addFlag(5, gameModel.getEAGLE_PLAYER(), Type.FLAG);
         addFlag(86, gameModel.getSHARK_PLAYER(), Type.FLAG);
+
     }
 
     private void randomStartingPlayer() {
@@ -166,7 +166,7 @@ public class GameController {
                 gameView.getTURN_PANEL().updateTurnText();
                 gameView.getTURN_PANEL().setButtonText();
 
-                victoryCondition();
+                checkVictoryCondition();
             }
         }
     }
@@ -175,13 +175,13 @@ public class GameController {
 
         switch (actionCommand) {
             case "Stun":
-                stun(index);
+                stunPiece(index);
                 break;
         }
 
     }
 
-    public void stun(int index) {
+    public void stunPiece(int index) {
 
         if (gameModel.isEagleTurn()) {
             gameModel.getSHARK_PLAYER().getPIECE_LIST().get(index).setStunned(true);
@@ -196,7 +196,7 @@ public class GameController {
         }
     }
 
-    public void nextTurn() {
+    public void updateNextTurn() {
 
         if (gameModel.isEagleTurn()) {
             gameModel.setIsEagleTurn(false);
@@ -209,12 +209,13 @@ public class GameController {
         gameView.getTURN_PANEL().updateTurnText();
         gameView.getTURN_PANEL().setButtonText();
         gameView.getTURN_PANEL().setEnabledButton(true);
+        gameView.getMOVEMENT_PANEL().getMOVE_JLIST().setVisible(false);
         gameView.getABILITY_PANEL().updatePieceJList();
         gameView.getTIME_PANEL().resetTimer();
 
     }
 
-    private void victoryCondition() {
+    private void checkVictoryCondition() {
 
         for (Flag flag : gameModel.getFLAG_LIST()) {
 
@@ -230,13 +231,13 @@ public class GameController {
         }
     }
 
-    public Movable getEaglePiece(int selectedPieceIndex) {
+    public MovablePiece getEaglePiece(int selectedPieceIndex) {
 
         return gameModel.getEAGLE_PLAYER().getPiece(selectedPieceIndex);
 
     }
 
-    public Movable getSharkPiece(int selectedPieceIndex) {
+    public MovablePiece getSharkPiece(int selectedPieceIndex) {
 
         return gameModel.getSHARK_PLAYER().getPiece(selectedPieceIndex);
 

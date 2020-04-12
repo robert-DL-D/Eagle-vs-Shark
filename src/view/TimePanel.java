@@ -14,9 +14,7 @@ import controller.GameController;
 public class TimePanel
         extends JPanel {
 
-    private final JLabel TIMER_LABEL;
     private Timer currentTimer = new Timer();
-
     private GameController gameController;
 
     TimePanel() {
@@ -27,11 +25,11 @@ public class TimePanel
         turnTimerLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(turnTimerLabel);
 
-        TIMER_LABEL = new JLabel();
-        TIMER_LABEL.setPreferredSize(new Dimension(150, 20));
-        TIMER_LABEL.setFont(new Font("Arial", Font.PLAIN, 18));
-        TIMER_LABEL.setHorizontalAlignment(SwingConstants.CENTER);
-        add(TIMER_LABEL);
+        JLabel timerLabel = new JLabel();
+        timerLabel.setPreferredSize(new Dimension(150, 20));
+        timerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(timerLabel);
 
         createNewTimer(currentTimer);
 
@@ -50,7 +48,7 @@ public class TimePanel
                 //timerLabel.setText(String.valueOf(turnTimerLimit--));
 
                 if (turnTimerLimit < 0) {
-                    gameController.nextTurn();
+                    gameController.updateNextTurn();
                 }
 
             }

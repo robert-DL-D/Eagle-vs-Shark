@@ -13,10 +13,10 @@ public class GameModel {
     private boolean isEagleTurn;
 
     public GameModel() {
-        initSquare();
+        initializeSquare();
     }
 
-    private void initSquare() {
+    private void initializeSquare() {
 
         int increment = 1;
 

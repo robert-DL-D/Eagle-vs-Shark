@@ -28,7 +28,7 @@ public class Piece {
 
         Square newSquare = squares[row + movementCoord[0]][column + movementCoord[1]];
 
-        if (validSquare(currentSquare, newSquare)) {
+        if (checkValidNewSquare(currentSquare, newSquare)) {
 
             row += movementCoord[0];
             column += movementCoord[1];
@@ -41,7 +41,7 @@ public class Piece {
 
     }
 
-    private boolean validSquare(Square currentSquare, Square newSquare) {
+    private boolean checkValidNewSquare(Square currentSquare, Square newSquare) {
 
         if (newSquare.getPIECE_LIST().isEmpty()) {
             return true;
@@ -49,7 +49,7 @@ public class Piece {
         } else if (newSquare.getPiece() instanceof Flag) {
             return !((Flag) newSquare.getPiece()).getOwner().getPIECE_LIST().contains(currentSquare.getPiece());
 
-        } else if (currentSquare.getPiece().getClass() != newSquare.getPiece().getClass()) {
+        } else if (currentSquare.getPiece().getClass().getSuperclass() != newSquare.getPiece().getClass().getSuperclass()) {
             return true;
         }
 

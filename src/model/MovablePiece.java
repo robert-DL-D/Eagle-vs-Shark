@@ -2,9 +2,9 @@ package model;
 
 import java.util.List;
 
-public abstract class Movable extends Piece {
+public abstract class MovablePiece extends Piece {
 
-    Movable(int position, Enum type) {
+    MovablePiece(int position, Enum type) {
         super(position, type);
     }
 

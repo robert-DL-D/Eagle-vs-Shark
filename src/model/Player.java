@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player<T> {
+public class Player<T extends MovablePiece> {
 
     private final List<T> PIECE_LIST;
 

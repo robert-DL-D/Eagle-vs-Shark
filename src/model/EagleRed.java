@@ -25,8 +25,6 @@ public class EagleRed extends Eagle {
         // Right
         ROOK_COORD.add(new int[]{0, 1});
         ROOK_COORD.add(new int[]{0, 2});
-
-        //type = Type.RED;
     }
 
     public List<int[]> getMovableCoords() {

@@ -14,7 +14,7 @@ import javax.swing.border.LineBorder;
 
 import model.BoardSize;
 import model.Eagle;
-import model.Movable;
+import model.MovablePiece;
 import model.Shark;
 
 public class MovementPanel
@@ -24,7 +24,7 @@ public class MovementPanel
     private final JList<String> MOVE_JLIST;
     private final GameView GAMEVIEW;
     private final ActionListener ACTIONLISTENER;
-    private final List<int[]> MOVEMENT_COORD_LIST = new LinkedList<>();
+    private List<int[]> MOVEMENT_COORD_LIST = new LinkedList<>();
 
     MovementPanel(GameView GAMEVIEW, ActionListener ACTIONLISTENER, Color background) {
         this.GAMEVIEW = GAMEVIEW;
@@ -49,7 +49,11 @@ public class MovementPanel
         ACTIONLISTENER.actionPerformed(e);
     }
 
-    void updateMoveJList(int index, Movable piece) {
+    void updateMoveJList(int index, MovablePiece piece) {
+
+        if (!MOVEMENT_COORD_LIST.isEmpty()) {
+            MOVEMENT_COORD_LIST.clear();
+        }
 
         List<String> pieceCoordList = new LinkedList<>();
 
@@ -62,7 +66,8 @@ public class MovementPanel
                 validCoord[0] = eagle.getRow() + movablecoord[0] + 1;
                 validCoord[1] = eagle.getColumn() + movablecoord[1] + 1;
 
-                if (!(validCoord[0] < 1 || validCoord[0] > BoardSize.BOARD_ROWS || validCoord[1] < 1 || validCoord[1] > BoardSize.BOARD_COLUMNS)) {
+                if (!(validCoord[0] < 1 || validCoord[0] > BoardSize.BOARD_ROWS
+                        || validCoord[1] < 1 || validCoord[1] > BoardSize.BOARD_COLUMNS)) {
                     pieceCoordList.add(validCoord[0] + " " + validCoord[1]);
                     MOVEMENT_COORD_LIST.add(movablecoord);
                 }
@@ -97,4 +102,7 @@ public class MovementPanel
         return MOVEMENT_COORD_LIST.get(MOVE_JLIST.getSelectedIndex());
     }
 
+    public JList<String> getMOVE_JLIST() {
+        return MOVE_JLIST;
+    }
 }

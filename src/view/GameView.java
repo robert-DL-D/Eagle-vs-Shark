@@ -93,7 +93,7 @@ public class GameView
         String actionCommand = e.getActionCommand();
 
         if ("Next Turn".equals(actionCommand)) {
-            gameController.nextTurn();
+            gameController.updateNextTurn();
         } else if ("Stun".equals(actionCommand)) {
             gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem(), e.getActionCommand());
         } else if (actionCommand.contains("Eagle")) {
@@ -111,6 +111,10 @@ public class GameView
 
     public TurnPanel getTURN_PANEL() {
         return TURN_PANEL;
+    }
+
+    public MovementPanel getMOVEMENT_PANEL() {
+        return MOVEMENT_PANEL;
     }
 
     public AbilityPanel getABILITY_PANEL() {
