@@ -4,7 +4,7 @@ import java.util.List;
 
 public abstract class MovablePiece extends Piece {
 
-    private boolean stunned = false;
+    private boolean stunned;
 
     public boolean isStunned() {
         return stunned;
@@ -41,7 +41,7 @@ public abstract class MovablePiece extends Piece {
             return true;
 
         } else if (newSquare.getPiece() instanceof Flag) {
-            return !((Flag) newSquare.getPiece()).getOwner().getPIECE_LIST().contains(currentSquare.getPiece());
+            return !((Flag) newSquare.getPiece()).getOWNER().getPIECE_LIST().contains(currentSquare.getPiece());
 
         } else if (currentSquare.getPiece().getClass().getSuperclass() != newSquare.getPiece().getClass().getSuperclass()) {
             return true;
@@ -72,6 +72,6 @@ public abstract class MovablePiece extends Piece {
 
     public abstract List<int[]> getMovableCoords();
 
-    public abstract Enum getAbility();
+    public abstract Enum getABILITY();
 
 }

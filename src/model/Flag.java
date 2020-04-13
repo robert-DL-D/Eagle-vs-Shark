@@ -2,15 +2,15 @@ package model;
 
 public class Flag extends Piece {
 
-    private final Player owner;
+    private final Player OWNER;
 
-    public Flag(int position, Player owner, Enum type) {
+    Flag(int position, Player owner, Enum type) {
         super(position, type);
 
-        this.owner = owner;
+        OWNER = owner;
     }
 
-    Player getOwner() {
-        return owner;
+    Player getOWNER() {
+        return OWNER;
     }
 }

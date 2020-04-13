@@ -32,7 +32,7 @@ public class TurnPanel
         ACTIONLISTENER = actionListener;
 
         turnLabel = new JLabel();
-        turnLabel.setPreferredSize(new Dimension(200, 20));
+        turnLabel.setPreferredSize(new Dimension(300, 20));
         turnLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(turnLabel);
@@ -49,14 +49,13 @@ public class TurnPanel
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        pressedButton = PIECE_BUTTON_LIST.indexOf(e.getSource());
+    public void actionPerformed(ActionEvent actionEvent) {
+        pressedButton = PIECE_BUTTON_LIST.indexOf(actionEvent.getSource());
 
-        ACTIONLISTENER.actionPerformed(e);
+        ACTIONLISTENER.actionPerformed(actionEvent);
     }
 
-    public void updateTurnText() {
-
+    void updateTurnText() {
         turnLabel.setText((isEaglePlayerTurn ? "Eagle" : "Shark") + "'s turn");
     }
 
@@ -65,23 +64,25 @@ public class TurnPanel
 
     }
 
-    public void disableAllPieceButton() {
+    void disableAllPieceButton() {
         for (JButton button : PIECE_BUTTON_LIST) {
             button.setEnabled(false);
         }
     }
 
-    public void setEnabledButton() {
-        int size = PIECE_BUTTON_LIST.size();
+    void setEnabledButton() {
+        for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
 
-        for (int i = 0; i < size; i++) {
+            JButton button = PIECE_BUTTON_LIST.get(i);
 
             if (isEaglePlayerTurn) {
                 List<Eagle> eagleList = GAMEVIEW.getEagleList();
                 Eagle eagle = eagleList.get(i);
 
                 if (eagle.isStunned()) {
-                    PIECE_BUTTON_LIST.get(i).setEnabled(false);
+                    button.setEnabled(false);
+                } else {
+                    button.setEnabled(true);
                 }
 
             } else {
@@ -89,14 +90,15 @@ public class TurnPanel
                 Shark shark = sharkList.get(i);
 
                 if (shark.isStunned()) {
-                    PIECE_BUTTON_LIST.get(i).setEnabled(false);
+                    button.setEnabled(false);
+                } else {
+                    button.setEnabled(true);
                 }
             }
         }
     }
 
-    public void setButtonText() {
-
+    void setButtonText() {
         int size = PIECE_BUTTON_LIST.size();
         for (int i = 0; i < size; i++) {
             JButton button = PIECE_BUTTON_LIST.get(i);
@@ -128,8 +130,8 @@ public class TurnPanel
         }
     }
 
-    public void setIsEaglePlayer(boolean isEaglePlayer) {
-        this.isEaglePlayerTurn = isEaglePlayer;
+    void setIsEaglePlayer(boolean isEaglePlayerTurn) {
+        this.isEaglePlayerTurn = isEaglePlayerTurn;
     }
 
 }

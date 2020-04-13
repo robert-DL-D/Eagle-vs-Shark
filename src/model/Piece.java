@@ -1,6 +1,6 @@
 package model;
 
-public class Piece {
+public abstract class Piece {
 
     int row;
     int column;

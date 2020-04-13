@@ -26,9 +26,9 @@ public class MovementPanel
     private final ActionListener ACTIONLISTENER;
     private List<int[]> MOVEMENT_COORD_LIST = new LinkedList<>();
 
-    MovementPanel(GameView GAMEVIEW, ActionListener ACTIONLISTENER, Color background) {
-        this.GAMEVIEW = GAMEVIEW;
-        this.ACTIONLISTENER = ACTIONLISTENER;
+    MovementPanel(GameView gameView, ActionListener actionListener, Color background) {
+        GAMEVIEW = gameView;
+        ACTIONLISTENER = actionListener;
 
         MOVE_JLIST = new JList<>();
         MOVE_JLIST.setBackground(background);
@@ -45,8 +45,8 @@ public class MovementPanel
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        ACTIONLISTENER.actionPerformed(e);
+    public void actionPerformed(ActionEvent actionEvent) {
+        ACTIONLISTENER.actionPerformed(actionEvent);
     }
 
     void updateMoveJList(int index, MovablePiece piece) {

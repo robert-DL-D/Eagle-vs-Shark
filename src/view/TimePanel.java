@@ -32,7 +32,6 @@ public class TimePanel
         add(timerLabel);
 
         createNewTimer(currentTimer);
-
     }
 
     private void createNewTimer(Timer currentTimer) {
@@ -55,7 +54,7 @@ public class TimePanel
         }, 0, 1000);
     }
 
-    public void resetTimer() {
+    void resetTimer() {
         currentTimer.cancel();
 
         Timer newTimer = new Timer();
@@ -64,7 +63,7 @@ public class TimePanel
         currentTimer = newTimer;
     }
 
-    public void setGameController(GameController gameController) {
+    void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
 

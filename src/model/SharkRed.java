@@ -6,9 +6,9 @@ import java.util.List;
 public class SharkRed extends Shark {
 
     private final List<int[]> KNIGHT_COORD = new LinkedList<>();
-    private Enum ability = Abilities.PH2;
+    private final Enum ABILITY = Abilities.PH2;
 
-    public SharkRed(int position, Enum type) {
+    SharkRed(int position, Enum type) {
         super(position, type);
 
         KNIGHT_COORD.add(new int[]{-1, 2});
@@ -31,7 +31,7 @@ public class SharkRed extends Shark {
     }
 
     @Override
-    public Enum getAbility() {
-        return ability;
+    public Enum getABILITY() {
+        return ABILITY;
     }
 }

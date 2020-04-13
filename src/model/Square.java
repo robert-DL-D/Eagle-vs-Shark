@@ -8,12 +8,11 @@ public class Square {
     private final int SQUARE_NUMBER;
     private final List<Piece> PIECE_LIST = new ArrayList<>();
 
-    Square(int SQUARE_NUMBER) {
-        this.SQUARE_NUMBER = SQUARE_NUMBER;
-
+    Square(int squareNumber) {
+        SQUARE_NUMBER = squareNumber;
     }
 
-    public void addPiece(Piece piece) {
+    void addPiece(Piece piece) {
         PIECE_LIST.add(piece);
     }
 

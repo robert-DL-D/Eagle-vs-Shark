@@ -4,9 +4,9 @@ import java.util.List;
 
 public class SharkBlue extends Shark {
 
-    private Enum ability = Abilities.PH1;
+    private final Enum ABILITY = Abilities.PH1;
 
-    public SharkBlue(int position, Enum type) {
+    SharkBlue(int position, Enum type) {
         super(position, type);
 
     }
@@ -17,7 +17,7 @@ public class SharkBlue extends Shark {
     }
 
     @Override
-    public Enum getAbility() {
-        return ability;
+    public Enum getABILITY() {
+        return ABILITY;
     }
 }

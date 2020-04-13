@@ -6,9 +6,9 @@ import java.util.List;
 public class EagleRed extends Eagle {
 
     private final List<int[]> ROOK_COORD = new LinkedList<>();
-    private Enum ability = Abilities.STUN;
+    private final Enum ABILITY = Abilities.STUN;
 
-    public EagleRed(int position, Enum type) {
+    EagleRed(int position, Enum type) {
         super(position, type);
 
         // Up
@@ -36,7 +36,7 @@ public class EagleRed extends Eagle {
     }
 
     @Override
-    public Enum getAbility() {
-        return ability;
+    public Enum getABILITY() {
+        return ABILITY;
     }
 }

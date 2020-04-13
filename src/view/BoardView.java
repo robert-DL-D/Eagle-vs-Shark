@@ -34,48 +34,27 @@ public class BoardView
     private final GameView GAMEVIEW;
     private Square[][] squares;
 
-    BoardView(GameView GAMEVIEW) {
-        this.GAMEVIEW = GAMEVIEW;
+    BoardView(GameView gameView) {
+        GAMEVIEW = gameView;
+    }
+
+    private static void drawLines(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+
+        // draw the rows
+        for (int i = 0; i < BoardSize.BOARD_ROWS + 1; i++) {
+            g.drawLine(BOARD_MARGIN, gridCoord(i), WIDTH - BOARD_MARGIN, gridCoord(i));
+        }
+
+        // draw the columns
+        for (int i = 0; i < BoardSize.BOARD_COLUMNS + 1; i++) {
+            g.drawLine(gridCoord(i), BOARD_MARGIN, gridCoord(i), HEIGHT - BOARD_MARGIN);
+        }
     }
 
     private static int gridCoord(int i) {
         return i * SQUARE_SIZE + BOARD_MARGIN;
-    }
-
-    private static int picGridCoord(int i) {
-        return BOARD_MARGIN + SQUARE_SIZE * i + PIC_MARGIN;
-    }
-
-    static int getBoardMargin() {
-        return BOARD_MARGIN;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        drawSquare(g, BoardSize.BOARD_ROWS, BoardSize.BOARD_COLUMNS);
-        drawLines(g);
-        drawEagle(g, GAMEVIEW.getEagleList());
-        drawShark(g, GAMEVIEW.getSharkList());
-        drawFlag(g, GAMEVIEW.getFlagList());
-        drawNumber(g, BoardSize.BOARD_ROWS, BoardSize.BOARD_COLUMNS);
-    }
-
-    private void drawSquare(Graphics g, int numberOfRows, int numberOfColumns) {
-        for (int i = 0; i < numberOfRows; i++) {
-            for (int j = 0; j < numberOfColumns; j++) {
-
-                if (squares[i][j].getSQUARE_NUMBER() - 1 < BoardSize.BOARD_ROWS / 2 * BoardSize.BOARD_COLUMNS) {
-                    g.setColor(SKY_COLOR);
-                } else {
-                    g.setColor(OCEAN_COLOR);
-                }
-
-                g.fillRect(gridCoord(j), gridCoord(i), SQUARE_SIZE, SQUARE_SIZE);
-
-            }
-        }
     }
 
     private void drawFlag(Graphics g, List<Flag> flagList) {
@@ -112,44 +91,65 @@ public class BoardView
         }
     }
 
-    private void drawLines(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+    private static int picGridCoord(int i) {
+        return BOARD_MARGIN + SQUARE_SIZE * i + PIC_MARGIN;
+    }
 
-        // draw the rows
-        for (int i = 0; i < BoardSize.BOARD_ROWS + 1; i++) {
-            g.drawLine(BOARD_MARGIN, gridCoord(i), WIDTH - BOARD_MARGIN, gridCoord(i));
-        }
+    static int getBoardMargin() {
+        return BOARD_MARGIN;
+    }
 
-        // draw the columns
-        for (int i = 0; i < BoardSize.BOARD_COLUMNS + 1; i++) {
-            g.drawLine(gridCoord(i), BOARD_MARGIN, gridCoord(i), HEIGHT - BOARD_MARGIN);
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        drawSquare(g);
+        drawLines(g);
+        drawEagle(g, GAMEVIEW.getEagleList());
+        drawShark(g, GAMEVIEW.getSharkList());
+        drawFlag(g, GAMEVIEW.getFlagList());
+        drawNumber(g);
+    }
+
+    private void drawSquare(Graphics g) {
+        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
+            for (int j = 0; j < BoardSize.BOARD_COLUMNS; j++) {
+
+                if (squares[i][j].getSQUARE_NUMBER() - 1 < BoardSize.BOARD_ROWS / 2 * BoardSize.BOARD_COLUMNS) {
+                    g.setColor(SKY_COLOR);
+                } else {
+                    g.setColor(OCEAN_COLOR);
+                }
+
+                g.fillRect(gridCoord(j), gridCoord(i), SQUARE_SIZE, SQUARE_SIZE);
+
+            }
         }
     }
 
-    private void drawNumber(Graphics g, int numberOfRows, int numberOfColumns) {
+    private void drawNumber(Graphics g) {
         // Draw the square number
-        for (int i = 0; i < numberOfRows; i++) {
-            for (int j = 0; j < numberOfColumns; j++) {
+        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
+            for (int j = 0; j < BoardSize.BOARD_COLUMNS; j++) {
                 g.drawString(Integer.toString(squares[i][j].getSQUARE_NUMBER()), j * SQUARE_SIZE + 30, i * SQUARE_SIZE + 40);
             }
         }
 
         // Draw the Y-axis number
-        for (int i = 0; i < numberOfRows; i++) {
+        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
             g.drawString(Integer.toString(i + 1), 5, i * SQUARE_SIZE + AXIS_NUMBER_MARGIN);
 
         }
 
         // Draw the X-axis number
 
-        for (int i = 0; i < numberOfColumns; i++) {
+        for (int i = 0; i < BoardSize.BOARD_COLUMNS; i++) {
             g.setColor(Color.BLACK);
             g.drawString(Integer.toString(i + 1), i * SQUARE_SIZE + AXIS_NUMBER_MARGIN, 18);
         }
     }
 
-    public void setSquares(Square[][] squares) {
+    void setSquares(Square[][] squares) {
         this.squares = squares;
     }
 

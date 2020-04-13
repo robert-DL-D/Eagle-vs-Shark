@@ -4,9 +4,9 @@ import java.util.List;
 
 public class EagleGreen extends Eagle {
 
-    private Enum ability = Abilities.PH2;
+    private final Enum ABILITY = Abilities.PH2;
 
-    public EagleGreen(int position, Enum type) {
+    EagleGreen(int position, Enum type) {
         super(position, type);
 
     }
@@ -17,7 +17,7 @@ public class EagleGreen extends Eagle {
     }
 
     @Override
-    public Enum getAbility() {
-        return ability;
+    public Enum getABILITY() {
+        return ABILITY;
     }
 }
