@@ -1,7 +1,6 @@
 package controller;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import model.Eagle;
 import model.Flag;
@@ -30,18 +29,15 @@ public class GameController {
         // -1 index means nothing is selected
         if (index != -1) {
 
-            Player<Eagle> eaglePlayer = gameModel.getEAGLE_PLAYER();
-            Player<Shark> sharkPlayer = gameModel.getSHARK_PLAYER();
             boolean moved;
+            Player<Eagle> eagle_player = gameModel.getEAGLE_PLAYER();
+            Player<Shark> shark_player = gameModel.getSHARK_PLAYER();
+            Player<? extends MovablePiece> player = gameModel.isEagleTurn() ? eagle_player : shark_player;
 
-            if (gameModel.isEagleTurn()) {
-                moved = eaglePlayer.getPiece(index).moveDirection(gameModel, gameModel.getSQUARE_ARRAY(), movementCoord);
-            } else {
-                moved = sharkPlayer.getPiece(index).moveDirection(gameModel, gameModel.getSQUARE_ARRAY(), movementCoord);
-            }
+            moved = player.getPiece(index).updatePieceRowColumn(gameModel, gameModel.getSQUARE_ARRAY(), movementCoord);
 
             if (moved) {
-                gameView.updateViewAfterPieceMove(eaglePlayer, sharkPlayer);
+                gameView.updateViewAfterPieceMove(eagle_player, shark_player);
 
                 checkVictoryCondition();
             }
@@ -50,12 +46,13 @@ public class GameController {
 
     public void useAbility(int index, String actionCommand) {
 
+        if (index != -1) {
         /*switch (actionCommand) {
             case "Stun":*/
-        stunPiece(index);
-        //break;
-        //}
-
+            stunPiece(index);
+            //break;
+            //}
+        }
     }
 
     public void stunPiece(int index) {

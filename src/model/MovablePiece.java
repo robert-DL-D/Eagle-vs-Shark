@@ -18,9 +18,9 @@ public abstract class MovablePiece extends Piece {
         super(position, type);
     }
 
-    public boolean moveDirection(GameModel gameModel, Square[][] squares, int[] movementCoord) {
-        Square currentSquare = squares[row][column];
+    public boolean updatePieceRowColumn(GameModel gameModel, Square[][] squares, int[] movementCoord) {
 
+        Square currentSquare = squares[row][column];
         Square newSquare = squares[row + movementCoord[0]][column + movementCoord[1]];
 
         if (checkValidNewSquare(currentSquare, newSquare)) {
@@ -52,16 +52,18 @@ public abstract class MovablePiece extends Piece {
 
     private void changePieceOnSquare(GameModel gameModel, Square currentSquare, Square newSquare) {
 
+        Piece pieceOnCurrentSquare = currentSquare.getPiece();
+        Piece pieceOnNewSquare = newSquare.getPiece();
+
         if (!newSquare.getPIECE_LIST().isEmpty()
-                && (currentSquare.getPiece().getClass() != newSquare.getPiece().getClass())
-                && !(newSquare.getPiece() instanceof Flag)) {
+                && (pieceOnCurrentSquare.getClass() != pieceOnNewSquare.getClass())
+                && !(pieceOnNewSquare instanceof Flag)) {
 
-            if (currentSquare.getPiece() instanceof Eagle) {
-                gameModel.getSHARK_PLAYER().getPIECE_LIST().remove(newSquare.getPiece());
-            } else {
-                gameModel.getEAGLE_PLAYER().getPIECE_LIST().remove(newSquare.getPiece());
+            Player<? extends MovablePiece> player;
 
-            }
+            player = pieceOnCurrentSquare instanceof Eagle ? gameModel.getSHARK_PLAYER() : gameModel.getEAGLE_PLAYER();
+
+            player.getPIECE_LIST().remove(pieceOnNewSquare);
 
             newSquare.removePiece();
         }

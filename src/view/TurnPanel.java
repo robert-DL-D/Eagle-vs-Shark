@@ -61,7 +61,6 @@ public class TurnPanel
 
     int getSelectedPieceIndex() {
         return pressedButton;
-
     }
 
     void disableAllPieceButton() {
@@ -99,8 +98,8 @@ public class TurnPanel
     }
 
     void setButtonText() {
-        int size = PIECE_BUTTON_LIST.size();
-        for (int i = 0; i < size; i++) {
+
+        for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
             JButton button = PIECE_BUTTON_LIST.get(i);
 
             if (isEaglePlayerTurn) {

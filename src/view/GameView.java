@@ -102,9 +102,9 @@ public class GameView
         } else if (actionCommand.contains("Use Ability")) {
             gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem(), actionEvent.getActionCommand());
         } else if (actionCommand.contains("Eagle")) {
-            MOVEMENT_PANEL.updateMoveJList(TURN_PANEL.getSelectedPieceIndex(), gameController.getEaglePiece(TURN_PANEL.getSelectedPieceIndex()));
+            MOVEMENT_PANEL.updateMoveJList(gameController.getEaglePiece(TURN_PANEL.getSelectedPieceIndex()));
         } else if (actionCommand.contains("Shark")) {
-            MOVEMENT_PANEL.updateMoveJList(TURN_PANEL.getSelectedPieceIndex(), gameController.getSharkPiece(TURN_PANEL.getSelectedPieceIndex()));
+            MOVEMENT_PANEL.updateMoveJList(gameController.getSharkPiece(TURN_PANEL.getSelectedPieceIndex()));
         } else if (actionCommand.equals("Move")) {
             gameController.movePiece(TURN_PANEL.getSelectedPieceIndex(), MOVEMENT_PANEL.getMovementCoord());
         }
