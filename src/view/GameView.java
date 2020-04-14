@@ -49,42 +49,48 @@ public class GameView
         BOARDVIEW.setSize(590, 650);
         contentPane.add(BOARDVIEW);
 
+        int boardViewX = BOARDVIEW.getWidth();
+
+        int timePanelX = boardViewX + PANEL_MARGIN;
         TIME_PANEL = new TimePanel();
-        TIME_PANEL.setLocation(BOARDVIEW.getWidth() + PANEL_MARGIN, BoardView.getBoardMargin());
+        TIME_PANEL.setLocation(timePanelX, BoardView.getBoardMargin());
         TIME_PANEL.setSize(150, 30);
         TIME_PANEL.setBorder(new LineBorder(Color.BLACK));
         contentPane.add(TIME_PANEL);
 
+        int nexTurnButtonX = timePanelX + TIME_PANEL.getWidth() + PANEL_MARGIN;
         JButton nextTurnButton = new JButton("Next Turn");
-        nextTurnButton.setLocation(BOARDVIEW.getWidth() + PANEL_MARGIN + TIME_PANEL.getWidth() + PANEL_MARGIN, BoardView.getBoardMargin());
+        nextTurnButton.setLocation(nexTurnButtonX, BoardView.getBoardMargin());
         nextTurnButton.setSize(130, 30);
         nextTurnButton.addActionListener(this);
         contentPane.add(nextTurnButton);
 
+        int turnPanelX = boardViewX + PANEL_MARGIN;
+        int turnPanelY = BoardView.getBoardMargin() + TIME_PANEL.getHeight() + PANEL_MARGIN;
         TURN_PANEL = new TurnPanel(this, this);
-        TURN_PANEL.setLocation(BOARDVIEW.getWidth() + PANEL_MARGIN, BoardView.getBoardMargin() + TIME_PANEL.getHeight() + PANEL_MARGIN);
-        TURN_PANEL.setSize(360, 240);
+        TURN_PANEL.setLocation(turnPanelX, turnPanelY);
+        TURN_PANEL.setSize(150, 360);
         TURN_PANEL.setBorder(new LineBorder(Color.BLACK));
         contentPane.add(TURN_PANEL);
 
+        int movementPanelX = turnPanelX + TURN_PANEL.getWidth() + PANEL_MARGIN;
         MOVEMENT_PANEL = new MovementPanel(this, this, getBackground());
-        MOVEMENT_PANEL.setLocation(BOARDVIEW.getWidth() + PANEL_MARGIN,
-                BoardView.getBoardMargin() + TIME_PANEL.getHeight() + PANEL_MARGIN + TURN_PANEL.getHeight() + PANEL_MARGIN);
-        MOVEMENT_PANEL.setSize(360, 300);
+        MOVEMENT_PANEL.setLocation(movementPanelX, turnPanelY);
+        MOVEMENT_PANEL.setSize(150, 360);
         MOVEMENT_PANEL.setBorder(new LineBorder(Color.BLACK));
         contentPane.add(MOVEMENT_PANEL);
 
+        int abilityPanelX = movementPanelX + MOVEMENT_PANEL.getWidth() + PANEL_MARGIN;
         ABILITY_PANEL = new AbilityPanel(this, this, getBackground());
-        ABILITY_PANEL.setLocation(BOARDVIEW.getWidth() + PANEL_MARGIN + TURN_PANEL.getWidth() + PANEL_MARGIN,
-                BoardView.getBoardMargin());
-        ABILITY_PANEL.setSize(160, 500);
+        ABILITY_PANEL.setLocation(abilityPanelX, turnPanelY);
+        ABILITY_PANEL.setSize(200, 360);
         ABILITY_PANEL.setBorder(new LineBorder(Color.BLACK));
         contentPane.add(ABILITY_PANEL);
 
+        int rulesTextAreaY = turnPanelY + TURN_PANEL.getHeight() + PANEL_MARGIN;
         TextArea rulesTextArea = new TextArea("placeholder text - to be added", 1, 1);
-        rulesTextArea.setSize(540, 150);
-        rulesTextArea.setLocation(BoardView.getBoardMargin(),
-                BOARDVIEW.getHeight() + PANEL_MARGIN);
+        rulesTextArea.setSize(470, 200);
+        rulesTextArea.setLocation(boardViewX + PANEL_MARGIN, rulesTextAreaY);
         rulesTextArea.setEditable(false);
         contentPane.add(rulesTextArea);
 
@@ -97,8 +103,7 @@ public class GameView
         if ("Next Turn".equals(actionCommand)) {
             gameController.updateNextTurn();
         } else if ("STUN".equals(actionCommand)) {
-            ABILITY_PANEL.updatePieceJList();
-            ABILITY_PANEL.setUseButtonText(actionCommand);
+            ABILITY_PANEL.selectedStun(actionCommand);
         } else if (actionCommand.contains("Use Ability")) {
             gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem(), actionEvent.getActionCommand());
         } else if (actionCommand.contains("Eagle")) {
@@ -137,9 +142,9 @@ public class GameView
         TURN_PANEL.setButtonText();
         TURN_PANEL.setEnabledButton();
         MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
-        //ABILITY_PANEL.updatePieceJList();
         ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
         ABILITY_PANEL.resetAbilityButtonText();
+        ABILITY_PANEL.setUseAbilityButton(false);
         TIME_PANEL.resetTimer();
     }
 

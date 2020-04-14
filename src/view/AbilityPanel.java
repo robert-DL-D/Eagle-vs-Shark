@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import model.Eagle;
+import model.MovablePiece;
 import model.Shark;
 
 public class AbilityPanel
@@ -61,6 +62,7 @@ public class AbilityPanel
         useAbilityButton = new JButton(ABILITY_BUTTON_TEXT);
         useAbilityButton.setPreferredSize(new Dimension(135, 30));
         useAbilityButton.addActionListener(this);
+        useAbilityButton.setEnabled(false);
         add(useAbilityButton);
     }
 
@@ -94,43 +96,35 @@ public class AbilityPanel
         }
     }
 
-    void updatePieceJList() {
+    private void updatePieceJList() {
 
-        if (isEaglePlayerTurn) {
+        List<? extends MovablePiece> movablePiecesList;
 
-            List<Shark> sharkList = GAMEVIEW.getSharkList();
-            int sharkListSize = sharkList.size();
-            String[] pieceCoordArray = new String[sharkListSize];
+        movablePiecesList = isEaglePlayerTurn ? GAMEVIEW.getSharkList() : GAMEVIEW.getEagleList();
 
-            for (int i = 0; i < sharkListSize; i++) {
-                Shark shark = sharkList.get(i);
-                pieceCoordArray[i] = ("Shark " + (i + 1) + ": " + (shark.getRow() + 1) + " " + (shark.getColumn() + 1));
-            }
+        String[] pieceCoordArray = new String[movablePiecesList.size()];
 
-            PIECE_JLIST.setListData(pieceCoordArray);
-            PIECE_JLIST.setVisible(true);
-        } else {
+        for (int i = 0; i < movablePiecesList.size(); i++) {
+            MovablePiece movablePiece = movablePiecesList.get(i);
 
-            List<Eagle> eagleList = GAMEVIEW.getEagleList();
-            int eagleListSize = eagleList.size();
-            String[] pieceCoordArray = new String[eagleListSize];
-
-            for (int i = 0; i < eagleListSize; i++) {
-                Eagle eagle = eagleList.get(i);
-                pieceCoordArray[i] = ("Eagle " + (i + 1) + ": " + (eagle.getRow() + 1) + " " + (eagle.getColumn() + 1));
-            }
-
-            PIECE_JLIST.setListData(pieceCoordArray);
-            PIECE_JLIST.setVisible(true);
+            pieceCoordArray[i] = (movablePiece.getType() + " " + movablePiece.getClass().getSuperclass().getSimpleName() + " " + (i + 1) + ": " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1));
         }
 
+        PIECE_JLIST.setListData(pieceCoordArray);
+        PIECE_JLIST.setVisible(true);
     }
 
     void resetAbilityButtonText() {
         useAbilityButton.setText(ABILITY_BUTTON_TEXT);
     }
 
-    public JList<String> getPIECE_JLIST() {
+    void selectedStun(String actionCommand) {
+        updatePieceJList();
+        setUseButtonText(actionCommand);
+        setUseAbilityButton(true);
+    }
+
+    JList<String> getPIECE_JLIST() {
         return PIECE_JLIST;
     }
 
@@ -142,9 +136,11 @@ public class AbilityPanel
         this.isEaglePlayerTurn = isEaglePlayerTurn;
     }
 
-    void setUseButtonText(String actionCommand) {
-
+    private void setUseButtonText(String actionCommand) {
         useAbilityButton.setText(ABILITY_BUTTON_TEXT + ": " + actionCommand);
     }
 
+    void setUseAbilityButton(boolean status) {
+        useAbilityButton.setEnabled(status);
+    }
 }
