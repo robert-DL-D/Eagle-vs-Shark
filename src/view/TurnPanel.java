@@ -12,8 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import model.Eagle;
-import model.Shark;
+import model.MovablePiece;
 
 public class TurnPanel
         extends JPanel
@@ -32,20 +31,10 @@ public class TurnPanel
         ACTIONLISTENER = actionListener;
 
         turnLabel = new JLabel();
-        turnLabel.setPreferredSize(new Dimension(300, 20));
+        turnLabel.setPreferredSize(new Dimension(100, 20));
         turnLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(turnLabel);
-
-        for (int i = 0; i < 6; i++) {
-            JButton pieceButton = new JButton();
-            PIECE_BUTTON_LIST.add(pieceButton);
-            //pieceButton.setPreferredSize(new Dimension(135, 30));
-            pieceButton.setSize(80, 180);
-            pieceButton.addActionListener(this);
-            add(pieceButton);
-        }
-
     }
 
     @Override
@@ -53,6 +42,30 @@ public class TurnPanel
         pressedButton = PIECE_BUTTON_LIST.indexOf(actionEvent.getSource());
 
         ACTIONLISTENER.actionPerformed(actionEvent);
+    }
+
+    void createButtons(int numberOfButtons) {
+
+        if (!PIECE_BUTTON_LIST.isEmpty()) {
+            for (JButton jButton : PIECE_BUTTON_LIST) {
+                remove(jButton);
+            }
+            PIECE_BUTTON_LIST.clear();
+        }
+
+        for (int i = 0; i < numberOfButtons; i++) {
+            JButton pieceButton = new JButton();
+            PIECE_BUTTON_LIST.add(pieceButton);
+            pieceButton.setSize(80, 180);
+            pieceButton.setEnabled(true);
+            pieceButton.addActionListener(this);
+            add(pieceButton);
+        }
+
+        revalidate();
+        repaint();
+        setButtonText();
+        setEnabledButton();
     }
 
     void updateTurnText() {
@@ -70,62 +83,39 @@ public class TurnPanel
     }
 
     void setEnabledButton() {
+
+        List<? extends MovablePiece> pieceList = isEaglePlayerTurn ? GAMEVIEW.getEagleList() : GAMEVIEW.getSharkList();
+
         for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
 
             JButton button = PIECE_BUTTON_LIST.get(i);
 
-            if (isEaglePlayerTurn) {
-                List<Eagle> eagleList = GAMEVIEW.getEagleList();
-                Eagle eagle = eagleList.get(i);
-
-                if (eagle.isStunned()) {
-                    button.setEnabled(false);
-                } else {
-                    button.setEnabled(true);
-                }
-
+            if (pieceList.get(i).isStunned()) {
+                button.setEnabled(false);
             } else {
-                List<Shark> sharkList = GAMEVIEW.getSharkList();
-                Shark shark = sharkList.get(i);
-
-                if (shark.isStunned()) {
-                    button.setEnabled(false);
-                } else {
-                    button.setEnabled(true);
-                }
+                button.setEnabled(true);
             }
         }
     }
 
     void setButtonText() {
 
+        List<? extends MovablePiece> pieceList = isEaglePlayerTurn ? GAMEVIEW.getEagleList() : GAMEVIEW.getSharkList();
+
         for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
             JButton button = PIECE_BUTTON_LIST.get(i);
 
-            if (isEaglePlayerTurn) {
-                List<Eagle> eagleList = GAMEVIEW.getEagleList();
-                Eagle eagle = eagleList.get(i);
+            MovablePiece movablePiece = pieceList.get(i);
 
-                String s = eagle.getType() + " Eagle " + (i + 1) + ": " + (eagle.getRow() + 1) + " " + (eagle.getColumn() + 1);
+            String s = movablePiece.getType() + " " + movablePiece.getClass().getSuperclass().getSimpleName()
+                    + " " + (i + 1) + ": " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1);
 
-                if (eagle.isStunned()) {
-                    s += " STUNNED";
-                }
-
-                button.setText(s);
-
-            } else {
-                List<Shark> sharkList = GAMEVIEW.getSharkList();
-                Shark shark = sharkList.get(i);
-
-                String s = shark.getType() + " Shark " + (i + 1) + ": " + (shark.getRow() + 1) + " " + (shark.getColumn() + 1);
-
-                if (shark.isStunned()) {
-                    s += " STUNNED";
-                }
-
-                button.setText(s);
+            if (movablePiece.isStunned()) {
+                s += " STUNNED";
             }
+
+            button.setText(s);
+
         }
     }
 

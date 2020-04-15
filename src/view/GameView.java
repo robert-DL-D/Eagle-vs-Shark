@@ -69,7 +69,7 @@ public class GameView
         int turnPanelY = BoardView.getBoardMargin() + TIME_PANEL.getHeight() + PANEL_MARGIN;
         TURN_PANEL = new TurnPanel(this, this);
         TURN_PANEL.setLocation(turnPanelX, turnPanelY);
-        TURN_PANEL.setSize(150, 360);
+        TURN_PANEL.setSize(220, 360);
         TURN_PANEL.setBorder(new LineBorder(Color.BLACK));
         contentPane.add(TURN_PANEL);
 
@@ -123,9 +123,13 @@ public class GameView
         flagList = gameModel.getFLAG_LIST();
         TURN_PANEL.updateTurnText();
         TURN_PANEL.setButtonText();
-        //getABILITY_PANEL().updatePieceJList();
+        TURN_PANEL.createButtons(getNumberOfPieces(gameModel.isEagleTurn()));
         ABILITY_PANEL.setAbilityButtonText();
         TIME_PANEL.setGameController(gameController);
+    }
+
+    private int getNumberOfPieces(boolean eagleTurn) {
+        return eagleTurn ? eagleList.size() : sharkList.size();
     }
 
     public void updateViewAfterPieceMove(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer) {
@@ -137,10 +141,10 @@ public class GameView
         TURN_PANEL.setButtonText();
     }
 
-    public void updateNextTurn() {
+    public void updateNextTurn(boolean eagleTurn) {
         TURN_PANEL.updateTurnText();
-        TURN_PANEL.setButtonText();
-        TURN_PANEL.setEnabledButton();
+        TURN_PANEL.createButtons(getNumberOfPieces(eagleTurn));
+        //TURN_PANEL.setEnabledButton();
         MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
         ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
         ABILITY_PANEL.resetAbilityButtonText();

@@ -30,14 +30,14 @@ public class GameController {
         if (index != -1) {
 
             boolean moved;
-            Player<Eagle> eagle_player = gameModel.getEAGLE_PLAYER();
-            Player<Shark> shark_player = gameModel.getSHARK_PLAYER();
-            Player<? extends MovablePiece> player = gameModel.isEagleTurn() ? eagle_player : shark_player;
+            Player<Eagle> eaglePlayer = gameModel.getEAGLE_PLAYER();
+            Player<Shark> sharkPlayer = gameModel.getSHARK_PLAYER();
+            Player<? extends MovablePiece> player = gameModel.isEagleTurn() ? eaglePlayer : sharkPlayer;
 
             moved = player.getPiece(index).updatePieceRowColumn(gameModel, gameModel.getSQUARE_ARRAY(), movementCoord);
 
             if (moved) {
-                gameView.updateViewAfterPieceMove(eagle_player, shark_player);
+                gameView.updateViewAfterPieceMove(eaglePlayer, sharkPlayer);
 
                 checkVictoryCondition();
             }
@@ -55,25 +55,25 @@ public class GameController {
         }
     }
 
-    public void stunPiece(int index) {
+    private void stunPiece(int index) {
 
         if (gameModel.isEagleTurn()) {
-            List<Shark> piece_list = gameModel.getSHARK_PLAYER().getPIECE_LIST();
+            List<Shark> pieceList = gameModel.getSHARK_PLAYER().getPIECE_LIST();
 
-            piece_list.get(index).setStunned(true);
+            pieceList.get(index).setStunned(true);
 
-            for (int i = 0; i < piece_list.size(); i++) {
-                if (piece_list.get(i).isStunned()) {
+            for (int i = 0; i < pieceList.size(); i++) {
+                if (pieceList.get(i).isStunned()) {
                     System.out.println("Shark " + (i + 1) + " is stunned");
                 }
             }
         } else {
-            List<Eagle> piece_list = gameModel.getEAGLE_PLAYER().getPIECE_LIST();
+            List<Eagle> pieceList = gameModel.getEAGLE_PLAYER().getPIECE_LIST();
 
-            piece_list.get(index).setStunned(true);
+            pieceList.get(index).setStunned(true);
 
-            for (int i = 0; i < piece_list.size(); i++) {
-                if (piece_list.get(i).isStunned()) {
+            for (int i = 0; i < pieceList.size(); i++) {
+                if (pieceList.get(i).isStunned()) {
                     System.out.println("Eagle " + (i + 1) + " is stunned");
                 }
             }
@@ -84,7 +84,7 @@ public class GameController {
         gameModel.changePlayerTurn();
         gameModel.updatePieceStatus();
         gameView.setCurrentPlayer(gameModel.isEagleTurn());
-        gameView.updateNextTurn();
+        gameView.updateNextTurn(gameModel.isEagleTurn());
     }
 
     private void checkVictoryCondition() {
