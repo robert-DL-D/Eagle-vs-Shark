@@ -1,23 +1,36 @@
 package model;
 
-import java.util.List;
-
-public class SharkBlue extends Shark {
-
-    private final Enum ABILITY = Abilities.PH1;
+class SharkBlue extends Shark {
 
     SharkBlue(int position, Enum type) {
         super(position, type);
 
+        ability = Abilities.PH1;
+
+        // Up
+        MOVEMENT_COORD.add(new int[]{-2, 0});
+
+        // Down
+        MOVEMENT_COORD.add(new int[]{2, 0});
+
+        // Left
+        MOVEMENT_COORD.add(new int[]{0, -2});
+
+        // Right
+        MOVEMENT_COORD.add(new int[]{0, 2});
+
+        // Upper-Left
+        MOVEMENT_COORD.add(new int[]{-1, -1});
+
+        // Upper-Right
+        MOVEMENT_COORD.add(new int[]{1, 1});
+
+        // Lower-Left
+        MOVEMENT_COORD.add(new int[]{1, -1});
+
+        // Lower-Right
+        MOVEMENT_COORD.add(new int[]{-1, 1});
+
     }
 
-    @Override
-    public List<int[]> getMovableCoords() {
-        return null;
-    }
-
-    @Override
-    public Enum getABILITY() {
-        return ABILITY;
-    }
 }

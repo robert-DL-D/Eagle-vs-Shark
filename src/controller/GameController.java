@@ -27,7 +27,7 @@ public class GameController {
     public void movePiece(int index, int[] movementCoord) {
 
         // -1 index means nothing is selected
-        if (index != -1) {
+        if (index != -1 && movementCoord != null) {
 
             boolean moved;
             Player<Eagle> eaglePlayer = gameModel.getEAGLE_PLAYER();
@@ -57,27 +57,15 @@ public class GameController {
 
     private void stunPiece(int index) {
 
+        List<? extends MovablePiece> movablePieceList;
+
         if (gameModel.isEagleTurn()) {
-            List<Shark> pieceList = gameModel.getSHARK_PLAYER().getPIECE_LIST();
-
-            pieceList.get(index).setStunned(true);
-
-            for (int i = 0; i < pieceList.size(); i++) {
-                if (pieceList.get(i).isStunned()) {
-                    System.out.println("Shark " + (i + 1) + " is stunned");
-                }
-            }
+            movablePieceList = gameModel.getSHARK_PLAYER().getPIECE_LIST();
         } else {
-            List<Eagle> pieceList = gameModel.getEAGLE_PLAYER().getPIECE_LIST();
-
-            pieceList.get(index).setStunned(true);
-
-            for (int i = 0; i < pieceList.size(); i++) {
-                if (pieceList.get(i).isStunned()) {
-                    System.out.println("Eagle " + (i + 1) + " is stunned");
-                }
-            }
+            movablePieceList = gameModel.getEAGLE_PLAYER().getPIECE_LIST();
         }
+
+        movablePieceList.get(index).setStunned(true);
     }
 
     public void updateNextTurn() {

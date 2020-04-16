@@ -20,12 +20,11 @@ public class MovementPanel
         implements ActionListener {
 
     private final JList<String> MOVE_JLIST;
-    private final GameView GAMEVIEW;
     private final ActionListener ACTIONLISTENER;
-    private List<int[]> MOVEMENT_COORD_LIST = new LinkedList<>();
+    private final List<int[]> MOVEMENT_COORD_LIST = new LinkedList<>();
+    private final JButton MOVE_BUTTON;
 
-    MovementPanel(GameView gameView, ActionListener actionListener, Color background) {
-        GAMEVIEW = gameView;
+    MovementPanel(ActionListener actionListener, Color background) {
         ACTIONLISTENER = actionListener;
 
         MOVE_JLIST = new JList<>();
@@ -35,10 +34,11 @@ public class MovementPanel
         MOVE_JLIST.setLocation(10, 50);
         add(MOVE_JLIST);
 
-        JButton moveButton = new JButton("Move");
-        moveButton.setSize(80, 180);
-        moveButton.addActionListener(this);
-        add(moveButton);
+        MOVE_BUTTON = new JButton("Move");
+        MOVE_BUTTON.setSize(80, 180);
+        MOVE_BUTTON.addActionListener(this);
+        MOVE_BUTTON.setVisible(false);
+        add(MOVE_BUTTON);
 
     }
 
@@ -72,14 +72,25 @@ public class MovementPanel
 
         MOVE_JLIST.setListData(pieceCoordArray);
         MOVE_JLIST.setVisible(true);
+        MOVE_BUTTON.setVisible(true);
     }
 
     int[] getMovementCoord() {
 
-        return MOVEMENT_COORD_LIST.get(MOVE_JLIST.getSelectedIndex());
+        int selectedIndex = MOVE_JLIST.getSelectedIndex();
+        if (selectedIndex != -1) {
+            return MOVEMENT_COORD_LIST.get(selectedIndex);
+        } else {
+            return null;
+        }
+
     }
 
     JList<String> getMOVE_JLIST() {
         return MOVE_JLIST;
+    }
+
+    public JButton getMOVE_BUTTON() {
+        return MOVE_BUTTON;
     }
 }

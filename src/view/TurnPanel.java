@@ -82,7 +82,7 @@ public class TurnPanel
         }
     }
 
-    void setEnabledButton() {
+    private void setEnabledButton() {
 
         List<? extends MovablePiece> pieceList = isEaglePlayerTurn ? GAMEVIEW.getEagleList() : GAMEVIEW.getSharkList();
 

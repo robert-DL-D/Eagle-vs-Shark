@@ -74,7 +74,7 @@ public class GameView
         contentPane.add(TURN_PANEL);
 
         int movementPanelX = turnPanelX + TURN_PANEL.getWidth() + PANEL_MARGIN;
-        MOVEMENT_PANEL = new MovementPanel(this, this, getBackground());
+        MOVEMENT_PANEL = new MovementPanel(this, getBackground());
         MOVEMENT_PANEL.setLocation(movementPanelX, turnPanelY);
         MOVEMENT_PANEL.setSize(150, 360);
         MOVEMENT_PANEL.setBorder(new LineBorder(Color.BLACK));
@@ -139,12 +139,13 @@ public class GameView
         TURN_PANEL.disableAllPieceButton();
         TURN_PANEL.updateTurnText();
         TURN_PANEL.setButtonText();
+        MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
+        MOVEMENT_PANEL.getMOVE_BUTTON().setVisible(false);
     }
 
     public void updateNextTurn(boolean eagleTurn) {
         TURN_PANEL.updateTurnText();
         TURN_PANEL.createButtons(getNumberOfPieces(eagleTurn));
-        //TURN_PANEL.setEnabledButton();
         MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
         ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
         ABILITY_PANEL.resetAbilityButtonText();

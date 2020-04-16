@@ -15,9 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-import model.Eagle;
 import model.MovablePiece;
-import model.Shark;
 
 public class AbilityPanel
         extends JPanel
@@ -55,7 +53,6 @@ public class AbilityPanel
         PIECE_JLIST.setBorder(new LineBorder(Color.BLACK));
         PIECE_JLIST.setFont(new Font("Arial", Font.PLAIN, 18));
         PIECE_JLIST.setLocation(10, 50);
-        //PIECE_JLIST.setVisible(false);
         PIECE_JLIST.setVisible(true);
         add(PIECE_JLIST);
 
@@ -76,23 +73,18 @@ public class AbilityPanel
         int size = ABILITIES_JBUTTON_LIST.size();
         for (int i = 0; i < size; i++) {
             JButton button = ABILITIES_JBUTTON_LIST.get(i);
+            List<? extends MovablePiece> movablePiecesList;
 
             if (isEaglePlayerTurn) {
-                List<Eagle> eagleList = GAMEVIEW.getEagleList();
-                Eagle eagle = eagleList.get(i * 2);
-
-                String s = eagle.getABILITY().toString();
-
-                button.setText(s);
-
+                movablePiecesList = GAMEVIEW.getEagleList();
             } else {
-                List<Shark> sharkList = GAMEVIEW.getSharkList();
-                Shark shark = sharkList.get(i * 2);
-
-                String s = shark.getABILITY().toString();
-
-                button.setText(s);
+                movablePiecesList = GAMEVIEW.getSharkList();
             }
+
+            MovablePiece movablePiece = movablePiecesList.get(i * 2);
+
+            String s = movablePiece.getAbility().toString();
+            button.setText(s);
         }
     }
 
@@ -107,7 +99,8 @@ public class AbilityPanel
         for (int i = 0; i < movablePiecesList.size(); i++) {
             MovablePiece movablePiece = movablePiecesList.get(i);
 
-            pieceCoordArray[i] = (movablePiece.getType() + " " + movablePiece.getClass().getSuperclass().getSimpleName() + " " + (i + 1) + ": " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1));
+            pieceCoordArray[i] = (movablePiece.getType() + " " + movablePiece.getClass().getSuperclass().getSimpleName()
+                    + " " + (i + 1) + ": " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1));
         }
 
         PIECE_JLIST.setListData(pieceCoordArray);
