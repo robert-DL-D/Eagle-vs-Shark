@@ -10,18 +10,27 @@ import model.Piece;
 import model.Player;
 import model.Shark;
 import view.GameView;
+import view.TemplateFrame;
 
 public class GameController {
 
     private GameView gameView;
     private GameModel gameModel;
 
-    public GameController(GameModel gameModel, GameView gameView) {
+    public GameController(){
+    }
+
+    public void startGame(GameModel gameModel, GameView gameView){
         this.gameModel = gameModel;
         this.gameView = gameView;
-
         gameView.setCurrentPlayer(gameModel.isEagleTurn());
         gameView.initializeGameView(this, gameModel);
+    }
+
+
+    public void showStartView() {
+        TemplateFrame templateFrame = new TemplateFrame();
+        templateFrame.showStartView(this);
     }
 
     public void movePiece(int index, int[] movementCoord) {
