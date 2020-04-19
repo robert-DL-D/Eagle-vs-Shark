@@ -78,11 +78,7 @@ public class MovementPanel
     int[] getMovementCoord() {
 
         int selectedIndex = MOVE_JLIST.getSelectedIndex();
-        if (selectedIndex != -1) {
-            return MOVEMENT_COORD_LIST.get(selectedIndex);
-        } else {
-            return null;
-        }
+        return selectedIndex == -1 ? null : MOVEMENT_COORD_LIST.get(selectedIndex);
 
     }
 
@@ -90,7 +86,7 @@ public class MovementPanel
         return MOVE_JLIST;
     }
 
-    public JButton getMOVE_BUTTON() {
+    JButton getMOVE_BUTTON() {
         return MOVE_BUTTON;
     }
 }

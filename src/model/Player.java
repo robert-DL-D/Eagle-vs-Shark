@@ -5,23 +5,19 @@ import java.util.List;
 
 public class Player<T extends MovablePiece> {
 
-    private final List<T> PIECE_LIST;
+    private final List<T> MOVABLEPIECE_LIST = new ArrayList<>();
 
-    Player() {
-        PIECE_LIST = new ArrayList<>();
+    public List<T> getMOVABLEPIECE_LIST() {
+        return MOVABLEPIECE_LIST;
     }
 
-    public List<T> getPIECE_LIST() {
-        return PIECE_LIST;
-    }
-
-    public void addPiece(T piece) {
-        PIECE_LIST.add(piece);
+    void addMovablePiece(T movablePiece) {
+        MOVABLEPIECE_LIST.add(movablePiece);
     }
 
     public T getPiece(int index) {
 
-        return PIECE_LIST.get(index);
+        return MOVABLEPIECE_LIST.get(index);
     }
 
 }

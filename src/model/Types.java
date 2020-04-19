@@ -2,7 +2,7 @@ package model;
 
 public enum Types {
 
-    RED, GREEN, BLUE, FLAG;
+    RED, GREEN, BLUE, FLAG, ISLAND;
 
     public String toString() {
 
@@ -19,7 +19,8 @@ public enum Types {
 
             case FLAG:
                 return "FLAG";
-
+            case ISLAND:
+                return "ISLAND";
             default:
                 return "NONE";
         }

@@ -23,11 +23,13 @@ public class AbilityPanel
 
     private final JList<String> PIECE_JLIST;
     private final List<JButton> ABILITIES_JBUTTON_LIST;
-    private static final String ABILITY_BUTTON_TEXT = "Use Ability";
+    private static final String USE_ABILITY_BUTTON_TEXT = "Use Ability";
+    private final JButton useAbilityButton;
+    private String lastAbilityUsed;
+
     private final GameView GAMEVIEW;
     private final ActionListener ACTIONLISTENER;
     private boolean isEaglePlayerTurn;
-    private final JButton useAbilityButton;
 
     AbilityPanel(GameView gameView, ActionListener actionListener, Color background) {
         GAMEVIEW = gameView;
@@ -53,13 +55,13 @@ public class AbilityPanel
         PIECE_JLIST.setBorder(new LineBorder(Color.BLACK));
         PIECE_JLIST.setFont(new Font("Arial", Font.PLAIN, 18));
         PIECE_JLIST.setLocation(10, 50);
-        PIECE_JLIST.setVisible(true);
+        PIECE_JLIST.setVisible(false);
         add(PIECE_JLIST);
 
-        useAbilityButton = new JButton(ABILITY_BUTTON_TEXT);
+        useAbilityButton = new JButton(USE_ABILITY_BUTTON_TEXT);
         useAbilityButton.setPreferredSize(new Dimension(135, 30));
         useAbilityButton.addActionListener(this);
-        useAbilityButton.setEnabled(false);
+        useAbilityButton.setVisible(false);
         add(useAbilityButton);
     }
 
@@ -70,8 +72,7 @@ public class AbilityPanel
 
     void setAbilityButtonText() {
 
-        int size = ABILITIES_JBUTTON_LIST.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < ABILITIES_JBUTTON_LIST.size(); i++) {
             JButton button = ABILITIES_JBUTTON_LIST.get(i);
             List<? extends MovablePiece> movablePiecesList;
 
@@ -85,6 +86,7 @@ public class AbilityPanel
 
             String s = movablePiece.getAbility().toString();
             button.setText(s);
+            button.setEnabled(true);
         }
     }
 
@@ -107,14 +109,32 @@ public class AbilityPanel
         PIECE_JLIST.setVisible(true);
     }
 
-    void resetAbilityButtonText() {
-        useAbilityButton.setText(ABILITY_BUTTON_TEXT);
-    }
-
     void selectedStun(String actionCommand) {
         updatePieceJList();
         setUseButtonText(actionCommand);
         setUseAbilityButton(true);
+
+        lastAbilityUsed = "STUN";
+    }
+
+    void disableAbilityUI() {
+
+        for (JButton jButton : ABILITIES_JBUTTON_LIST) {
+            jButton.setEnabled(false);
+        }
+
+        PIECE_JLIST.setVisible(false);
+        setUseAbilityButton(false);
+    }
+
+    void setAfterUseText(MovablePiece movablePiece) {
+        for (JButton jButton : ABILITIES_JBUTTON_LIST) {
+            if (jButton.getText().equals(lastAbilityUsed)) {
+                jButton.setText(jButton.getText() + ": "
+                        + movablePiece.getClass().getSuperclass().getSimpleName()
+                        + " " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1));
+            }
+        }
     }
 
     JList<String> getPIECE_JLIST() {
@@ -130,10 +150,14 @@ public class AbilityPanel
     }
 
     private void setUseButtonText(String actionCommand) {
-        useAbilityButton.setText(ABILITY_BUTTON_TEXT + ": " + actionCommand);
+        useAbilityButton.setText(USE_ABILITY_BUTTON_TEXT + ": " + actionCommand);
+    }
+
+    void resetUseAbilityButtonText() {
+        useAbilityButton.setText(USE_ABILITY_BUTTON_TEXT);
     }
 
     void setUseAbilityButton(boolean status) {
-        useAbilityButton.setEnabled(status);
+        useAbilityButton.setVisible(status);
     }
 }

@@ -1,31 +1,33 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Square {
 
     private final int SQUARE_NUMBER;
-    private final List<Piece> PIECE_LIST = new ArrayList<>();
+    private Piece piece;
+    private MovablePiece movablePiece;
 
     Square(int squareNumber) {
         SQUARE_NUMBER = squareNumber;
     }
 
-    void addPiece(Piece piece) {
-        PIECE_LIST.add(piece);
+    void addMovablePiece(MovablePiece movablePiece) {
+        this.movablePiece = movablePiece;
     }
 
-    void removePiece() {
-        PIECE_LIST.clear();
+    void addPiece(Piece piece) {
+        this.piece = piece;
+    }
+
+    void removeMovablePiece() {
+        movablePiece = null;
+    }
+
+    public MovablePiece getMovablePiece() {
+        return movablePiece;
     }
 
     Piece getPiece() {
-        return PIECE_LIST.get(0);
-    }
-
-    public List<Piece> getPIECE_LIST() {
-        return PIECE_LIST;
+        return piece;
     }
 
     public int getSQUARE_NUMBER() {

@@ -34,48 +34,56 @@ public abstract class MovablePiece
 
     private boolean checkValidNewSquare(Square currentSquare, Square newSquare) {
 
-        if (newSquare.getPIECE_LIST().isEmpty()) {
+        if (newSquare.getPiece() == null && newSquare.getMovablePiece() == null) {
             return true;
+        } else {
+            MovablePiece movablePieceOnCurrentSquare = currentSquare.getMovablePiece();
+            Piece pieceOnNewSquare = newSquare.getPiece();
 
-        } else if (newSquare.getPiece() instanceof Flag) {
-            return !((Flag) newSquare.getPiece()).getOWNER().getPIECE_LIST().contains(currentSquare.getPiece());
+            if (pieceOnNewSquare instanceof Island) {
+                return false;
+            } else if (pieceOnNewSquare instanceof Flag) {
+                return !((Flag) pieceOnNewSquare).getOWNER().getMOVABLEPIECE_LIST().contains(movablePieceOnCurrentSquare);
+            } else {
+                MovablePiece movablePieceOnNewSquare = newSquare.getMovablePiece();
 
-        } else if (currentSquare.getPiece().getClass().getSuperclass() != newSquare.getPiece().getClass().getSuperclass()) {
-            return true;
+                Enum movablePieceOnCurrentSquareType = movablePieceOnCurrentSquare.getType();
+                Enum movablePieceOnNewSquareType = movablePieceOnNewSquare.getType();
+
+                return (movablePieceOnCurrentSquare.getClass().getSuperclass() != movablePieceOnNewSquare.getClass().getSuperclass())
+                        && ((movablePieceOnCurrentSquareType == Types.RED && movablePieceOnNewSquareType == Types.GREEN)
+                        || (movablePieceOnCurrentSquareType == Types.GREEN && movablePieceOnNewSquareType == Types.BLUE)
+                        || (movablePieceOnCurrentSquareType == Types.BLUE && movablePieceOnNewSquareType == Types.RED));
+            }
         }
-
-        return false;
     }
 
-    private void changePieceOnSquare(GameModel gameModel, Square currentSquare, Square newSquare) {
+    private void changePieceOnSquare(GameModel gameModel, Square currentSquare, Square
+            newSquare) {
 
-        Piece pieceOnCurrentSquare = currentSquare.getPiece();
+        Piece pieceOnCurrentSquare = currentSquare.getMovablePiece();
 
-        if (!newSquare.getPIECE_LIST().isEmpty()) {
-            Piece pieceOnNewSquare = newSquare.getPiece();
+        if (newSquare.getMovablePiece() != null) {
+            Piece pieceOnNewSquare = newSquare.getMovablePiece();
 
             if (pieceOnCurrentSquare.getClass() != pieceOnNewSquare.getClass()
                     && !(pieceOnNewSquare instanceof Flag)) {
 
-                Player<? extends MovablePiece> player;
+                Player<? extends MovablePiece> player = pieceOnCurrentSquare instanceof Eagle ? gameModel.getSHARK_PLAYER() : gameModel.getEAGLE_PLAYER();
 
-                player = pieceOnCurrentSquare instanceof Eagle ? gameModel.getSHARK_PLAYER() : gameModel.getEAGLE_PLAYER();
+                player.getMOVABLEPIECE_LIST().remove(pieceOnNewSquare);
 
-                player.getPIECE_LIST().remove(pieceOnNewSquare);
-
-                newSquare.removePiece();
+                newSquare.removeMovablePiece();
             }
         }
 
-        currentSquare.removePiece();
-        newSquare.addPiece(this);
+        currentSquare.removeMovablePiece();
+        newSquare.addMovablePiece(this);
     }
 
     public List<int[]> getMovableCoords() {
         return MOVEMENT_COORD;
     }
-
-    ;
 
     public boolean isStunned() {
         return stunned;

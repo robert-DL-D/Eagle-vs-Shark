@@ -6,9 +6,9 @@ import model.Eagle;
 import model.Flag;
 import model.GameModel;
 import model.MovablePiece;
-import model.Piece;
 import model.Player;
 import model.Shark;
+import model.Square;
 import view.GameView;
 
 public class GameController {
@@ -47,25 +47,33 @@ public class GameController {
     public void useAbility(int index, String actionCommand) {
 
         if (index != -1) {
+
+            MovablePiece movablePiece;
+
         /*switch (actionCommand) {
             case "Stun":*/
-            stunPiece(index);
+            movablePiece = stunPiece(index);
             //break;
             //}
+
+            gameView.setAfterUseText(movablePiece);
+
         }
     }
 
-    private void stunPiece(int index) {
+    private MovablePiece stunPiece(int index) {
 
         List<? extends MovablePiece> movablePieceList;
 
         if (gameModel.isEagleTurn()) {
-            movablePieceList = gameModel.getSHARK_PLAYER().getPIECE_LIST();
+            movablePieceList = gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST();
         } else {
-            movablePieceList = gameModel.getEAGLE_PLAYER().getPIECE_LIST();
+            movablePieceList = gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST();
         }
 
         movablePieceList.get(index).setStunned(true);
+
+        return movablePieceList.get(index);
     }
 
     public void updateNextTurn() {
@@ -79,10 +87,13 @@ public class GameController {
 
         for (Flag flag : gameModel.getFLAG_LIST()) {
 
-            List<Piece> pieceList = gameModel.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()].getPIECE_LIST();
+            Square flagSquare = gameModel.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
 
-            if (pieceList.size() == 2) {
-                if (pieceList.get(1) instanceof Eagle) {
+            if (flagSquare.getMovablePiece() != null) {
+
+                MovablePiece movablepiece = gameModel.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()].getMovablePiece();
+
+                if (movablepiece instanceof Eagle) {
                     System.out.println("Eagle Won");
                 } else {
                     System.out.println("Shark Won");

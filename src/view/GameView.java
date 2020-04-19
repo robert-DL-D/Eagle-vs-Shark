@@ -9,12 +9,15 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import controller.GameController;
 import model.Eagle;
 import model.Flag;
 import model.GameModel;
+import model.Island;
+import model.MovablePiece;
 import model.Player;
 import model.Shark;
 
@@ -22,9 +25,8 @@ public class GameView
         extends JFrame
         implements ActionListener {
 
-    private static final int PANEL_MARGIN = 5;
-    private final BoardView BOARDVIEW;
-    private final TurnPanel TURN_PANEL;
+    private final BoardPanel BOARD_PANEL;
+    private final PiecePanel PIECE_PANEL;
     private final MovementPanel MOVEMENT_PANEL;
     private final AbilityPanel ABILITY_PANEL;
     private final TimePanel TIME_PANEL;
@@ -33,68 +35,67 @@ public class GameView
     private List<Shark> sharkList;
     private List<Eagle> eagleList;
     private List<Flag> flagList;
+    private List<Island> islandList;
 
     public GameView() {
         super("Eagle vs Shark");
 
+        int panelMargin = 5;
+
         setLayout(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1400, 850);
+        setSize(1500, 820);
 
         Container contentPane = getContentPane();
 
-        BOARDVIEW = new BoardView(this);
-        BOARDVIEW.setLocation(0, 0);
-        BOARDVIEW.setSize(590, 650);
-        contentPane.add(BOARDVIEW);
+        BOARD_PANEL = new BoardPanel(this);
+        BOARD_PANEL.setLocation(0, 0);
+        BOARD_PANEL.setSize(590, 650);
+        contentPane.add(BOARD_PANEL);
 
-        int boardViewX = BOARDVIEW.getWidth();
+        int boardViewX = BOARD_PANEL.getWidth();
 
-        int timePanelX = boardViewX + PANEL_MARGIN;
+        int timePanelX = boardViewX + panelMargin;
         TIME_PANEL = new TimePanel();
-        TIME_PANEL.setLocation(timePanelX, BoardView.getBoardMargin());
-        TIME_PANEL.setSize(150, 30);
-        TIME_PANEL.setBorder(new LineBorder(Color.BLACK));
-        contentPane.add(TIME_PANEL);
+        contentPane.add(addPanel(TIME_PANEL, timePanelX, BoardPanel.getBoardMargin(), 150, 30));
 
-        int nexTurnButtonX = timePanelX + TIME_PANEL.getWidth() + PANEL_MARGIN;
+        int nexTurnButtonX = timePanelX + TIME_PANEL.getWidth() + panelMargin;
         JButton nextTurnButton = new JButton("Next Turn");
-        nextTurnButton.setLocation(nexTurnButtonX, BoardView.getBoardMargin());
+        nextTurnButton.setLocation(nexTurnButtonX, BoardPanel.getBoardMargin());
         nextTurnButton.setSize(130, 30);
         nextTurnButton.addActionListener(this);
         contentPane.add(nextTurnButton);
 
-        int turnPanelX = boardViewX + PANEL_MARGIN;
-        int turnPanelY = BoardView.getBoardMargin() + TIME_PANEL.getHeight() + PANEL_MARGIN;
-        TURN_PANEL = new TurnPanel(this, this);
-        TURN_PANEL.setLocation(turnPanelX, turnPanelY);
-        TURN_PANEL.setSize(220, 360);
-        TURN_PANEL.setBorder(new LineBorder(Color.BLACK));
-        contentPane.add(TURN_PANEL);
+        int turnPanelX = boardViewX + panelMargin;
+        int turnPanelY = BoardPanel.getBoardMargin() + TIME_PANEL.getHeight() + panelMargin;
+        PIECE_PANEL = new PiecePanel(this, this);
+        contentPane.add(addPanel(PIECE_PANEL, turnPanelX, turnPanelY, 220, 360));
 
-        int movementPanelX = turnPanelX + TURN_PANEL.getWidth() + PANEL_MARGIN;
+        int movementPanelX = turnPanelX + PIECE_PANEL.getWidth() + panelMargin;
         MOVEMENT_PANEL = new MovementPanel(this, getBackground());
-        MOVEMENT_PANEL.setLocation(movementPanelX, turnPanelY);
-        MOVEMENT_PANEL.setSize(150, 360);
-        MOVEMENT_PANEL.setBorder(new LineBorder(Color.BLACK));
-        contentPane.add(MOVEMENT_PANEL);
+        contentPane.add(addPanel(MOVEMENT_PANEL, movementPanelX, turnPanelY, 150, 360));
 
-        int abilityPanelX = movementPanelX + MOVEMENT_PANEL.getWidth() + PANEL_MARGIN;
+        int abilityPanelX = movementPanelX + MOVEMENT_PANEL.getWidth() + panelMargin;
         ABILITY_PANEL = new AbilityPanel(this, this, getBackground());
-        ABILITY_PANEL.setLocation(abilityPanelX, turnPanelY);
-        ABILITY_PANEL.setSize(200, 360);
-        ABILITY_PANEL.setBorder(new LineBorder(Color.BLACK));
-        contentPane.add(ABILITY_PANEL);
+        contentPane.add(addPanel(ABILITY_PANEL, abilityPanelX, turnPanelY, 180, 360));
 
-        int rulesTextAreaY = turnPanelY + TURN_PANEL.getHeight() + PANEL_MARGIN;
+        int rulesTextAreaX = abilityPanelX + ABILITY_PANEL.getWidth() + panelMargin;
         TextArea rulesTextArea = new TextArea("placeholder text - to be added", 1, 1);
-        rulesTextArea.setSize(470, 200);
-        rulesTextArea.setLocation(boardViewX + PANEL_MARGIN, rulesTextAreaY);
+        rulesTextArea.setSize(220, 360);
+        rulesTextArea.setLocation(rulesTextAreaX, turnPanelY);
         rulesTextArea.setEditable(false);
         contentPane.add(rulesTextArea);
 
         setVisible(true);
+    }
+
+    private JPanel addPanel(JPanel panel, int panelX, int panelY, int width, int height) {
+        panel.setLocation(panelX, panelY);
+        panel.setSize(width, height);
+        panel.setBorder(new LineBorder(Color.BLACK));
+
+        return panel;
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
@@ -106,55 +107,58 @@ public class GameView
             ABILITY_PANEL.selectedStun(actionCommand);
         } else if (actionCommand.contains("Use Ability")) {
             gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem(), actionEvent.getActionCommand());
+            ABILITY_PANEL.disableAbilityUI();
         } else if (actionCommand.contains("Eagle")) {
-            MOVEMENT_PANEL.updateMoveJList(gameController.getEaglePiece(TURN_PANEL.getSelectedPieceIndex()));
+            MOVEMENT_PANEL.updateMoveJList(gameController.getEaglePiece(PIECE_PANEL.getSelectedPieceIndex()));
         } else if (actionCommand.contains("Shark")) {
-            MOVEMENT_PANEL.updateMoveJList(gameController.getSharkPiece(TURN_PANEL.getSelectedPieceIndex()));
+            MOVEMENT_PANEL.updateMoveJList(gameController.getSharkPiece(PIECE_PANEL.getSelectedPieceIndex()));
         } else if (actionCommand.equals("Move")) {
-            gameController.movePiece(TURN_PANEL.getSelectedPieceIndex(), MOVEMENT_PANEL.getMovementCoord());
+            gameController.movePiece(PIECE_PANEL.getSelectedPieceIndex(), MOVEMENT_PANEL.getMovementCoord());
         }
     }
 
     public void initializeGameView(GameController gameController, GameModel gameModel) {
         this.gameController = gameController;
-        BOARDVIEW.setSquares(gameModel.getSQUARE_ARRAY());
-        sharkList = gameModel.getSHARK_PLAYER().getPIECE_LIST();
-        eagleList = gameModel.getEAGLE_PLAYER().getPIECE_LIST();
+        BOARD_PANEL.setSquares(gameModel.getSQUARE_ARRAY());
+        sharkList = gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST();
+        eagleList = gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST();
         flagList = gameModel.getFLAG_LIST();
-        TURN_PANEL.updateTurnText();
-        TURN_PANEL.setButtonText();
-        TURN_PANEL.createButtons(getNumberOfPieces(gameModel.isEagleTurn()));
+        islandList = gameModel.getISLAND_LIST();
+        PIECE_PANEL.updateTurnText();
+        PIECE_PANEL.setButtonText();
+        PIECE_PANEL.createButtons(getNumberOfPieces(gameModel.isEagleTurn()));
         ABILITY_PANEL.setAbilityButtonText();
         TIME_PANEL.setGameController(gameController);
+    }
+
+    public void updateViewAfterPieceMove(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer) {
+        repaint();
+        eagleList = eaglePlayer.getMOVABLEPIECE_LIST();
+        sharkList = sharkPlayer.getMOVABLEPIECE_LIST();
+        PIECE_PANEL.disableAllPieceButton();
+        PIECE_PANEL.updateTurnText();
+        PIECE_PANEL.setButtonText();
+        MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
+        MOVEMENT_PANEL.getMOVE_BUTTON().setVisible(false);
+    }
+
+    public void updateNextTurn(boolean eagleTurn) {
+        PIECE_PANEL.updateTurnText();
+        PIECE_PANEL.createButtons(getNumberOfPieces(eagleTurn));
+        MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
+        MOVEMENT_PANEL.getMOVE_BUTTON().setVisible(false);
+        ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
+        ABILITY_PANEL.resetUseAbilityButtonText();
+        ABILITY_PANEL.setUseAbilityButton(false);
+        TIME_PANEL.resetTimer();
     }
 
     private int getNumberOfPieces(boolean eagleTurn) {
         return eagleTurn ? eagleList.size() : sharkList.size();
     }
 
-    public void updateViewAfterPieceMove(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer) {
-        repaint();
-        eagleList = eaglePlayer.getPIECE_LIST();
-        sharkList = sharkPlayer.getPIECE_LIST();
-        TURN_PANEL.disableAllPieceButton();
-        TURN_PANEL.updateTurnText();
-        TURN_PANEL.setButtonText();
-        MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
-        MOVEMENT_PANEL.getMOVE_BUTTON().setVisible(false);
-    }
-
-    public void updateNextTurn(boolean eagleTurn) {
-        TURN_PANEL.updateTurnText();
-        TURN_PANEL.createButtons(getNumberOfPieces(eagleTurn));
-        MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
-        ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
-        ABILITY_PANEL.resetAbilityButtonText();
-        ABILITY_PANEL.setUseAbilityButton(false);
-        TIME_PANEL.resetTimer();
-    }
-
     public void setCurrentPlayer(boolean isEagleTurn) {
-        TURN_PANEL.setIsEaglePlayer(isEagleTurn);
+        PIECE_PANEL.setIsEaglePlayer(isEagleTurn);
         ABILITY_PANEL.setIsEaglePlayer(isEagleTurn);
     }
 
@@ -170,4 +174,11 @@ public class GameView
         return flagList;
     }
 
+    List<Island> getIslandList() {
+        return islandList;
+    }
+
+    public void setAfterUseText(MovablePiece movablePiece) {
+        ABILITY_PANEL.setAfterUseText(movablePiece);
+    }
 }

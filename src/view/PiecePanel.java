@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 
 import model.MovablePiece;
 
-public class TurnPanel
+public class PiecePanel
         extends JPanel
         implements ActionListener {
 
@@ -26,7 +26,7 @@ public class TurnPanel
     private final List<JButton> PIECE_BUTTON_LIST = new ArrayList<>();
     private int pressedButton;
 
-    TurnPanel(GameView gameView, ActionListener actionListener) {
+    PiecePanel(GameView gameView, ActionListener actionListener) {
         GAMEVIEW = gameView;
         ACTIONLISTENER = actionListener;
 
