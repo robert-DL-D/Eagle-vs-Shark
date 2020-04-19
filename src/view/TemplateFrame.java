@@ -1,10 +1,12 @@
 package view;
 
-import controller.GameController;
+import java.awt.Color;
+import java.awt.Container;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 import javax.swing.border.LineBorder;
-import java.awt.*;
+
+import controller.GameController;
 
 public class TemplateFrame extends JFrame {
     public TemplateFrame() {
@@ -29,6 +31,19 @@ public class TemplateFrame extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-//    public void showEndView(GameController gameController, String winnerName) {}
+    public void showEndView(GameController gameController, String winnerName) {
+        Container con = this.getContentPane();
+        con.setLayout(null);
 
+        EndPanel endPanel = new EndPanel();
+        endPanel.init(this, gameController, winnerName);
+        endPanel.setLocation(100, 80);
+        endPanel.setSize(300, 300);
+
+        con.add(endPanel);
+
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
 }

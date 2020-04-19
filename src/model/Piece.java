@@ -10,6 +10,7 @@ public abstract class Piece {
     Piece(int position, Enum type) {
         this.type = type;
 
+        // TODO please remember to change this
         row = position / 9;
         column = (position - (row) * 9) - 1;
     }

@@ -1,7 +1,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameModel {
@@ -17,27 +19,40 @@ public class GameModel {
     public GameModel() {
         initializeSquare();
 
-        addEagle(38, Types.RED);
-        addEagle(41, Types.RED);
-        addEagle(44, Types.GREEN);
-        addEagle(77, Types.GREEN);
-        addEagle(4, Types.BLUE);
-        addEagle(29, Types.BLUE);
+        addEaglesAndSharksAndFlags();
 
-        addShark(30, Types.RED);
-        addShark(50, Types.RED);
-        addShark(39, Types.GREEN);
-        addShark(14, Types.GREEN);
-        addShark(40, Types.BLUE);
-        addShark(61, Types.BLUE);
+        isEagleTurn = ThreadLocalRandom.current().nextInt(0, 2) == 0;
+    }
 
-        addFlag(5, EAGLE_PLAYER);
-        addFlag(86, SHARK_PLAYER);
+    private void addEaglesAndSharksAndFlags() {
 
         addIsland(32);
         addIsland(59);
 
-        isEagleTurn = ThreadLocalRandom.current().nextInt(0, 2) == 0;
+        // add flags first
+        addFlag((BoardSize.BOARD_COLUMNS + 1) / 2, EAGLE_PLAYER);
+        addFlag(BoardSize.BOARD_ROWS * BoardSize.BOARD_COLUMNS - BoardSize.BOARD_COLUMNS / 2, SHARK_PLAYER);
+
+        Set<Object> positionSet = new HashSet<>();
+        positionSet.add((BoardSize.BOARD_COLUMNS + 1) / 2);
+        positionSet.add(BoardSize.BOARD_ROWS * BoardSize.BOARD_COLUMNS - BoardSize.BOARD_COLUMNS / 2);
+        int count = 0;
+        do {
+            // calculate the random positions of eagle and shark
+            // range:[1 , BoardSize.BOARD_ROWS * BoardSize.BOARD_COLUMNS]
+            int position = (int) (Math.random() * (BoardSize.BOARD_ROWS * BoardSize.BOARD_COLUMNS - 1 + 1) + 1);
+            if (!positionSet.contains(position) && position != BoardSize.BOARD_COLUMNS / 2) {
+                if (count < 6) {
+                    // three eagles:red,green,blue
+                    addEagle(position, Types.values()[count % 3]);
+                } else {
+                    // three sharks:red,green,blue
+                    addShark(position, Types.values()[count % 3]);
+                }
+                positionSet.add(position);
+                count++;
+            }
+        } while (count < 12);
     }
 
     private void initializeSquare() {

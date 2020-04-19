@@ -1,13 +1,19 @@
 package view;
 
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import controller.GameController;
 import model.BoardSize;
 import model.GameModel;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class StartPanel extends JPanel {
     public StartPanel() {
@@ -50,25 +56,30 @@ public class StartPanel extends JPanel {
         add(button);
 
         button.addActionListener(new ActionListener() {
+
+            @SuppressWarnings("deprecation")
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                int rowValue= 0;
-                int columnValue =0;
-                try{
+                int rowValue = 0;
+                int columnValue = 0;
+                try {
                     rowValue = Integer.valueOf(rowText.getText());
                     columnValue = Integer.valueOf(columnText.getText());
-                }catch (NumberFormatException e){
-                    JOptionPane.showMessageDialog(null, "Numbers only");
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Numbers only!");
                     return;
                 }
 
-                jFrame.dispose();
-                //load board
-                new BoardSize(rowValue, columnValue);
-                gameController.startGame(new GameModel(), new GameView());
+                if (4 <= rowValue && rowValue <= 10
+                        && 4 <= columnValue && columnValue <= 10) {
+                    jFrame.dispose();
+                    // open GameBoard
+                    new BoardSize(rowValue, columnValue);
+                    gameController.startGame(new GameModel(), new GameView());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Numbers between 4 and 10!");
+                }
             }
-        });//end of action listerner
-
-
+        });
     }
 }
