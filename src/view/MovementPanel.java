@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,8 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import model.BoardSize;
@@ -26,6 +29,13 @@ public class MovementPanel
 
     MovementPanel(ActionListener actionListener, Color background) {
         ACTIONLISTENER = actionListener;
+
+        JLabel instructionLabel = new JLabel("<html>" + "Select a coordinate to move to" + "</html>");
+        instructionLabel.setPreferredSize(new Dimension(130, 70));
+        instructionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        instructionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        //instructionLabel.setBorder(new LineBorder(Color.BLACK));
+        add(instructionLabel);
 
         MOVE_JLIST = new JList<>();
         MOVE_JLIST.setBackground(background);

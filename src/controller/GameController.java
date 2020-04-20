@@ -14,23 +14,14 @@ import view.TemplateFrame;
 
 public class GameController {
 
-    private GameView gameView;
-    private GameModel gameModel;
+    private final GameView GAME_VIEW;
+    private final GameModel GAME_MODEL;
 
-    public GameController(){
-    }
-
-    public void startGame(GameModel gameModel, GameView gameView){
-        this.gameModel = gameModel;
-        this.gameView = gameView;
-        gameView.setCurrentPlayer(gameModel.isEagleTurn());
-        gameView.initializeGameView(this, gameModel);
-    }
-
-
-    public void showStartView() {
-        TemplateFrame templateFrame = new TemplateFrame();
-        templateFrame.showStartView(this);
+    public GameController(GameModel GAME_MODEL, GameView GAME_VIEW) {
+        this.GAME_MODEL = GAME_MODEL;
+        this.GAME_VIEW = GAME_VIEW;
+        GAME_VIEW.setCurrentPlayer(GAME_MODEL.isEagleTurn());
+        GAME_VIEW.initializeGameView(this, GAME_MODEL);
     }
 
     public void movePiece(int index, int[] movementCoord) {
@@ -39,14 +30,14 @@ public class GameController {
         if (index != -1 && movementCoord != null) {
 
             boolean moved;
-            Player<Eagle> eaglePlayer = gameModel.getEAGLE_PLAYER();
-            Player<Shark> sharkPlayer = gameModel.getSHARK_PLAYER();
-            Player<? extends MovablePiece> player = gameModel.isEagleTurn() ? eaglePlayer : sharkPlayer;
+            Player<Eagle> eaglePlayer = GAME_MODEL.getEAGLE_PLAYER();
+            Player<Shark> sharkPlayer = GAME_MODEL.getSHARK_PLAYER();
+            Player<? extends MovablePiece> player = GAME_MODEL.isEagleTurn() ? eaglePlayer : sharkPlayer;
 
-            moved = player.getPiece(index).updatePieceRowColumn(gameModel, gameModel.getSQUARE_ARRAY(), movementCoord);
+            moved = player.getPiece(index).updatePieceRowColumn(GAME_MODEL, GAME_MODEL.getSQUARE_ARRAY(), movementCoord);
 
             if (moved) {
-                gameView.updateViewAfterPieceMove(eaglePlayer, sharkPlayer);
+                GAME_VIEW.updateViewAfterPieceMove(eaglePlayer, sharkPlayer);
 
                 checkVictoryCondition();
             }
@@ -65,33 +56,27 @@ public class GameController {
             //break;
             //}
 
-            gameView.setAfterUseText(movablePiece);
+            GAME_VIEW.setAfterUseText(movablePiece);
 
         }
     }
 
     private MovablePiece stunPiece(int index) {
 
-        List<? extends MovablePiece> movablePieceList;
+        List<? extends MovablePiece> movablePieceList = GAME_MODEL.isEagleTurn() ? GAME_MODEL.getSHARK_PLAYER().getMOVABLEPIECE_LIST() : GAME_MODEL.getEAGLE_PLAYER().getMOVABLEPIECE_LIST();
 
-        if (gameModel.isEagleTurn()) {
-            movablePieceList = gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST();
-        } else {
-            movablePieceList = gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST();
-        }
+        MovablePiece movablePiece = movablePieceList.get(index);
+        movablePiece.setStunned(true);
 
-        movablePieceList.get(index).setStunned(true);
-
-        return movablePieceList.get(index);
+        return movablePiece;
     }
 
     public void updateNextTurn() {
 
         // click the 'next turn' button to test the end panel
         // could be removed when test is finished
-        gameView.dispose();
-        TemplateFrame frame = new TemplateFrame();
-        frame.showEndView(this, "Eagle");
+        GAME_VIEW.dispose();
+        new TemplateFrame().showEndView("Eagle");
 
         // gameModel.changePlayerTurn();
         // gameModel.updatePieceStatus();
@@ -101,13 +86,13 @@ public class GameController {
 
     private void checkVictoryCondition() {
 
-        for (Flag flag : gameModel.getFLAG_LIST()) {
+        for (Flag flag : GAME_MODEL.getFLAG_LIST()) {
 
-            Square flagSquare = gameModel.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
+            Square flagSquare = GAME_MODEL.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
 
             if (flagSquare.getMovablePiece() != null) {
 
-                MovablePiece movablepiece = gameModel.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()].getMovablePiece();
+                MovablePiece movablepiece = flagSquare.getMovablePiece();
 
                 if (movablepiece instanceof Eagle) {
                     System.out.println("Eagle Won");
@@ -120,13 +105,13 @@ public class GameController {
 
     public MovablePiece getEaglePiece(int selectedPieceIndex) {
 
-        return gameModel.getEAGLE_PLAYER().getPiece(selectedPieceIndex);
+        return GAME_MODEL.getEAGLE_PLAYER().getPiece(selectedPieceIndex);
 
     }
 
     public MovablePiece getSharkPiece(int selectedPieceIndex) {
 
-        return gameModel.getSHARK_PLAYER().getPiece(selectedPieceIndex);
+        return GAME_MODEL.getSHARK_PLAYER().getPiece(selectedPieceIndex);
 
     }
 }

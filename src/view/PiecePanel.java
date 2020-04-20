@@ -31,10 +31,16 @@ public class PiecePanel
         ACTIONLISTENER = actionListener;
 
         turnLabel = new JLabel();
-        turnLabel.setPreferredSize(new Dimension(100, 20));
-        turnLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        turnLabel.setPreferredSize(new Dimension(200, 25));
+        turnLabel.setFont(new Font("Arial", Font.BOLD, 19));
         turnLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(turnLabel);
+
+        JLabel instructionLabel = new JLabel("Select a piece to move");
+        instructionLabel.setPreferredSize(new Dimension(200, 20));
+        instructionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        instructionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(instructionLabel);
     }
 
     @Override
