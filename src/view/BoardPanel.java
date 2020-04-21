@@ -90,13 +90,14 @@ public class BoardPanel
 
         // draw the rows
         for (int i = 0; i < BoardSize.BOARD_ROWS + 1; i++) {
-            g.drawLine(BOARD_MARGIN, gridCoord(i), getWidth() - BOARD_MARGIN, gridCoord(i));
+            g.drawLine(BOARD_MARGIN, gridCoord(i), BoardSize.BOARD_COLUMNS * SQUARE_SIZE + BOARD_MARGIN, gridCoord(i));
         }
 
         // draw the columns
         for (int i = 0; i < BoardSize.BOARD_COLUMNS + 1; i++) {
-            g.drawLine(gridCoord(i), BOARD_MARGIN, gridCoord(i), getHeight() - BOARD_MARGIN);
+            g.drawLine(gridCoord(i), BOARD_MARGIN, gridCoord(i), BoardSize.BOARD_ROWS * SQUARE_SIZE + BOARD_MARGIN);
         }
+
     }
 
     private void drawEagle(Graphics g, Toolkit toolkit, List<Eagle> eagleList) {

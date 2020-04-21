@@ -73,15 +73,11 @@ public class GameController {
 
     public void updateNextTurn() {
 
-        // click the 'next turn' button to test the end panel
-        // could be removed when test is finished
-        GAME_VIEW.dispose();
-        new TemplateFrame().showEndView("Eagle");
+        GAME_MODEL.changePlayerTurn();
+        GAME_MODEL.updatePieceStatus();
+        GAME_VIEW.setCurrentPlayer(GAME_MODEL.isEagleTurn());
+        GAME_VIEW.updateNextTurn(GAME_MODEL.isEagleTurn());
 
-        // gameModel.changePlayerTurn();
-        // gameModel.updatePieceStatus();
-        // gameView.setCurrentPlayer(gameModel.isEagleTurn());
-        // gameView.updateNextTurn();
     }
 
     private void checkVictoryCondition() {
