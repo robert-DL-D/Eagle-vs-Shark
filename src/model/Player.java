@@ -15,7 +15,7 @@ public class Player<T extends MovablePiece> {
         MOVABLEPIECE_LIST.add(movablePiece);
     }
 
-    public T getPiece(int index) {
+    public T getMovablePiece(int index) {
 
         return MOVABLEPIECE_LIST.get(index);
     }
