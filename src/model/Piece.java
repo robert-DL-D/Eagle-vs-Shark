@@ -10,8 +10,8 @@ public abstract class Piece {
     Piece(int position, Enum type) {
         this.type = type;
 
-        row = position / BoardSize.BOARD_ROWS;
-        column = (position - (row) * BoardSize.BOARD_ROWS) - 1;
+        row = position / BoardSize.BOARD_COLUMNS;
+        column = (position - (row) * BoardSize.BOARD_COLUMNS) - 1;
     }
 
     public int getRow() {
