@@ -10,7 +10,7 @@ import model.Player;
 import model.Shark;
 import model.Square;
 import view.GameView;
-import view.TemplateFrame;
+//import view.TemplateFrame;
 
 public class GameController {
 
@@ -22,6 +22,20 @@ public class GameController {
         this.GAME_VIEW = GAME_VIEW;
         GAME_VIEW.setCurrentPlayer(GAME_MODEL.isEagleTurn());
         GAME_VIEW.initializeGameView(this, GAME_MODEL);
+
+        /*SaveLoadGame saveLoadGame = new SaveLoadGame();
+
+        try {
+            saveLoadGame.saveGame(GAME_MODEL.getEAGLE_PLAYER().getMovablePiece(0));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            saveLoadGame.loadGame();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
     }
 
     public void movePiece(int index, int[] movementCoord) {
@@ -34,7 +48,8 @@ public class GameController {
             Player<Shark> sharkPlayer = GAME_MODEL.getSHARK_PLAYER();
             Player<? extends MovablePiece> player = GAME_MODEL.isEagleTurn() ? eaglePlayer : sharkPlayer;
 
-            moved = player.getPiece(index).updatePieceRowColumn(GAME_MODEL, GAME_MODEL.getSQUARE_ARRAY(), movementCoord);
+            // TODO simplify GAME_MODEL to player
+            moved = player.getMovablePiece(index).updatePieceRowColumn(GAME_MODEL, GAME_MODEL.getSQUARE_ARRAY(), movementCoord);
 
             if (moved) {
                 GAME_VIEW.updateViewAfterPieceMove(eaglePlayer, sharkPlayer);
@@ -73,11 +88,15 @@ public class GameController {
 
     public void updateNextTurn() {
 
+        // click the 'next turn' button to test the end panel
+        // could be removed when test is finished
+       /* GAME_VIEW.dispose();
+        new TemplateFrame().showEndView("Eagle");*/
+
         GAME_MODEL.changePlayerTurn();
         GAME_MODEL.updatePieceStatus();
         GAME_VIEW.setCurrentPlayer(GAME_MODEL.isEagleTurn());
         GAME_VIEW.updateNextTurn(GAME_MODEL.isEagleTurn());
-
     }
 
     private void checkVictoryCondition() {
@@ -101,13 +120,13 @@ public class GameController {
 
     public MovablePiece getEaglePiece(int selectedPieceIndex) {
 
-        return GAME_MODEL.getEAGLE_PLAYER().getPiece(selectedPieceIndex);
+        return GAME_MODEL.getEAGLE_PLAYER().getMovablePiece(selectedPieceIndex);
 
     }
 
     public MovablePiece getSharkPiece(int selectedPieceIndex) {
 
-        return GAME_MODEL.getSHARK_PLAYER().getPiece(selectedPieceIndex);
+        return GAME_MODEL.getSHARK_PLAYER().getMovablePiece(selectedPieceIndex);
 
     }
 }

@@ -19,7 +19,27 @@ public class GameModel {
     public GameModel() {
         initializeSquare();
 
-        addEaglesAndSharksAndFlags();
+        //addEaglesAndSharksAndFlags();
+
+        addEagle(38, Types.RED);
+        addEagle(41, Types.RED);
+        addEagle(44, Types.GREEN);
+        addEagle(77, Types.GREEN);
+        addEagle(4, Types.BLUE);
+        addEagle(29, Types.BLUE);
+
+        addShark(30, Types.RED);
+        addShark(50, Types.RED);
+        addShark(39, Types.GREEN);
+        addShark(14, Types.GREEN);
+        addShark(40, Types.BLUE);
+        addShark(61, Types.BLUE);
+
+        addFlag(5, EAGLE_PLAYER);
+        addFlag(86, SHARK_PLAYER);
+
+        addIsland(32);
+        addIsland(59);
 
         isEagleTurn = ThreadLocalRandom.current().nextInt(0, 2) == 0;
     }
@@ -67,51 +87,37 @@ public class GameModel {
         }
     }
 
-    private void addShark(int position, Enum type) {
+    private void addEagle(int position, Enum type) {
+        Eagle eagle = null;
 
         if (type == Types.RED) {
-            SharkRed shark = new SharkRed(position, Types.RED);
-            SHARK_PLAYER.addMovablePiece(shark);
-
-            Square square = getSQUARE_ARRAY()[shark.getRow()][shark.getColumn()];
-            square.addMovablePiece(shark);
+            eagle = new EagleRed(position, Types.RED);
         } else if (type == Types.GREEN) {
-            SharkGreen shark = new SharkGreen(position, Types.GREEN);
-            SHARK_PLAYER.addMovablePiece(shark);
-
-            Square square = getSQUARE_ARRAY()[shark.getRow()][shark.getColumn()];
-            square.addMovablePiece(shark);
+            eagle = new EagleGreen(position, Types.GREEN);
         } else if (type == Types.BLUE) {
-            SharkBlue shark = new SharkBlue(position, Types.BLUE);
-            SHARK_PLAYER.addMovablePiece(shark);
-
-            Square square = getSQUARE_ARRAY()[shark.getRow()][shark.getColumn()];
-            square.addMovablePiece(shark);
+            eagle = new EagleBlue(position, Types.BLUE);
         }
+
+        EAGLE_PLAYER.addMovablePiece(eagle);
+        Square square = getSQUARE_ARRAY()[eagle.getRow()][eagle.getColumn()];
+        square.addMovablePiece(eagle);
     }
 
-    private void addEagle(int position, Enum type) {
+    private void addShark(int position, Enum type) {
+
+        Shark shark = null;
 
         if (type == Types.RED) {
-            EagleRed eagle = new EagleRed(position, Types.RED);
-            EAGLE_PLAYER.addMovablePiece(eagle);
-
-            Square square = getSQUARE_ARRAY()[eagle.getRow()][eagle.getColumn()];
-            square.addMovablePiece(eagle);
+            shark = new SharkRed(position, Types.RED);
         } else if (type == Types.GREEN) {
-            EagleGreen eagle = new EagleGreen(position, Types.GREEN);
-            EAGLE_PLAYER.addMovablePiece(eagle);
-
-            Square square = getSQUARE_ARRAY()[eagle.getRow()][eagle.getColumn()];
-            square.addMovablePiece(eagle);
+            shark = new SharkGreen(position, Types.GREEN);
         } else if (type == Types.BLUE) {
-            Eagle eagle = new EagleBlue(position, Types.BLUE);
-            EAGLE_PLAYER.addMovablePiece(eagle);
-
-            Square square = getSQUARE_ARRAY()[eagle.getRow()][eagle.getColumn()];
-            square.addMovablePiece(eagle);
+            shark = new SharkBlue(position, Types.BLUE);
         }
 
+        SHARK_PLAYER.addMovablePiece(shark);
+        Square square = getSQUARE_ARRAY()[shark.getRow()][shark.getColumn()];
+        square.addMovablePiece(shark);
     }
 
     private void addFlag(int position, Player owner) {
