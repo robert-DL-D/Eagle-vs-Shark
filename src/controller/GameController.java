@@ -10,7 +10,6 @@ import model.Player;
 import model.Shark;
 import model.Square;
 import view.GameView;
-//import view.TemplateFrame;
 
 public class GameController {
 
@@ -23,19 +22,6 @@ public class GameController {
         GAME_VIEW.setCurrentPlayer(GAME_MODEL.isEagleTurn());
         GAME_VIEW.initializeGameView(this, GAME_MODEL);
 
-        /*SaveLoadGame saveLoadGame = new SaveLoadGame();
-
-        try {
-            saveLoadGame.saveGame(GAME_MODEL.getEAGLE_PLAYER().getMovablePiece(0));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            saveLoadGame.loadGame();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }*/
     }
 
     public void movePiece(int index, int[] movementCoord) {
@@ -59,17 +45,13 @@ public class GameController {
         }
     }
 
-    public void useAbility(int index, String actionCommand) {
+    public void useAbility(int index) {
 
         if (index != -1) {
 
             MovablePiece movablePiece;
 
-        /*switch (actionCommand) {
-            case "Stun":*/
             movablePiece = stunPiece(index);
-            //break;
-            //}
 
             GAME_VIEW.setAfterUseText(movablePiece);
 
@@ -87,12 +69,6 @@ public class GameController {
     }
 
     public void updateNextTurn() {
-
-        // click the 'next turn' button to test the end panel
-        // could be removed when test is finished
-       /* GAME_VIEW.dispose();
-        new TemplateFrame().showEndView("Eagle");*/
-
         GAME_MODEL.changePlayerTurn();
         GAME_MODEL.updatePieceStatus();
         GAME_VIEW.setCurrentPlayer(GAME_MODEL.isEagleTurn());

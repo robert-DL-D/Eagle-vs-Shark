@@ -117,6 +117,16 @@ public class AbilityPanel
         lastAbilityUsed = "STUN";
     }
 
+    void enableAbilityUI() {
+
+        for (JButton jButton : ABILITIES_JBUTTON_LIST) {
+            jButton.setEnabled(true);
+        }
+
+        setAbilityButtonText();
+
+    }
+
     void disableAbilityUI() {
 
         for (JButton jButton : ABILITIES_JBUTTON_LIST) {

@@ -106,7 +106,7 @@ public class GameView
         } else if ("STUN".equals(actionCommand)) {
             ABILITY_PANEL.selectedStun(actionCommand);
         } else if (actionCommand.contains("Use Ability")) {
-            gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem(), actionEvent.getActionCommand());
+            gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem());
             ABILITY_PANEL.disableAbilityUI();
         } else if (actionCommand.contains("Eagle")) {
             MOVEMENT_PANEL.updateMoveJList(gameController.getEaglePiece(PIECE_PANEL.getSelectedPieceIndex()));
@@ -150,6 +150,7 @@ public class GameView
         ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
         ABILITY_PANEL.resetUseAbilityButtonText();
         ABILITY_PANEL.setUseAbilityButton(false);
+        ABILITY_PANEL.enableAbilityUI();
         TIME_PANEL.resetTimer();
     }
 
