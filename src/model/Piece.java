@@ -5,9 +5,9 @@ public abstract class Piece {
     int row;
     int column;
 
-    private Enum type;
+    Enum type;
 
-    Piece(int position, Enum type) {
+    Piece(Enum type, int position) {
         this.type = type;
 
         row = position / BoardSize.BOARD_COLUMNS;

@@ -2,26 +2,25 @@ package model;
 
 class EagleRed extends Eagle {
 
-    EagleRed(int position, Enum type) {
-        super(position, type);
+    EagleRed(int position) {
+        super(Types.RED, position, Abilities.STUN);
 
-        ability = Abilities.STUN;
+        addMovementCoord(DEFAULT_MOVEMENT_DISTANCE);
+    }
 
+    @Override
+    void addMovementCoord(int movementDistance) {
         // Up
-        MOVEMENT_COORD.add(new int[]{-1, 0});
-        MOVEMENT_COORD.add(new int[]{-2, 0});
+        addIncrementMOVEMENT_COORD(new int[]{-1, 0}, movementDistance);
 
         // Down
-        MOVEMENT_COORD.add(new int[]{1, 0});
-        MOVEMENT_COORD.add(new int[]{2, 0});
+        addIncrementMOVEMENT_COORD(new int[]{1, 0}, movementDistance);
 
         // Left
-        MOVEMENT_COORD.add(new int[]{0, -1});
-        MOVEMENT_COORD.add(new int[]{0, -2});
+        addIncrementMOVEMENT_COORD(new int[]{0, -1}, movementDistance);
 
         // Right
-        MOVEMENT_COORD.add(new int[]{0, 1});
-        MOVEMENT_COORD.add(new int[]{0, 2});
+        addIncrementMOVEMENT_COORD(new int[]{0, 1}, movementDistance);
     }
 
 }

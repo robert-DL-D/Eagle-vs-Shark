@@ -118,6 +118,8 @@ public class PiecePanel
 
             if (movablePiece.isStunned()) {
                 s += " STUNNED";
+            } else if (movablePiece.isSlowed()) {
+                s += " SLOWED";
             }
 
             button.setText(s);

@@ -2,34 +2,38 @@ package model;
 
 class EagleBlue extends Eagle {
 
-    EagleBlue(int position, Enum type) {
-        super(position, type);
+    EagleBlue(int position) {
+        super(Types.BLUE, position, Abilities.SPEED);
 
-        ability = Abilities.PH1;
+        addMovementCoord(DEFAULT_MOVEMENT_DISTANCE - 1);
+    }
+
+    @Override
+    void addMovementCoord(int movementDistance) {
 
         // Up
-        MOVEMENT_COORD.add(new int[]{-1, 0});
+        addIncrementMOVEMENT_COORD(new int[]{-1, 0}, movementDistance);
 
         // Down
-        MOVEMENT_COORD.add(new int[]{1, 0});
+        addIncrementMOVEMENT_COORD(new int[]{1, 0}, movementDistance);
 
         // Left
-        MOVEMENT_COORD.add(new int[]{0, -1});
+        addIncrementMOVEMENT_COORD(new int[]{0, -1}, movementDistance);
 
         // Right
-        MOVEMENT_COORD.add(new int[]{0, 1});
+        addIncrementMOVEMENT_COORD(new int[]{0, 1}, movementDistance);
 
         // Upper-Left
-        MOVEMENT_COORD.add(new int[]{-1, -1});
+        addIncrementMOVEMENT_COORD(new int[]{-1, -1}, movementDistance);
 
         // Upper-Right
-        MOVEMENT_COORD.add(new int[]{1, 1});
+        addIncrementMOVEMENT_COORD(new int[]{-1, 1}, movementDistance);
 
         // Lower-Left
-        MOVEMENT_COORD.add(new int[]{1, -1});
+        addIncrementMOVEMENT_COORD(new int[]{1, -1}, movementDistance);
 
         // Lower-Right
-        MOVEMENT_COORD.add(new int[]{-1, 1});
+        addIncrementMOVEMENT_COORD(new int[]{1, 1}, movementDistance);
     }
 
 }

@@ -23,7 +23,7 @@ public class AbilityPanel
 
     private final JList<String> PIECE_JLIST;
     private final List<JButton> ABILITIES_JBUTTON_LIST;
-    private static final String USE_ABILITY_BUTTON_TEXT = "Use Ability";
+    private static final String USE_ABILITY_BUTTON_TEXT = "Use";
     private final JButton useAbilityButton;
     private String lastAbilityUsed;
 
@@ -90,11 +90,15 @@ public class AbilityPanel
         }
     }
 
-    private void updatePieceJList() {
+    private void updatePieceJList(boolean listForEnemy) {
 
         List<? extends MovablePiece> movablePiecesList;
 
-        movablePiecesList = isEaglePlayerTurn ? GAMEVIEW.getSharkList() : GAMEVIEW.getEagleList();
+        if (isEaglePlayerTurn == listForEnemy) {
+            movablePiecesList = GAMEVIEW.getSharkList();
+        } else {
+            movablePiecesList = GAMEVIEW.getEagleList();
+        }
 
         String[] pieceCoordArray = new String[movablePiecesList.size()];
 
@@ -109,12 +113,20 @@ public class AbilityPanel
         PIECE_JLIST.setVisible(true);
     }
 
-    void selectedStun(String actionCommand) {
-        updatePieceJList();
+    void selectedAbilityOnEnemy(String actionCommand) {
+        updatePieceJList(true);
         setUseButtonText(actionCommand);
         setUseAbilityButton(true);
 
-        lastAbilityUsed = "STUN";
+        lastAbilityUsed = actionCommand;
+    }
+
+    void selectedAbilityOnAlly(String actionCommand) {
+        updatePieceJList(false);
+        setUseButtonText(actionCommand);
+        setUseAbilityButton(true);
+
+        lastAbilityUsed = actionCommand;
     }
 
     void enableAbilityUI() {

@@ -2,35 +2,39 @@ package model;
 
 class EagleGreen extends Eagle {
 
-    EagleGreen(int position, Enum type) {
-        super(position, type);
+    EagleGreen(int position) {
+        super(Types.GREEN, position, Abilities.SLOW);
+        addMovementCoord(DEFAULT_MOVEMENT_DISTANCE);
+    }
 
-        ability = Abilities.PH2;
+    @Override
+    void addMovementCoord(int movementDistance) {
+
+        movementDistance /= 3;
 
         // Up
-        MOVEMENT_COORD.add(new int[]{-1, 0});
+        addGapMOVEMENT_COORD(new int[]{-1, 0}, movementDistance);
 
         // Down
-        MOVEMENT_COORD.add(new int[]{1, 0});
+        addGapMOVEMENT_COORD(new int[]{1, 0}, movementDistance);
 
         // Left
-        MOVEMENT_COORD.add(new int[]{0, -1});
+        addGapMOVEMENT_COORD(new int[]{0, -1}, movementDistance);
 
         // Right
-        MOVEMENT_COORD.add(new int[]{0, 1});
+        addGapMOVEMENT_COORD(new int[]{0, 1}, movementDistance);
 
         // Upper-Left
-        MOVEMENT_COORD.add(new int[]{-2, -2});
+        addGapMOVEMENT_COORD(new int[]{-2, -2}, movementDistance);
 
         // Upper-Right
-        MOVEMENT_COORD.add(new int[]{2, 2});
+        addGapMOVEMENT_COORD(new int[]{-2, 2}, movementDistance);
 
         // Lower-Left
-        MOVEMENT_COORD.add(new int[]{2, -2});
+        addGapMOVEMENT_COORD(new int[]{2, -2}, movementDistance);
 
         // Lower-Right
-        MOVEMENT_COORD.add(new int[]{-2, 2});
-
+        addGapMOVEMENT_COORD(new int[]{2, 2}, movementDistance);
     }
 
 }

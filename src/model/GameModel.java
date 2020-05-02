@@ -17,25 +17,25 @@ public class GameModel {
     public GameModel() {
         initializeSquare();
 
-        addEagle(38, Types.RED);
-        addEagle(41, Types.RED);
-        addEagle(44, Types.GREEN);
-        addEagle(77, Types.GREEN);
-        addEagle(4, Types.BLUE);
-        addEagle(29, Types.BLUE);
+        addMovablePiece(Types.RED, "Eagle", 38);
+        addMovablePiece(Types.RED, "Eagle", 33);
+        addMovablePiece(Types.GREEN, "Eagle", 59);
+        addMovablePiece(Types.GREEN, "Eagle", 77);
+        addMovablePiece(Types.BLUE, "Eagle", 14);
+        addMovablePiece(Types.BLUE, "Eagle", 29);
 
-        addShark(30, Types.RED);
-        addShark(50, Types.RED);
-        addShark(39, Types.GREEN);
-        addShark(14, Types.GREEN);
-        addShark(40, Types.BLUE);
-        addShark(61, Types.BLUE);
+        addMovablePiece(Types.RED, "Shark", 30);
+        addMovablePiece(Types.RED, "Shark", 50);
+        addMovablePiece(Types.GREEN, "Shark", 39);
+        addMovablePiece(Types.GREEN, "Shark", 42);
+        addMovablePiece(Types.BLUE, "Shark", 40);
+        addMovablePiece(Types.BLUE, "Shark", 61);
 
         addFlag(5, EAGLE_PLAYER);
         addFlag(86, SHARK_PLAYER);
 
-        addIsland(32);
-        addIsland(59);
+        addIsland(1);
+        addIsland(82);
 
         isEagleTurn = ThreadLocalRandom.current().nextInt(0, 2) == 0;
     }
@@ -52,42 +52,37 @@ public class GameModel {
         }
     }
 
-    private void addEagle(int position, Enum type) {
-        Eagle eagle = null;
+    private void addMovablePiece(Enum type, String playerString, int position) {
+
+        AbstractFactory factory = null;
+        Player player = null;
+        MovablePiece movablePiece;
 
         if (type == Types.RED) {
-            eagle = new EagleRed(position, Types.RED);
+            factory = new RedPieceFactory();
         } else if (type == Types.GREEN) {
-            eagle = new EagleGreen(position, Types.GREEN);
+            factory = new GreenPieceFactory();
         } else if (type == Types.BLUE) {
-            eagle = new EagleBlue(position, Types.BLUE);
+            factory = new BluePieceFactory();
         }
 
-        EAGLE_PLAYER.addMovablePiece(eagle);
-        Square square = getSQUARE_ARRAY()[eagle.getRow()][eagle.getColumn()];
-        square.addMovablePiece(eagle);
-    }
+        movablePiece = factory.getPiece(playerString, position);
 
-    private void addShark(int position, Enum type) {
-
-        Shark shark = null;
-
-        if (type == Types.RED) {
-            shark = new SharkRed(position, Types.RED);
-        } else if (type == Types.GREEN) {
-            shark = new SharkGreen(position, Types.GREEN);
-        } else if (type == Types.BLUE) {
-            shark = new SharkBlue(position, Types.BLUE);
+        if (playerString.equals("Eagle")) {
+            player = EAGLE_PLAYER;
+        } else if (playerString.equals("Shark")) {
+            player = SHARK_PLAYER;
         }
 
-        SHARK_PLAYER.addMovablePiece(shark);
-        Square square = getSQUARE_ARRAY()[shark.getRow()][shark.getColumn()];
-        square.addMovablePiece(shark);
+        player.addMovablePiece(movablePiece);
+        Square square = getSQUARE_ARRAY()[movablePiece.getRow()][movablePiece.getColumn()];
+        square.addMovablePiece(movablePiece);
+
     }
 
-    private void addFlag(int position, Player owner) {
+    private void addFlag(int position, Player player) {
 
-        Flag flag = new Flag(position, owner, Types.FLAG);
+        Flag flag = new Flag(position, player);
         FLAG_LIST.add(flag);
 
         Square square = getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
@@ -96,7 +91,7 @@ public class GameModel {
 
     private void addIsland(int position) {
 
-        Island island = new Island(position, Types.ISLAND);
+        Island island = new Island(position);
         ISLAND_LIST.add(island);
 
         Square square = getSQUARE_ARRAY()[island.getRow()][island.getColumn()];
@@ -107,19 +102,58 @@ public class GameModel {
         isEagleTurn = !isEagleTurn;
     }
 
-    public void updatePieceStatus() {
+    public boolean movePiece(int index, int[] movementCoord) {
+
+        return (isEagleTurn ? EAGLE_PLAYER : SHARK_PLAYER).getMovablePiece(index).updatePieceRowColumn(EAGLE_PLAYER, SHARK_PLAYER, SQUARE_ARRAY, movementCoord);
+
+    }
+
+    public MovablePiece stunPiece(int index) {
+
+        MovablePiece movablePiece = (isEagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST()).get(index);
+        movablePiece.setStunned(true);
+        return movablePiece;
+    }
+
+    public MovablePiece speedPiece(int index) {
+
+        MovablePiece movablePiece = (isEagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST()).get(index);
+        movablePiece.getMOVEMENT_COORD().clear();
+        movablePiece.addMovementCoord(3);
+
+        return movablePiece;
+    }
+
+    public MovablePiece slowPiece(int index) {
+
+        MovablePiece movablePiece = (isEagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST()).get(index);
+        movablePiece.getMOVEMENT_COORD().clear();
+        movablePiece.addMovementCoord(1);
+        movablePiece.setSlowed(true);
+
+        return movablePiece;
+    }
+
+    public void resetPieceMovementStatus() {
+
+        List<? extends MovablePiece> movablePieceList;
+
         if (isEagleTurn) {
-            for (Shark shark : SHARK_PLAYER.getMOVABLEPIECE_LIST()) {
-                if (shark.isStunned()) {
-                    shark.setStunned(false);
-                }
+            movablePieceList = SHARK_PLAYER.getMOVABLEPIECE_LIST();
+        } else {
+            movablePieceList = EAGLE_PLAYER.getMOVABLEPIECE_LIST();
+        }
+
+        for (MovablePiece movablePiece : movablePieceList) {
+
+            movablePiece.addMovementCoord(MovablePiece.DEFAULT_MOVEMENT_DISTANCE);
+
+            if (movablePiece.isStunned()) {
+                movablePiece.setStunned(false);
             }
 
-        } else {
-            for (Eagle eagle : EAGLE_PLAYER.getMOVABLEPIECE_LIST()) {
-                if (eagle.isStunned()) {
-                    eagle.setStunned(false);
-                }
+            if (movablePiece.isSlowed()) {
+                movablePiece.setSlowed(false);
             }
         }
     }

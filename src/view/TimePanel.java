@@ -41,7 +41,7 @@ public class TimePanel
     private void setCountdownTimer(Timer currentTimer) {
         currentTimer.scheduleAtFixedRate(new TimerTask() {
 
-            int turnTimerLimit = Integer.parseInt("30");
+            final int turnTimerLimit = Integer.parseInt("30");
 
             public void run() {
                 //timerLabel.setText(String.valueOf(turnTimerLimit--));

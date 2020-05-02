@@ -70,19 +70,19 @@ public class GameView
         int turnPanelX = boardViewX + panelMargin;
         int turnPanelY = BoardPanel.getBoardMargin() + TIME_PANEL.getHeight() + panelMargin;
         PIECE_PANEL = new PiecePanel(this, this);
-        contentPane.add(addPanel(PIECE_PANEL, turnPanelX, turnPanelY, 220, 360));
+        contentPane.add(addPanel(PIECE_PANEL, turnPanelX, turnPanelY, 220, 660));
 
         int movementPanelX = turnPanelX + PIECE_PANEL.getWidth() + panelMargin;
         MOVEMENT_PANEL = new MovementPanel(this, getBackground());
-        contentPane.add(addPanel(MOVEMENT_PANEL, movementPanelX, turnPanelY, 150, 360));
+        contentPane.add(addPanel(MOVEMENT_PANEL, movementPanelX, turnPanelY, 150, PIECE_PANEL.getHeight()));
 
         int abilityPanelX = movementPanelX + MOVEMENT_PANEL.getWidth() + panelMargin;
         ABILITY_PANEL = new AbilityPanel(this, this, getBackground());
-        contentPane.add(addPanel(ABILITY_PANEL, abilityPanelX, turnPanelY, 180, 360));
+        contentPane.add(addPanel(ABILITY_PANEL, abilityPanelX, turnPanelY, 180, PIECE_PANEL.getHeight()));
 
         int rulesTextAreaX = abilityPanelX + ABILITY_PANEL.getWidth() + panelMargin;
         TextArea rulesTextArea = new TextArea("placeholder text - to be added", 1, 1);
-        rulesTextArea.setSize(220, 360);
+        rulesTextArea.setSize(220, PIECE_PANEL.getHeight());
         rulesTextArea.setLocation(rulesTextAreaX, turnPanelY);
         rulesTextArea.setEditable(false);
         contentPane.add(rulesTextArea);
@@ -104,9 +104,13 @@ public class GameView
         if ("Next Turn".equals(actionCommand)) {
             gameController.updateNextTurn();
         } else if ("STUN".equals(actionCommand)) {
-            ABILITY_PANEL.selectedStun(actionCommand);
-        } else if (actionCommand.contains("Use Ability")) {
-            gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem());
+            ABILITY_PANEL.selectedAbilityOnEnemy(actionCommand);
+        } else if ("SPEED".equals(actionCommand)) {
+            ABILITY_PANEL.selectedAbilityOnAlly(actionCommand);
+        } else if ("SLOW".equals(actionCommand)) {
+            ABILITY_PANEL.selectedAbilityOnEnemy(actionCommand);
+        } else if (actionCommand.contains("Use")) {
+            gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem(), actionCommand);
             ABILITY_PANEL.disableAbilityUI();
         } else if (actionCommand.contains("Eagle")) {
             MOVEMENT_PANEL.updateMoveJList(gameController.getEaglePiece(PIECE_PANEL.getSelectedPieceIndex()));
@@ -182,4 +186,5 @@ public class GameView
     public void setAfterUseText(MovablePiece movablePiece) {
         ABILITY_PANEL.setAfterUseText(movablePiece);
     }
+
 }

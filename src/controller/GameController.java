@@ -1,13 +1,9 @@
 package controller;
 
-import java.util.List;
-
 import model.Eagle;
 import model.Flag;
 import model.GameModel;
 import model.MovablePiece;
-import model.Player;
-import model.Shark;
 import model.Square;
 import view.GameView;
 
@@ -29,48 +25,31 @@ public class GameController {
         // -1 index means nothing is selected
         if (index != -1 && movementCoord != null) {
 
-            boolean moved;
-            Player<Eagle> eaglePlayer = GAME_MODEL.getEAGLE_PLAYER();
-            Player<Shark> sharkPlayer = GAME_MODEL.getSHARK_PLAYER();
-            Player<? extends MovablePiece> player = GAME_MODEL.isEagleTurn() ? eaglePlayer : sharkPlayer;
-
-            // TODO simplify GAME_MODEL to player
-            moved = player.getMovablePiece(index).updatePieceRowColumn(GAME_MODEL, GAME_MODEL.getSQUARE_ARRAY(), movementCoord);
-
-            if (moved) {
-                GAME_VIEW.updateViewAfterPieceMove(eaglePlayer, sharkPlayer);
+            if (GAME_MODEL.movePiece(index, movementCoord)) {
+                GAME_VIEW.updateViewAfterPieceMove(GAME_MODEL.getEAGLE_PLAYER(), GAME_MODEL.getSHARK_PLAYER());
 
                 checkVictoryCondition();
             }
         }
     }
 
-    public void useAbility(int index) {
+    public void useAbility(int index, String actionCommand) {
 
         if (index != -1) {
 
-            MovablePiece movablePiece;
-
-            movablePiece = stunPiece(index);
-
-            GAME_VIEW.setAfterUseText(movablePiece);
-
+            if (actionCommand.contains("STUN")) {
+                GAME_VIEW.setAfterUseText(GAME_MODEL.stunPiece(index));
+            } else if (actionCommand.contains("SPEED")) {
+                GAME_VIEW.setAfterUseText(GAME_MODEL.speedPiece(index));
+            } else if (actionCommand.contains("SLOW")) {
+                GAME_VIEW.setAfterUseText(GAME_MODEL.slowPiece(index));
+            }
         }
-    }
-
-    private MovablePiece stunPiece(int index) {
-
-        List<? extends MovablePiece> movablePieceList = GAME_MODEL.isEagleTurn() ? GAME_MODEL.getSHARK_PLAYER().getMOVABLEPIECE_LIST() : GAME_MODEL.getEAGLE_PLAYER().getMOVABLEPIECE_LIST();
-
-        MovablePiece movablePiece = movablePieceList.get(index);
-        movablePiece.setStunned(true);
-
-        return movablePiece;
     }
 
     public void updateNextTurn() {
         GAME_MODEL.changePlayerTurn();
-        GAME_MODEL.updatePieceStatus();
+        GAME_MODEL.resetPieceMovementStatus();
         GAME_VIEW.setCurrentPlayer(GAME_MODEL.isEagleTurn());
         GAME_VIEW.updateNextTurn(GAME_MODEL.isEagleTurn());
     }
@@ -95,14 +74,10 @@ public class GameController {
     }
 
     public MovablePiece getEaglePiece(int selectedPieceIndex) {
-
         return GAME_MODEL.getEAGLE_PLAYER().getMovablePiece(selectedPieceIndex);
-
     }
 
     public MovablePiece getSharkPiece(int selectedPieceIndex) {
-
         return GAME_MODEL.getSHARK_PLAYER().getMovablePiece(selectedPieceIndex);
-
     }
 }

@@ -2,26 +2,25 @@ package model;
 
 class SharkGreen extends Shark {
 
-    SharkGreen(int position, Enum type) {
-        super(position, type);
+    SharkGreen(int position) {
+        super(Types.GREEN, position, Abilities.SPEED);
 
-        ability = Abilities.STUN;
+        addMovementCoord(DEFAULT_MOVEMENT_DISTANCE);
+    }
 
+    @Override
+    void addMovementCoord(int movementDistance) {
         // Upper-Left
-        MOVEMENT_COORD.add(new int[]{-1, -1});
-        MOVEMENT_COORD.add(new int[]{-2, -2});
+        addIncrementMOVEMENT_COORD(new int[]{-1, -1}, movementDistance);
 
         // Upper-Right
-        MOVEMENT_COORD.add(new int[]{1, 1});
-        MOVEMENT_COORD.add(new int[]{2, 2});
+        addIncrementMOVEMENT_COORD(new int[]{-1, 1}, movementDistance);
 
         // Lower-Left
-        MOVEMENT_COORD.add(new int[]{1, -1});
-        MOVEMENT_COORD.add(new int[]{2, -2});
+        addIncrementMOVEMENT_COORD(new int[]{1, -1}, movementDistance);
 
         // Lower-Right
-        MOVEMENT_COORD.add(new int[]{-1, 1});
-        MOVEMENT_COORD.add(new int[]{-2, 2});
+        addIncrementMOVEMENT_COORD(new int[]{1, 1}, movementDistance);
     }
 
 }
