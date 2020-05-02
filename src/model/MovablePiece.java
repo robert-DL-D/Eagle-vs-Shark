@@ -10,12 +10,15 @@ public abstract class MovablePiece
     Enum ability;
     static final int DEFAULT_MOVEMENT_DISTANCE = 2;
 
+    private boolean movingMode;
     private boolean stunned;
     private boolean slowed;
 
     MovablePiece(Enum type, int position, Enum ability) {
         super(type, position);
         this.ability = ability;
+
+        movingMode = true;
     }
 
     void addIncrementMOVEMENT_COORD(int[] movementCoord, int movementDistance) {
@@ -139,12 +142,20 @@ public abstract class MovablePiece
         return ability;
     }
 
-    void setSlowed(boolean slowed) {
-        this.slowed = slowed;
-    }
-
     List<int[]> getMOVEMENT_COORD() {
         return MOVEMENT_COORD;
+    }
+
+    public boolean isMovingMode() {
+        return movingMode;
+    }
+
+    public void setMovingMode(boolean movingMode) {
+        this.movingMode = movingMode;
+    }
+
+    void setSlowed(boolean slowed) {
+        this.slowed = slowed;
     }
 
     void setStunned(boolean stunned) {

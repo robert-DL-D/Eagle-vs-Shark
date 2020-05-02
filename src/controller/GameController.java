@@ -73,6 +73,11 @@ public class GameController {
         }
     }
 
+    public void updateMovingMode(String actionCommand, int selectedModeIndex) {
+        MovablePiece movablePiece = GAME_MODEL.getCurrentPieceList().get(selectedModeIndex);
+        movablePiece.setMovingMode(!actionCommand.equals("M"));
+    }
+
     public void updateNextTurn() {
         GAME_MODEL.changePlayerTurn();
         GAME_MODEL.resetPieceMovementStatus();

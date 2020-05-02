@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
 import model.MovablePiece;
@@ -20,14 +21,13 @@ public class PiecePanel
 
     private final JLabel turnLabel;
 
-    private final GameView GAMEVIEW;
     private final ActionListener ACTIONLISTENER;
     private boolean isEaglePlayerTurn;
     private final List<JButton> PIECE_BUTTON_LIST = new ArrayList<>();
-    private int pressedButton;
+    private final List<JToggleButton> MODE_BUTTON_LIST = new ArrayList<>();
+    private int selectedButtonIndex;
 
-    PiecePanel(GameView gameView, ActionListener actionListener) {
-        GAMEVIEW = gameView;
+    PiecePanel(ActionListener actionListener) {
         ACTIONLISTENER = actionListener;
 
         turnLabel = new JLabel();
@@ -45,7 +45,12 @@ public class PiecePanel
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        pressedButton = PIECE_BUTTON_LIST.indexOf(actionEvent.getSource());
+
+        if (actionEvent.getSource().getClass().getSimpleName().equals("JButton")) {
+            selectedButtonIndex = PIECE_BUTTON_LIST.indexOf(actionEvent.getSource());
+        } else {
+            selectedButtonIndex = MODE_BUTTON_LIST.indexOf(actionEvent.getSource());
+        }
 
         ACTIONLISTENER.actionPerformed(actionEvent);
     }
@@ -59,7 +64,21 @@ public class PiecePanel
             PIECE_BUTTON_LIST.clear();
         }
 
-        for (int i = 0; i < currentPieceList.size(); i++) {
+        if (!MODE_BUTTON_LIST.isEmpty()) {
+            for (JToggleButton jToggleButton : MODE_BUTTON_LIST) {
+                remove(jToggleButton);
+            }
+            MODE_BUTTON_LIST.clear();
+        }
+
+        for (MovablePiece movablePiece : currentPieceList) {
+            JToggleButton toggleModeButton = new JToggleButton();
+            MODE_BUTTON_LIST.add(toggleModeButton);
+            toggleModeButton.setText(movablePiece.isMovingMode() ? "M" : "A");
+            toggleModeButton.addActionListener(this);
+            toggleModeButton.setSize(40, 180);
+            add(toggleModeButton);
+
             JButton pieceButton = new JButton();
             PIECE_BUTTON_LIST.add(pieceButton);
             pieceButton.setSize(80, 180);
@@ -74,12 +93,21 @@ public class PiecePanel
         setEnabledButton(currentPieceList);
     }
 
-    void updateTurnText() {
-        turnLabel.setText((isEaglePlayerTurn ? "Eagle" : "Shark") + "'s turn");
+    void changeModeButton() {
+        JToggleButton jToggleButton = MODE_BUTTON_LIST.get(selectedButtonIndex);
+
+        if (jToggleButton.getText().equals("M")) {
+            jToggleButton.setText("A");
+        } else {
+            jToggleButton.setText("M");
+        }
+
+        jToggleButton.setEnabled(false);
+        PIECE_BUTTON_LIST.get(selectedButtonIndex).setEnabled(false);
     }
 
-    int getSelectedPieceIndex() {
-        return pressedButton;
+    void updateTurnText() {
+        turnLabel.setText((isEaglePlayerTurn ? "Eagle" : "Shark") + "'s turn");
     }
 
     void disableAllPieceButton() {
@@ -128,6 +156,10 @@ public class PiecePanel
             PIECE_BUTTON_LIST.get(i).setText(s);
 
         }
+    }
+
+    int getSelectedButtonIndex() {
+        return selectedButtonIndex;
     }
 
     void setIsEaglePlayer(boolean isEaglePlayerTurn) {

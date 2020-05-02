@@ -27,11 +27,9 @@ public class AbilityPanel
     private final JButton useAbilityButton;
     private String lastAbilityUsed;
 
-    private final GameView GAMEVIEW;
     private final ActionListener ACTIONLISTENER;
 
-    AbilityPanel(GameView gameView, ActionListener actionListener, Color background) {
-        GAMEVIEW = gameView;
+    AbilityPanel(ActionListener actionListener, Color background) {
         ACTIONLISTENER = actionListener;
 
         JLabel abilityLabel = new JLabel("Abilities");
@@ -72,13 +70,12 @@ public class AbilityPanel
     void setAbilityButtonText(List<? extends MovablePiece> currentPieceList) {
 
         for (int i = 0; i < ABILITIES_JBUTTON_LIST.size(); i++) {
-            JButton button = ABILITIES_JBUTTON_LIST.get(i);
-
             MovablePiece movablePiece = currentPieceList.get(i * 2);
-
             String s = movablePiece.getAbility().toString();
+
+            JButton button = ABILITIES_JBUTTON_LIST.get(i);
             button.setText(s);
-            button.setEnabled(true);
+            button.setEnabled(!movablePiece.isMovingMode());
         }
     }
 
@@ -143,13 +140,8 @@ public class AbilityPanel
         }
     }
 
-    void hideUnusableAbility(MovablePiece movablePiece) {
-        for (JButton jButton : ABILITIES_JBUTTON_LIST) {
-            if (jButton.getText().equals(movablePiece.getAbility().toString())) {
-                jButton.setEnabled(false);
-                break;
-            }
-        }
+    void changeAbilityButtonStatus(int selectedModeIndex) {
+        ABILITIES_JBUTTON_LIST.get(selectedModeIndex).setEnabled(false);
     }
 
     JList<String> getPIECE_JLIST() {
@@ -171,4 +163,5 @@ public class AbilityPanel
     void setUseAbilityButton(boolean status) {
         useAbilityButton.setVisible(status);
     }
+
 }

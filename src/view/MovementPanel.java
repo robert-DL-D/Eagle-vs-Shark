@@ -58,31 +58,32 @@ public class MovementPanel
     }
 
     void updateMoveJList(MovablePiece movablePiece) {
-
-        if (!MOVEMENT_COORD_LIST.isEmpty()) {
-            MOVEMENT_COORD_LIST.clear();
-        }
-
-        List<String> pieceCoordList = new LinkedList<>();
-
-        for (int[] movablecoord : movablePiece.getMovableCoords()) {
-
-            int[] validCoord = new int[2];
-            validCoord[0] = movablePiece.getRow() + movablecoord[0] + 1;
-            validCoord[1] = movablePiece.getColumn() + movablecoord[1] + 1;
-
-            if (!(validCoord[0] < 1 || validCoord[0] > BoardSize.BOARD_ROWS || validCoord[1] < 1 || validCoord[1] > BoardSize.BOARD_COLUMNS)) {
-                pieceCoordList.add(validCoord[0] + " " + validCoord[1]);
-                MOVEMENT_COORD_LIST.add(movablecoord);
+        if (movablePiece.isMovingMode()) {
+            if (!MOVEMENT_COORD_LIST.isEmpty()) {
+                MOVEMENT_COORD_LIST.clear();
             }
+
+            List<String> pieceCoordList = new LinkedList<>();
+
+            for (int[] movablecoord : movablePiece.getMovableCoords()) {
+
+                int[] validCoord = new int[2];
+                validCoord[0] = movablePiece.getRow() + movablecoord[0] + 1;
+                validCoord[1] = movablePiece.getColumn() + movablecoord[1] + 1;
+
+                if (!(validCoord[0] < 1 || validCoord[0] > BoardSize.BOARD_ROWS || validCoord[1] < 1 || validCoord[1] > BoardSize.BOARD_COLUMNS)) {
+                    pieceCoordList.add(validCoord[0] + " " + validCoord[1]);
+                    MOVEMENT_COORD_LIST.add(movablecoord);
+                }
+            }
+
+            // Must use variable here
+            String[] pieceCoordArray = pieceCoordList.toArray(new String[pieceCoordList.size()]);
+
+            MOVE_JLIST.setListData(pieceCoordArray);
+            MOVE_JLIST.setVisible(true);
+            MOVE_BUTTON.setVisible(true);
         }
-
-        // Must use variable here
-        String[] pieceCoordArray = pieceCoordList.toArray(new String[pieceCoordList.size()]);
-
-        MOVE_JLIST.setListData(pieceCoordArray);
-        MOVE_JLIST.setVisible(true);
-        MOVE_BUTTON.setVisible(true);
     }
 
     int[] getMovementCoord() {
@@ -90,15 +91,6 @@ public class MovementPanel
         int selectedIndex = MOVE_JLIST.getSelectedIndex();
         return selectedIndex == -1 ? null : MOVEMENT_COORD_LIST.get(selectedIndex);
 
-    }
-
-    void method() {
-
-        String[] empty = new String[0];
-
-        MOVE_JLIST.setListData(empty);
-
-        hideMovementUI();
     }
 
     void hideMovementUI() {

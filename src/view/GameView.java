@@ -63,7 +63,7 @@ public class GameView
 
         int turnPanelX = boardViewX + panelMargin;
         int turnPanelY = BoardPanel.getBoardMargin() + TIME_PANEL.getHeight() + panelMargin;
-        PIECE_PANEL = new PiecePanel(this, this);
+        PIECE_PANEL = new PiecePanel(this);
         contentPane.add(addPanel(PIECE_PANEL, turnPanelX, turnPanelY, 220, 660));
 
         int movementPanelX = turnPanelX + PIECE_PANEL.getWidth() + panelMargin;
@@ -71,7 +71,7 @@ public class GameView
         contentPane.add(addPanel(MOVEMENT_PANEL, movementPanelX, turnPanelY, 150, PIECE_PANEL.getHeight()));
 
         int abilityPanelX = movementPanelX + MOVEMENT_PANEL.getWidth() + panelMargin;
-        ABILITY_PANEL = new AbilityPanel(this, this, getBackground());
+        ABILITY_PANEL = new AbilityPanel(this, getBackground());
         contentPane.add(addPanel(ABILITY_PANEL, abilityPanelX, turnPanelY, 180, PIECE_PANEL.getHeight()));
 
         int rulesTextAreaX = abilityPanelX + ABILITY_PANEL.getWidth() + panelMargin;
@@ -104,12 +104,16 @@ public class GameView
         } else if (actionCommand.contains("Use")) {
             gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem(), actionCommand);
             ABILITY_PANEL.disableAbilityUI();
+        } else if ("M".equals(actionCommand) || "A".equals(actionCommand)) {
+            PIECE_PANEL.changeModeButton();
+            ABILITY_PANEL.changeAbilityButtonStatus(PIECE_PANEL.getSelectedButtonIndex());
+            gameController.updateMovingMode(actionCommand, PIECE_PANEL.getSelectedButtonIndex());
         } else if (actionCommand.contains("Eagle")) {
-            MOVEMENT_PANEL.updateMoveJList(gameController.getEaglePiece(PIECE_PANEL.getSelectedPieceIndex()));
+            MOVEMENT_PANEL.updateMoveJList(gameController.getEaglePiece(PIECE_PANEL.getSelectedButtonIndex()));
         } else if (actionCommand.contains("Shark")) {
-            MOVEMENT_PANEL.updateMoveJList(gameController.getSharkPiece(PIECE_PANEL.getSelectedPieceIndex()));
+            MOVEMENT_PANEL.updateMoveJList(gameController.getSharkPiece(PIECE_PANEL.getSelectedButtonIndex()));
         } else if (actionCommand.equals("Move")) {
-            gameController.movePiece(PIECE_PANEL.getSelectedPieceIndex(), MOVEMENT_PANEL.getMovementCoord());
+            gameController.movePiece(PIECE_PANEL.getSelectedButtonIndex(), MOVEMENT_PANEL.getMovementCoord());
         }
     }
 
@@ -133,7 +137,6 @@ public class GameView
         PIECE_PANEL.updateTurnText();
         PIECE_PANEL.setButtonText(currentPieceList);
         MOVEMENT_PANEL.hideMovementUI();
-        ABILITY_PANEL.hideUnusableAbility(movablePiece);
     }
 
     public void updateNextTurn(List<? extends MovablePiece> currentPieceList) {
