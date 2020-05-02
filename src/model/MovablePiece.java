@@ -91,7 +91,7 @@ public abstract class MovablePiece
             if (pieceOnNewSquare instanceof Island) {
                 return false;
             } else if (pieceOnNewSquare instanceof Flag) {
-                return !((Flag) pieceOnNewSquare).getOWNER().getMOVABLEPIECE_LIST().contains(movablePieceOnCurrentSquare);
+                return !((Flag) pieceOnNewSquare).getPLAYER().getMOVABLEPIECE_LIST().contains(movablePieceOnCurrentSquare);
             } else {
                 MovablePiece movablePieceOnNewSquare = newSquare.getMovablePiece();
 

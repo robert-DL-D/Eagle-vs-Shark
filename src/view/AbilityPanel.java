@@ -29,7 +29,6 @@ public class AbilityPanel
 
     private final GameView GAMEVIEW;
     private final ActionListener ACTIONLISTENER;
-    private boolean isEaglePlayerTurn;
 
     AbilityPanel(GameView gameView, ActionListener actionListener, Color background) {
         GAMEVIEW = gameView;
@@ -70,19 +69,12 @@ public class AbilityPanel
         ACTIONLISTENER.actionPerformed(actionEvent);
     }
 
-    void setAbilityButtonText() {
+    void setAbilityButtonText(List<? extends MovablePiece> currentPieceList) {
 
         for (int i = 0; i < ABILITIES_JBUTTON_LIST.size(); i++) {
             JButton button = ABILITIES_JBUTTON_LIST.get(i);
-            List<? extends MovablePiece> movablePiecesList;
 
-            if (isEaglePlayerTurn) {
-                movablePiecesList = GAMEVIEW.getEagleList();
-            } else {
-                movablePiecesList = GAMEVIEW.getSharkList();
-            }
-
-            MovablePiece movablePiece = movablePiecesList.get(i * 2);
+            MovablePiece movablePiece = currentPieceList.get(i * 2);
 
             String s = movablePiece.getAbility().toString();
             button.setText(s);
@@ -90,20 +82,12 @@ public class AbilityPanel
         }
     }
 
-    private void updatePieceJList(boolean listForEnemy) {
+    private void updatePieceJList(List<? extends MovablePiece> listForEnemy) {
 
-        List<? extends MovablePiece> movablePiecesList;
+        String[] pieceCoordArray = new String[listForEnemy.size()];
 
-        if (isEaglePlayerTurn == listForEnemy) {
-            movablePiecesList = GAMEVIEW.getSharkList();
-        } else {
-            movablePiecesList = GAMEVIEW.getEagleList();
-        }
-
-        String[] pieceCoordArray = new String[movablePiecesList.size()];
-
-        for (int i = 0; i < movablePiecesList.size(); i++) {
-            MovablePiece movablePiece = movablePiecesList.get(i);
+        for (int i = 0; i < listForEnemy.size(); i++) {
+            MovablePiece movablePiece = listForEnemy.get(i);
 
             pieceCoordArray[i] = (movablePiece.getType() + " " + movablePiece.getClass().getSuperclass().getSimpleName()
                     + " " + (i + 1) + ": " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1));
@@ -113,29 +97,29 @@ public class AbilityPanel
         PIECE_JLIST.setVisible(true);
     }
 
-    void selectedAbilityOnEnemy(String actionCommand) {
-        updatePieceJList(true);
+    void selectedAbilityOnEnemy(String actionCommand, List<? extends MovablePiece> otherPieceList) {
+        updatePieceJList(otherPieceList);
         setUseButtonText(actionCommand);
         setUseAbilityButton(true);
 
         lastAbilityUsed = actionCommand;
     }
 
-    void selectedAbilityOnAlly(String actionCommand) {
-        updatePieceJList(false);
+    void selectedAbilityOnAlly(String actionCommand, List<? extends MovablePiece> currentPieceList) {
+        updatePieceJList(currentPieceList);
         setUseButtonText(actionCommand);
         setUseAbilityButton(true);
 
         lastAbilityUsed = actionCommand;
     }
 
-    void enableAbilityUI() {
+    void enableAbilityUI(List<? extends MovablePiece> currentPieceList) {
 
         for (JButton jButton : ABILITIES_JBUTTON_LIST) {
             jButton.setEnabled(true);
         }
 
-        setAbilityButtonText();
+        setAbilityButtonText(currentPieceList);
 
     }
 
@@ -159,16 +143,21 @@ public class AbilityPanel
         }
     }
 
+    void hideUnusableAbility(MovablePiece movablePiece) {
+        for (JButton jButton : ABILITIES_JBUTTON_LIST) {
+            if (jButton.getText().equals(movablePiece.getAbility().toString())) {
+                jButton.setEnabled(false);
+                break;
+            }
+        }
+    }
+
     JList<String> getPIECE_JLIST() {
         return PIECE_JLIST;
     }
 
     int getPieceJListSelectedItem() {
         return PIECE_JLIST.getSelectedIndex();
-    }
-
-    void setIsEaglePlayer(boolean isEaglePlayerTurn) {
-        this.isEaglePlayerTurn = isEaglePlayerTurn;
     }
 
     private void setUseButtonText(String actionCommand) {

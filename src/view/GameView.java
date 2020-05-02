@@ -15,11 +15,10 @@ import javax.swing.border.LineBorder;
 import controller.GameController;
 import model.Eagle;
 import model.Flag;
-import model.GameModel;
 import model.Island;
 import model.MovablePiece;
-import model.Player;
 import model.Shark;
+import model.Square;
 
 public class GameView
         extends JFrame
@@ -31,11 +30,6 @@ public class GameView
     private final AbilityPanel ABILITY_PANEL;
     private final TimePanel TIME_PANEL;
     private GameController gameController;
-
-    private List<Shark> sharkList;
-    private List<Eagle> eagleList;
-    private List<Flag> flagList;
-    private List<Island> islandList;
 
     public GameView() {
         super("Eagle vs Shark");
@@ -49,7 +43,7 @@ public class GameView
 
         Container contentPane = getContentPane();
 
-        BOARD_PANEL = new BoardPanel(this);
+        BOARD_PANEL = new BoardPanel();
         BOARD_PANEL.setLocation(0, 0);
         BOARD_PANEL.setSize(590, 650);
         contentPane.add(BOARD_PANEL);
@@ -103,12 +97,10 @@ public class GameView
 
         if ("Next Turn".equals(actionCommand)) {
             gameController.updateNextTurn();
-        } else if ("STUN".equals(actionCommand)) {
-            ABILITY_PANEL.selectedAbilityOnEnemy(actionCommand);
+        } else if ("STUN".equals(actionCommand) || "SLOW".equals(actionCommand)) {
+            ABILITY_PANEL.selectedAbilityOnEnemy(actionCommand, gameController.getOtherPieceList());
         } else if ("SPEED".equals(actionCommand)) {
-            ABILITY_PANEL.selectedAbilityOnAlly(actionCommand);
-        } else if ("SLOW".equals(actionCommand)) {
-            ABILITY_PANEL.selectedAbilityOnEnemy(actionCommand);
+            ABILITY_PANEL.selectedAbilityOnAlly(actionCommand, gameController.getCurrentPieceList());
         } else if (actionCommand.contains("Use")) {
             gameController.useAbility(ABILITY_PANEL.getPieceJListSelectedItem(), actionCommand);
             ABILITY_PANEL.disableAbilityUI();
@@ -121,70 +113,53 @@ public class GameView
         }
     }
 
-    public void initializeGameView(GameController gameController, GameModel gameModel) {
+    public void initializeGameView(GameController gameController, Square[][] squareArray,
+                                   List<Eagle> eagleList, List<Shark> sharkList,
+                                   List<Flag> flagList, List<Island> islandList,
+                                   int numberOfButtons,
+                                   List<? extends MovablePiece> currentPieceList) {
         this.gameController = gameController;
-        BOARD_PANEL.setSquares(gameModel.getSQUARE_ARRAY());
-        sharkList = gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST();
-        eagleList = gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST();
-        flagList = gameModel.getFLAG_LIST();
-        islandList = gameModel.getISLAND_LIST();
+        BOARD_PANEL.setBoard(squareArray, eagleList, sharkList, flagList, islandList);
         PIECE_PANEL.updateTurnText();
-        PIECE_PANEL.setButtonText();
-        PIECE_PANEL.createButtons(getNumberOfPieces(gameModel.isEagleTurn()));
-        ABILITY_PANEL.setAbilityButtonText();
+        PIECE_PANEL.createButtons(currentPieceList);
+        PIECE_PANEL.setButtonText(currentPieceList);
+        ABILITY_PANEL.setAbilityButtonText(currentPieceList);
         TIME_PANEL.setGameController(gameController);
     }
 
-    public void updateViewAfterPieceMove(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer) {
+    public void updateViewAfterPieceMove(List<? extends MovablePiece> currentPieceList, MovablePiece movablePiece) {
         repaint();
-        eagleList = eaglePlayer.getMOVABLEPIECE_LIST();
-        sharkList = sharkPlayer.getMOVABLEPIECE_LIST();
         PIECE_PANEL.disableAllPieceButton();
         PIECE_PANEL.updateTurnText();
-        PIECE_PANEL.setButtonText();
-        MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
-        MOVEMENT_PANEL.getMOVE_BUTTON().setVisible(false);
+        PIECE_PANEL.setButtonText(currentPieceList);
+        MOVEMENT_PANEL.hideMovementUI();
+        ABILITY_PANEL.hideUnusableAbility(movablePiece);
     }
 
-    public void updateNextTurn(boolean eagleTurn) {
+    public void updateNextTurn(List<? extends MovablePiece> currentPieceList) {
         PIECE_PANEL.updateTurnText();
-        PIECE_PANEL.createButtons(getNumberOfPieces(eagleTurn));
-        MOVEMENT_PANEL.getMOVE_JLIST().setVisible(false);
-        MOVEMENT_PANEL.getMOVE_BUTTON().setVisible(false);
+        PIECE_PANEL.createButtons(currentPieceList);
+        MOVEMENT_PANEL.hideMovementUI();
         ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
         ABILITY_PANEL.resetUseAbilityButtonText();
         ABILITY_PANEL.setUseAbilityButton(false);
-        ABILITY_PANEL.enableAbilityUI();
+        ABILITY_PANEL.enableAbilityUI(currentPieceList);
         TIME_PANEL.resetTimer();
-    }
-
-    private int getNumberOfPieces(boolean eagleTurn) {
-        return eagleTurn ? eagleList.size() : sharkList.size();
     }
 
     public void setCurrentPlayer(boolean isEagleTurn) {
         PIECE_PANEL.setIsEaglePlayer(isEagleTurn);
-        ABILITY_PANEL.setIsEaglePlayer(isEagleTurn);
-    }
-
-    List<Shark> getSharkList() {
-        return sharkList;
-    }
-
-    List<Eagle> getEagleList() {
-        return eagleList;
-    }
-
-    List<Flag> getFlagList() {
-        return flagList;
-    }
-
-    List<Island> getIslandList() {
-        return islandList;
     }
 
     public void setAfterUseText(MovablePiece movablePiece) {
         ABILITY_PANEL.setAfterUseText(movablePiece);
     }
 
+    public void hideMovementUI() {
+        MOVEMENT_PANEL.hideMovementUI();
+    }
+
+    public void hideUnmovablePiece(String abilityUsed, List<? extends MovablePiece> currentPieceList) {
+        PIECE_PANEL.hideUnmovablePiece(abilityUsed, currentPieceList);
+    }
 }

@@ -11,7 +11,7 @@ import javax.swing.SwingConstants;
 
 import controller.GameController;
 
-public class TimePanel
+class TimePanel
         extends JPanel {
 
     private Timer currentTimer = new Timer();

@@ -146,6 +146,7 @@ public class GameModel {
 
         for (MovablePiece movablePiece : movablePieceList) {
 
+            movablePiece.getMOVEMENT_COORD().clear();
             movablePiece.addMovementCoord(MovablePiece.DEFAULT_MOVEMENT_DISTANCE);
 
             if (movablePiece.isStunned()) {
@@ -182,4 +183,13 @@ public class GameModel {
         return isEagleTurn;
     }
 
+    public List<? extends MovablePiece> getCurrentPieceList() {
+
+        return isEagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST();
+    }
+
+    public List<? extends MovablePiece> getOtherPieceList() {
+
+        return isEagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST();
+    }
 }

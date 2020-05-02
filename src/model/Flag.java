@@ -10,7 +10,7 @@ public class Flag extends Piece {
         PLAYER = player;
     }
 
-    Player getOWNER() {
+    Player getPLAYER() {
         return PLAYER;
     }
 }

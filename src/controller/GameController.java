@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import model.Eagle;
 import model.Flag;
 import model.GameModel;
@@ -12,11 +14,21 @@ public class GameController {
     private final GameView GAME_VIEW;
     private final GameModel GAME_MODEL;
 
-    public GameController(GameModel GAME_MODEL, GameView GAME_VIEW) {
-        this.GAME_MODEL = GAME_MODEL;
-        this.GAME_VIEW = GAME_VIEW;
-        GAME_VIEW.setCurrentPlayer(GAME_MODEL.isEagleTurn());
-        GAME_VIEW.initializeGameView(this, GAME_MODEL);
+    public GameController(GameModel gameModel, GameView gameView) {
+        GAME_MODEL = gameModel;
+        GAME_VIEW = gameView;
+        gameView.setCurrentPlayer(gameModel.isEagleTurn());
+
+        int numberOfButtons = gameModel.getCurrentPieceList().size();
+
+        gameView.initializeGameView(this,
+                gameModel.getSQUARE_ARRAY(),
+                gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST(),
+                gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST(),
+                gameModel.getFLAG_LIST(),
+                gameModel.getISLAND_LIST(),
+                numberOfButtons,
+                gameModel.getCurrentPieceList());
 
     }
 
@@ -26,7 +38,10 @@ public class GameController {
         if (index != -1 && movementCoord != null) {
 
             if (GAME_MODEL.movePiece(index, movementCoord)) {
-                GAME_VIEW.updateViewAfterPieceMove(GAME_MODEL.getEAGLE_PLAYER(), GAME_MODEL.getSHARK_PLAYER());
+
+                MovablePiece movablePiece = getCurrentPieceList().get(index);
+
+                GAME_VIEW.updateViewAfterPieceMove(getCurrentPieceList(), movablePiece);
 
                 checkVictoryCondition();
             }
@@ -37,13 +52,24 @@ public class GameController {
 
         if (index != -1) {
 
+            String abilityUsed = null;
+
             if (actionCommand.contains("STUN")) {
                 GAME_VIEW.setAfterUseText(GAME_MODEL.stunPiece(index));
+                abilityUsed = "STUN";
+
             } else if (actionCommand.contains("SPEED")) {
                 GAME_VIEW.setAfterUseText(GAME_MODEL.speedPiece(index));
+                GAME_VIEW.hideMovementUI();
+                abilityUsed = "SPEED";
+
             } else if (actionCommand.contains("SLOW")) {
                 GAME_VIEW.setAfterUseText(GAME_MODEL.slowPiece(index));
+                abilityUsed = "SLOW";
+
             }
+
+            GAME_VIEW.hideUnmovablePiece(abilityUsed, getCurrentPieceList());
         }
     }
 
@@ -51,7 +77,8 @@ public class GameController {
         GAME_MODEL.changePlayerTurn();
         GAME_MODEL.resetPieceMovementStatus();
         GAME_VIEW.setCurrentPlayer(GAME_MODEL.isEagleTurn());
-        GAME_VIEW.updateNextTurn(GAME_MODEL.isEagleTurn());
+
+        GAME_VIEW.updateNextTurn(getCurrentPieceList());
     }
 
     private void checkVictoryCondition() {
@@ -79,5 +106,13 @@ public class GameController {
 
     public MovablePiece getSharkPiece(int selectedPieceIndex) {
         return GAME_MODEL.getSHARK_PLAYER().getMovablePiece(selectedPieceIndex);
+    }
+
+    public List<? extends MovablePiece> getCurrentPieceList() {
+        return GAME_MODEL.getCurrentPieceList();
+    }
+
+    public List<? extends MovablePiece> getOtherPieceList() {
+        return GAME_MODEL.getCurrentPieceList();
     }
 }

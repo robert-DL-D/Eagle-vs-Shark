@@ -92,11 +92,18 @@ public class MovementPanel
 
     }
 
-    JList<String> getMOVE_JLIST() {
-        return MOVE_JLIST;
+    void method() {
+
+        String[] empty = new String[0];
+
+        MOVE_JLIST.setListData(empty);
+
+        hideMovementUI();
     }
 
-    JButton getMOVE_BUTTON() {
-        return MOVE_BUTTON;
+    void hideMovementUI() {
+        MOVE_JLIST.setVisible(false);
+        MOVE_BUTTON.setVisible(false);
     }
+
 }

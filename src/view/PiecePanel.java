@@ -50,7 +50,7 @@ public class PiecePanel
         ACTIONLISTENER.actionPerformed(actionEvent);
     }
 
-    void createButtons(int numberOfButtons) {
+    void createButtons(List<? extends MovablePiece> currentPieceList) {
 
         if (!PIECE_BUTTON_LIST.isEmpty()) {
             for (JButton jButton : PIECE_BUTTON_LIST) {
@@ -59,7 +59,7 @@ public class PiecePanel
             PIECE_BUTTON_LIST.clear();
         }
 
-        for (int i = 0; i < numberOfButtons; i++) {
+        for (int i = 0; i < currentPieceList.size(); i++) {
             JButton pieceButton = new JButton();
             PIECE_BUTTON_LIST.add(pieceButton);
             pieceButton.setSize(80, 180);
@@ -70,8 +70,8 @@ public class PiecePanel
 
         revalidate();
         repaint();
-        setButtonText();
-        setEnabledButton();
+        setButtonText(currentPieceList);
+        setEnabledButton(currentPieceList);
     }
 
     void updateTurnText() {
@@ -88,15 +88,13 @@ public class PiecePanel
         }
     }
 
-    private void setEnabledButton() {
-
-        List<? extends MovablePiece> pieceList = isEaglePlayerTurn ? GAMEVIEW.getEagleList() : GAMEVIEW.getSharkList();
+    private void setEnabledButton(List<? extends MovablePiece> currentPieceList) {
 
         for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
 
             JButton button = PIECE_BUTTON_LIST.get(i);
 
-            if (pieceList.get(i).isStunned()) {
+            if (currentPieceList.get(i).isStunned()) {
                 button.setEnabled(false);
             } else {
                 button.setEnabled(true);
@@ -104,14 +102,19 @@ public class PiecePanel
         }
     }
 
-    void setButtonText() {
+    void hideUnmovablePiece(String abilityUsed, List<? extends MovablePiece> currentPieceList) {
+        for (int i = 0; i < currentPieceList.size(); i++) {
+            if (currentPieceList.get(i).getAbility().toString().equals(abilityUsed)) {
+                PIECE_BUTTON_LIST.get(i).setEnabled(false);
+            }
+        }
+    }
 
-        List<? extends MovablePiece> pieceList = isEaglePlayerTurn ? GAMEVIEW.getEagleList() : GAMEVIEW.getSharkList();
+    void setButtonText(List<? extends MovablePiece> currentPieceList) {
 
         for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
-            JButton button = PIECE_BUTTON_LIST.get(i);
 
-            MovablePiece movablePiece = pieceList.get(i);
+            MovablePiece movablePiece = currentPieceList.get(i);
 
             String s = movablePiece.getType() + " " + movablePiece.getClass().getSuperclass().getSimpleName()
                     + " " + (i + 1) + ": " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1);
@@ -122,7 +125,7 @@ public class PiecePanel
                 s += " SLOWED";
             }
 
-            button.setText(s);
+            PIECE_BUTTON_LIST.get(i).setText(s);
 
         }
     }

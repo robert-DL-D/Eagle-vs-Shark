@@ -27,12 +27,11 @@ public class BoardPanel
     private static final int PIC_SIZE = 58;
     private static final int AXIS_NUMBER_MARGIN = 40;
     private static final String FOLDER_PATH = "src/images";
-    private final GameView GAMEVIEW;
     private Square[][] squares;
-
-    BoardPanel(GameView gameView) {
-        GAMEVIEW = gameView;
-    }
+    private List<Eagle> eagleList;
+    private List<Shark> sharkList;
+    private List<Flag> flagList;
+    private List<Island> islandList;
 
     private static int gridCoord(int i) {
         return i * SQUARE_SIZE + BOARD_MARGIN;
@@ -55,10 +54,10 @@ public class BoardPanel
 
         drawSquare(g);
         drawLines(g);
-        drawEagle(g, toolkit, GAMEVIEW.getEagleList());
-        drawShark(g, toolkit, GAMEVIEW.getSharkList());
-        drawFlag(g, toolkit, GAMEVIEW.getFlagList());
-        drawIsland(g, toolkit, GAMEVIEW.getIslandList());
+        drawEagle(g, toolkit, eagleList);
+        drawShark(g, toolkit, sharkList);
+        drawFlag(g, toolkit, flagList);
+        drawIsland(g, toolkit, islandList);
         drawNumber(g);
     }
 
@@ -160,8 +159,12 @@ public class BoardPanel
         }
     }
 
-    void setSquares(Square[][] squares) {
+    void setBoard(Square[][] squares, List<Eagle> eagleList, List<Shark> sharkList, List<Flag> flagList, List<Island> islandList) {
         this.squares = squares;
+        this.eagleList = eagleList;
+        this.sharkList = sharkList;
+        this.flagList = flagList;
+        this.islandList = islandList;
     }
 
     @Override
@@ -172,7 +175,6 @@ public class BoardPanel
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println("mousePressed");
-
     }
 
     @Override
