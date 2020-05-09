@@ -13,6 +13,7 @@ public abstract class MovablePiece
     private boolean movingMode;
     private boolean stunned;
     private boolean slowed;
+    private boolean shielded;
 
     MovablePiece(Enum type, int position, Enum ability) {
         super(type, position);
@@ -21,52 +22,34 @@ public abstract class MovablePiece
         movingMode = true;
     }
 
-    void addIncrementMOVEMENT_COORD(int[] movementCoord, int movementDistance) {
-        MOVEMENT_COORD.add(movementCoord);
+    void addMOVEMENT_COORD(int[] movementCoord, int movementDistance, int increment) {
+        if (movementDistance != 0) {
+            MOVEMENT_COORD.add(movementCoord);
 
-        int index = MOVEMENT_COORD.size() - 1;
+            int startIndex = increment == 2 ? 1 : increment;
+            int index = MOVEMENT_COORD.size() - 1;
 
-        for (int i = 1; i < movementDistance; i++) {
-
-            MOVEMENT_COORD.add(new int[]{getIncrementPosition(MOVEMENT_COORD.get(index)[0]),
-                    getIncrementPosition(MOVEMENT_COORD.get(index)[1])});
-            index++;
+            for (int i = startIndex; i < movementDistance; i++) {
+                MOVEMENT_COORD.add(new int[]{getPosition(MOVEMENT_COORD.get(index)[0], increment),
+                        getPosition(MOVEMENT_COORD.get(index)[1], increment)});
+                index++;
+            }
         }
+
     }
 
-    void addGapMOVEMENT_COORD(int[] movementCoord, int movementDistance) {
-        MOVEMENT_COORD.add(movementCoord);
-
-        int index = MOVEMENT_COORD.size() - 1;
-
-        for (int i = 0; i < movementDistance; i++) {
-
-            MOVEMENT_COORD.add(new int[]{getGapPosition(MOVEMENT_COORD.get(index)[0]),
-                    getGapPosition(MOVEMENT_COORD.get(index)[1])});
-        }
-    }
-
-    private int getIncrementPosition(int i) {
-        if (Integer.signum(i) == 1) {
-            return i + 1;
-        } else if (Integer.signum(i) == -1) {
-            return i - 1;
+    private int getPosition(int coord, int increment) {
+        if (Integer.signum(coord) == 1) {
+            return coord + increment;
+        } else if (Integer.signum(coord) == -1) {
+            return coord - increment;
         }
 
         return 0;
     }
 
-    private int getGapPosition(int i) {
-        if (Integer.signum(i) == 1) {
-            return i + 2;
-        } else if (Integer.signum(i) == -1) {
-            return i - 2;
-        }
-
-        return 0;
-    }
-
-    boolean updatePieceRowColumn(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer, Square[][] squares, int[] movementCoord) {
+    boolean updatePieceRowColumn(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer,
+                                 Square[][] squares, int[] movementCoord) {
 
         Square currentSquare = squares[row][column];
         Square newSquare = squares[row + movementCoord[0]][column + movementCoord[1]];
@@ -98,6 +81,10 @@ public abstract class MovablePiece
             } else {
                 MovablePiece movablePieceOnNewSquare = newSquare.getMovablePiece();
 
+                if (movablePieceOnNewSquare.shielded) {
+                    return false;
+                }
+
                 Enum movablePieceOnCurrentSquareType = movablePieceOnCurrentSquare.getType();
                 Enum movablePieceOnNewSquareType = movablePieceOnNewSquare.getType();
 
@@ -109,8 +96,8 @@ public abstract class MovablePiece
         }
     }
 
-    private void changePieceOnSquare(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer, Square currentSquare, Square
-            newSquare) {
+    private void changePieceOnSquare(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer,
+                                     Square currentSquare, Square newSquare) {
 
         if (newSquare.getMovablePiece() != null) {
 
@@ -126,6 +113,29 @@ public abstract class MovablePiece
         newSquare.addMovablePiece(this);
     }
 
+    public void useAbility(MovablePiece targetedMovablePiece) {
+
+        AbilityDecorator abilityDecorator = null;
+
+        switch (ability.toString()) {
+            case "STUN":
+                abilityDecorator = new StunDecorator();
+                break;
+            case "SPEED":
+                abilityDecorator = new SpeedDecorator();
+                break;
+            case "SLOW":
+                abilityDecorator = new SlowDecorator();
+                break;
+            case "SHIELD":
+                abilityDecorator = new ShieldDecorator();
+                break;
+        }
+
+        abilityDecorator.useAbility(targetedMovablePiece);
+
+    }
+
     public List<int[]> getMovableCoords() {
         return MOVEMENT_COORD;
     }
@@ -136,6 +146,10 @@ public abstract class MovablePiece
 
     public boolean isSlowed() {
         return slowed;
+    }
+
+    public boolean isShielded() {
+        return shielded;
     }
 
     public Enum getAbility() {
@@ -160,6 +174,10 @@ public abstract class MovablePiece
 
     void setStunned(boolean stunned) {
         this.stunned = stunned;
+    }
+
+    void setShielded(boolean shielded) {
+        this.shielded = shielded;
     }
 
     abstract void addMovementCoord(int movementDistance);

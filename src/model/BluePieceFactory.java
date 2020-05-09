@@ -3,12 +3,12 @@ package model;
 class BluePieceFactory extends AbstractFactory {
 
     @Override
-    MovablePiece getPiece(String owner, int position) {
-        if (owner.equalsIgnoreCase("Eagle")) {
-            return new EagleBlue(position);
-        } else if (owner.equalsIgnoreCase("Shark")) {
-            return new SharkBlue(position);
-        }
-        return null;
+    MovablePiece getEaglePiece(int position) {
+        return new EagleBlue(position);
+    }
+
+    @Override
+    MovablePiece getSharkPiece(int position) {
+        return new SharkBlue(position);
     }
 }

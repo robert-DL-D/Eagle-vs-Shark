@@ -3,7 +3,7 @@ package model;
 class SharkGreen extends Shark {
 
     SharkGreen(int position) {
-        super(Types.GREEN, position, Abilities.SPEED);
+        super(Types.GREEN, position, Abilities.PH3);
 
         addMovementCoord(DEFAULT_MOVEMENT_DISTANCE);
     }
@@ -11,16 +11,16 @@ class SharkGreen extends Shark {
     @Override
     void addMovementCoord(int movementDistance) {
         // Upper-Left
-        addIncrementMOVEMENT_COORD(new int[]{-1, -1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{-1, -1}, movementDistance, 1);
 
         // Upper-Right
-        addIncrementMOVEMENT_COORD(new int[]{-1, 1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{-1, 1}, movementDistance, 1);
 
         // Lower-Left
-        addIncrementMOVEMENT_COORD(new int[]{1, -1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{1, -1}, movementDistance, 1);
 
         // Lower-Right
-        addIncrementMOVEMENT_COORD(new int[]{1, 1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{1, 1}, movementDistance, 1);
     }
 
 }

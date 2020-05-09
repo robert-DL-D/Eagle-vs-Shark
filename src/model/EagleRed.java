@@ -11,16 +11,16 @@ class EagleRed extends Eagle {
     @Override
     void addMovementCoord(int movementDistance) {
         // Up
-        addIncrementMOVEMENT_COORD(new int[]{-1, 0}, movementDistance);
+        addMOVEMENT_COORD(new int[]{-1, 0}, movementDistance, 1);
 
         // Down
-        addIncrementMOVEMENT_COORD(new int[]{1, 0}, movementDistance);
+        addMOVEMENT_COORD(new int[]{1, 0}, movementDistance, 1);
 
         // Left
-        addIncrementMOVEMENT_COORD(new int[]{0, -1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{0, -1}, movementDistance, 1);
 
         // Right
-        addIncrementMOVEMENT_COORD(new int[]{0, 1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{0, 1}, movementDistance, 1);
     }
 
 }

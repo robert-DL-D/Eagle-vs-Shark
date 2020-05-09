@@ -10,19 +10,15 @@ class SharkRed extends Shark {
     @Override
     void addMovementCoord(int movementDistance) {
 
-        movementDistance -= 1;
+        int adjustedMovementDistance = movementDistance - 1;
 
-        addIncrementMOVEMENT_COORD(new int[]{-1, 2}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{1, 2}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{2, 1}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{2, -1}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{1, -2}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{-1, -2}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{-2, -1}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{-2, 1}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{-1, -1}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{1, 1}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{-1, 1}, movementDistance);
-        addIncrementMOVEMENT_COORD(new int[]{1, -1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{-adjustedMovementDistance, movementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{adjustedMovementDistance, movementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{movementDistance, adjustedMovementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{movementDistance, -adjustedMovementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{adjustedMovementDistance, -movementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{-adjustedMovementDistance, -movementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{-movementDistance, -adjustedMovementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{-movementDistance, adjustedMovementDistance}, adjustedMovementDistance, 1);
     }
 }

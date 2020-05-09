@@ -31,10 +31,9 @@ public class MovementPanel
         ACTIONLISTENER = actionListener;
 
         JLabel instructionLabel = new JLabel("<html>" + "Select a coordinate to move to" + "</html>");
-        instructionLabel.setPreferredSize(new Dimension(130, 70));
+        instructionLabel.setPreferredSize(new Dimension(100, 60));
         instructionLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         instructionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        //instructionLabel.setBorder(new LineBorder(Color.BLACK));
         add(instructionLabel);
 
         MOVE_JLIST = new JList<>();
@@ -45,7 +44,7 @@ public class MovementPanel
         add(MOVE_JLIST);
 
         MOVE_BUTTON = new JButton("Move");
-        MOVE_BUTTON.setSize(80, 180);
+        MOVE_BUTTON.setPreferredSize(new Dimension(80, 30));
         MOVE_BUTTON.addActionListener(this);
         MOVE_BUTTON.setVisible(false);
         add(MOVE_BUTTON);
@@ -71,7 +70,8 @@ public class MovementPanel
                 validCoord[0] = movablePiece.getRow() + movablecoord[0] + 1;
                 validCoord[1] = movablePiece.getColumn() + movablecoord[1] + 1;
 
-                if (!(validCoord[0] < 1 || validCoord[0] > BoardSize.BOARD_ROWS || validCoord[1] < 1 || validCoord[1] > BoardSize.BOARD_COLUMNS)) {
+                if (!(validCoord[0] < 1 || validCoord[0] > BoardSize.BOARD_ROWS
+                        || validCoord[1] < 1 || validCoord[1] > BoardSize.BOARD_COLUMNS)) {
                     pieceCoordList.add(validCoord[0] + " " + validCoord[1]);
                     MOVEMENT_COORD_LIST.add(movablecoord);
                 }
@@ -79,7 +79,6 @@ public class MovementPanel
 
             // Must use variable here
             String[] pieceCoordArray = pieceCoordList.toArray(new String[pieceCoordList.size()]);
-
             MOVE_JLIST.setListData(pieceCoordArray);
             MOVE_JLIST.setVisible(true);
             MOVE_BUTTON.setVisible(true);

@@ -14,6 +14,7 @@ import model.BoardSize;
 import model.Eagle;
 import model.Flag;
 import model.Island;
+import model.MovablePiece;
 import model.Shark;
 import model.Square;
 import model.Types;
@@ -26,12 +27,15 @@ public class BoardPanel
     private static final int SQUARE_SIZE = 60;
     private static final int PIC_SIZE = 58;
     private static final int AXIS_NUMBER_MARGIN = 40;
-    private static final String FOLDER_PATH = "src/images";
+    private static final String FOLDER_PATH = "src/images/";
     private Square[][] squares;
     private List<Eagle> eagleList;
     private List<Shark> sharkList;
     private List<Flag> flagList;
     private List<Island> islandList;
+
+    private Graphics graphics;
+    private MovablePiece movablePiece;
 
     private static int gridCoord(int i) {
         return i * SQUARE_SIZE + BOARD_MARGIN;
@@ -40,47 +44,6 @@ public class BoardPanel
     private static int picGridCoord(int i) {
         int picMargin = 2;
         return BOARD_MARGIN + SQUARE_SIZE * i + picMargin;
-    }
-
-    static int getBoardMargin() {
-        return BOARD_MARGIN;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-        drawSquare(g);
-        drawLines(g);
-        drawEagle(g, toolkit, eagleList);
-        drawShark(g, toolkit, sharkList);
-        drawFlag(g, toolkit, flagList);
-        drawIsland(g, toolkit, islandList);
-        drawNumber(g);
-    }
-
-    private void drawSquare(Graphics g) {
-        Color skyBlue = new Color(135, 206, 235);
-        Color oceanBlue = new Color(0, 105, 148);
-        Color neutralColor = Color.WHITE;
-
-        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
-            for (int j = 0; j < BoardSize.BOARD_COLUMNS; j++) {
-
-                if (i == BoardSize.BOARD_ROWS / 2 - 1 || i == BoardSize.BOARD_ROWS / 2) {
-                    g.setColor(neutralColor);
-                } else if (squares[i][j].getSQUARE_NUMBER() - 1 < BoardSize.BOARD_ROWS / 2 * BoardSize.BOARD_COLUMNS) {
-                    g.setColor(skyBlue);
-                } else {
-                    g.setColor(oceanBlue);
-                }
-
-                g.fillRect(gridCoord(j), gridCoord(i), SQUARE_SIZE, SQUARE_SIZE);
-
-            }
-        }
     }
 
     private void drawLines(Graphics g) {
@@ -99,35 +62,70 @@ public class BoardPanel
 
     }
 
+    static int getBoardMargin() {
+        return BOARD_MARGIN;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        graphics = g;
+
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+        drawSquare(g);
+        drawLines(g);
+        drawEagle(g, toolkit, eagleList);
+        drawShark(g, toolkit, sharkList);
+        drawFlag(g, toolkit, flagList);
+        drawIsland(g, toolkit, islandList);
+        drawNumber(g);
+    }
+
+    private void drawSquare(Graphics g) {
+
+        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
+            for (int j = 0; j < BoardSize.BOARD_COLUMNS; j++) {
+
+                if (i == BoardSize.BOARD_ROWS / 2 - 1 || i == BoardSize.BOARD_ROWS / 2) {
+                    g.setColor(Color.WHITE);
+                } else if (squares[i][j].getSQUARE_NUMBER() - 1 < BoardSize.BOARD_ROWS / 2 * BoardSize.BOARD_COLUMNS) {
+                    g.setColor(new Color(135, 206, 235));
+                } else {
+                    g.setColor(new Color(0, 105, 148));
+                }
+
+                g.fillRect(gridCoord(j), gridCoord(i), SQUARE_SIZE, SQUARE_SIZE);
+
+            }
+        }
+
+        if (movablePiece != null) {
+            graphics.setColor(Color.GREEN);
+
+            for (int[] movableCoord : movablePiece.getMovableCoords()) {
+                int i = movablePiece.getRow() + movableCoord[0];
+                int j = movablePiece.getColumn() + movableCoord[1];
+
+                if ((i >= 0 && j >= 0)
+                        && (i <= BoardSize.BOARD_COLUMNS && j <= BoardSize.BOARD_ROWS)) {
+                    g.fillRect(gridCoord(j), gridCoord(i), SQUARE_SIZE, SQUARE_SIZE);
+                }
+            }
+        }
+
+    }
+
     private void drawEagle(Graphics g, Toolkit toolkit, List<Eagle> eagleList) {
 
         for (Eagle eagle : eagleList) {
             if (eagle.getType() == Types.RED) {
-                g.drawImage(toolkit.getImage(FOLDER_PATH + "/red_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+                g.drawImage(toolkit.getImage(FOLDER_PATH + "red_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
             } else if (eagle.getType() == Types.GREEN) {
-                g.drawImage(toolkit.getImage(FOLDER_PATH + "/green_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+                g.drawImage(toolkit.getImage(FOLDER_PATH + "green_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
             } else if (eagle.getType() == Types.BLUE) {
-                g.drawImage(toolkit.getImage(FOLDER_PATH + "/blue_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
+                g.drawImage(toolkit.getImage(FOLDER_PATH + "blue_eagle.png"), picGridCoord(eagle.getColumn()), picGridCoord(eagle.getRow()), PIC_SIZE, PIC_SIZE, this);
             }
-        }
-    }
-
-    private void drawShark(Graphics g, Toolkit toolkit, List<Shark> sharkList) {
-
-        for (Shark shark : sharkList) {
-            if (shark.getType() == Types.RED) {
-                g.drawImage(toolkit.getImage(FOLDER_PATH + "/red_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
-            } else if (shark.getType() == Types.GREEN) {
-                g.drawImage(toolkit.getImage(FOLDER_PATH + "/green_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
-            } else if (shark.getType() == Types.BLUE) {
-                g.drawImage(toolkit.getImage(FOLDER_PATH + "/blue_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
-            }
-        }
-    }
-
-    private void drawFlag(Graphics g, Toolkit toolkit, List<Flag> flagList) {
-        for (Flag flag : flagList) {
-            g.drawImage(toolkit.getImage(FOLDER_PATH + "/flag.png"), picGridCoord(flag.getColumn()), picGridCoord(flag.getRow()), PIC_SIZE, PIC_SIZE, this);
         }
     }
 
@@ -146,25 +144,58 @@ public class BoardPanel
         }
 
         // Draw the X-axis number
-
         for (int i = 0; i < BoardSize.BOARD_COLUMNS; i++) {
             g.setColor(Color.BLACK);
             g.drawString(Integer.toString(i + 1), i * SQUARE_SIZE + AXIS_NUMBER_MARGIN, 18);
         }
     }
 
-    private void drawIsland(Graphics g, Toolkit toolkit, List<Island> islandList) {
-        for (Island island : islandList) {
-            g.drawImage(toolkit.getImage(FOLDER_PATH + "/island.png"), picGridCoord(island.getColumn()), picGridCoord(island.getRow()), PIC_SIZE, PIC_SIZE, this);
+    private void drawShark(Graphics g, Toolkit toolkit, List<Shark> sharkList) {
+
+        for (Shark shark : sharkList) {
+            if (shark.getType() == Types.RED) {
+                g.drawImage(toolkit.getImage(FOLDER_PATH + "red_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+            } else if (shark.getType() == Types.GREEN) {
+                g.drawImage(toolkit.getImage(FOLDER_PATH + "green_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+            } else if (shark.getType() == Types.BLUE) {
+                g.drawImage(toolkit.getImage(FOLDER_PATH + "blue_shark.png"), picGridCoord(shark.getColumn()), picGridCoord(shark.getRow()), PIC_SIZE, PIC_SIZE, this);
+            }
         }
     }
 
-    void setBoard(Square[][] squares, List<Eagle> eagleList, List<Shark> sharkList, List<Flag> flagList, List<Island> islandList) {
+    private void drawFlag(Graphics g, Toolkit toolkit, List<Flag> flagList) {
+        for (Flag flag : flagList) {
+            g.drawImage(toolkit.getImage(FOLDER_PATH + "flag.png"), picGridCoord(flag.getColumn()), picGridCoord(flag.getRow()), PIC_SIZE, PIC_SIZE, this);
+        }
+    }
+
+    private void drawIsland(Graphics g, Toolkit toolkit, List<Island> islandList) {
+        for (Island island : islandList) {
+            g.drawImage(toolkit.getImage(FOLDER_PATH + "island.png"), picGridCoord(island.getColumn()), picGridCoord(island.getRow()), PIC_SIZE, PIC_SIZE, this);
+        }
+    }
+
+    void showValidSquares(MovablePiece movablePiece) {
+        this.movablePiece = movablePiece;
+        revalidate();
+        repaint();
+    }
+
+    void setBoard(Square[][] squares,
+                  List<Eagle> eagleList,
+                  List<Shark> sharkList,
+                  List<Flag> flagList,
+                  List<Island> islandList) {
         this.squares = squares;
         this.eagleList = eagleList;
         this.sharkList = sharkList;
         this.flagList = flagList;
         this.islandList = islandList;
+    }
+
+    void removeMovablePiece() {
+        movablePiece = null;
+
     }
 
     @Override
@@ -191,4 +222,5 @@ public class BoardPanel
     public void mouseExited(MouseEvent e) {
 
     }
+
 }

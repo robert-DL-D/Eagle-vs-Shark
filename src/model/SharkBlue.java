@@ -3,38 +3,38 @@ package model;
 class SharkBlue extends Shark {
 
     SharkBlue(int position) {
-        super(Types.BLUE, position, Abilities.PH3);
+        super(Types.BLUE, position, Abilities.SHIELD);
         addMovementCoord(DEFAULT_MOVEMENT_DISTANCE);
     }
 
     @Override
     void addMovementCoord(int movementDistance) {
 
-        movementDistance /= 3;
+        movementDistance -= 1;
 
         // Up
-        addGapMOVEMENT_COORD(new int[]{-2, 0}, movementDistance);
+        addMOVEMENT_COORD(new int[]{-2, 0}, movementDistance, 2);
 
         // Down
-        addGapMOVEMENT_COORD(new int[]{2, 0}, movementDistance);
+        addMOVEMENT_COORD(new int[]{2, 0}, movementDistance, 2);
 
         // Left
-        addGapMOVEMENT_COORD(new int[]{0, -2}, movementDistance);
+        addMOVEMENT_COORD(new int[]{0, -2}, movementDistance, 2);
 
         // Right
-        addGapMOVEMENT_COORD(new int[]{0, 2}, movementDistance);
+        addMOVEMENT_COORD(new int[]{0, 2}, movementDistance, 2);
 
         // Upper-Left
-        addGapMOVEMENT_COORD(new int[]{-1, -1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{-1, -1}, movementDistance, 2);
 
         // Upper-Right
-        addGapMOVEMENT_COORD(new int[]{-1, 1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{-1, 1}, movementDistance, 2);
 
         // Lower-Left
-        addGapMOVEMENT_COORD(new int[]{1, -1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{1, -1}, movementDistance, 2);
 
         // Lower-Right
-        addGapMOVEMENT_COORD(new int[]{1, 1}, movementDistance);
+        addMOVEMENT_COORD(new int[]{1, 1}, movementDistance, 2);
     }
 
 }

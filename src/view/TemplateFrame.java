@@ -1,4 +1,3 @@
-/*
 package view;
 
 import java.awt.Color;
@@ -46,4 +45,3 @@ public class TemplateFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 }
-*/

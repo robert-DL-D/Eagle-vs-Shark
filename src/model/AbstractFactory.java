@@ -2,5 +2,8 @@ package model;
 
 abstract class AbstractFactory {
 
-    abstract MovablePiece getPiece(String player, int position);
+    abstract MovablePiece getEaglePiece(int position);
+
+    abstract MovablePiece getSharkPiece(int position);
+
 }

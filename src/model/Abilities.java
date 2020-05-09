@@ -2,7 +2,7 @@ package model;
 
 enum Abilities {
 
-    STUN, SPEED, SLOW, PH1, PH2, PH3;
+    STUN, SPEED, SLOW, SHIELD, PH2, PH3;
 
     public String toString() {
 
@@ -17,8 +17,8 @@ enum Abilities {
             case SLOW:
                 return "SLOW";
 
-            case PH1:
-                return "PH1";
+            case SHIELD:
+                return "SHIELD";
 
             case PH2:
                 return "PH2";

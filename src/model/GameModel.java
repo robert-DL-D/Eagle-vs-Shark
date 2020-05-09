@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GameModel {
+public class GameModel implements Serializable {
 
     private final Square[][] SQUARE_ARRAY = new Square[BoardSize.BOARD_ROWS][BoardSize.BOARD_COLUMNS];
     private final Player<Eagle> EAGLE_PLAYER = new Player<>();
@@ -12,7 +13,7 @@ public class GameModel {
     private final List<Flag> FLAG_LIST = new ArrayList<>();
     private final List<Island> ISLAND_LIST = new ArrayList<>();
 
-    private boolean isEagleTurn;
+    private boolean eagleTurn;
 
     public GameModel() {
         initializeSquare();
@@ -31,13 +32,13 @@ public class GameModel {
         addMovablePiece(Types.BLUE, "Shark", 40);
         addMovablePiece(Types.BLUE, "Shark", 61);
 
-        addFlag(5, EAGLE_PLAYER);
-        addFlag(86, SHARK_PLAYER);
+        addFlag(5, EAGLE_PLAYER, "Eagle");
+        addFlag(86, SHARK_PLAYER, "Shark");
 
         addIsland(1);
         addIsland(82);
 
-        isEagleTurn = ThreadLocalRandom.current().nextInt(0, 2) == 0;
+        eagleTurn = ThreadLocalRandom.current().nextInt(0, 2) == 0;
     }
 
     private void initializeSquare() {
@@ -56,7 +57,7 @@ public class GameModel {
 
         AbstractFactory factory = null;
         Player player = null;
-        MovablePiece movablePiece;
+        MovablePiece movablePiece = null;
 
         if (type == Types.RED) {
             factory = new RedPieceFactory();
@@ -66,12 +67,12 @@ public class GameModel {
             factory = new BluePieceFactory();
         }
 
-        movablePiece = factory.getPiece(playerString, position);
-
         if (playerString.equals("Eagle")) {
             player = EAGLE_PLAYER;
+            movablePiece = factory.getEaglePiece(position);
         } else if (playerString.equals("Shark")) {
             player = SHARK_PLAYER;
+            movablePiece = factory.getSharkPiece(position);
         }
 
         player.addMovablePiece(movablePiece);
@@ -80,9 +81,9 @@ public class GameModel {
 
     }
 
-    private void addFlag(int position, Player player) {
+    private void addFlag(int position, Player player, String playerString) {
 
-        Flag flag = new Flag(position, player);
+        Flag flag = new Flag(position, player, playerString);
         FLAG_LIST.add(flag);
 
         Square square = getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
@@ -98,64 +99,52 @@ public class GameModel {
         square.addPiece(island);
     }
 
-    public void changePlayerTurn() {
-        isEagleTurn = !isEagleTurn;
+    private void changePlayerTurn() {
+        eagleTurn = !eagleTurn;
+
     }
 
     public boolean movePiece(int index, int[] movementCoord) {
 
-        return (isEagleTurn ? EAGLE_PLAYER : SHARK_PLAYER).getMovablePiece(index).updatePieceRowColumn(EAGLE_PLAYER, SHARK_PLAYER, SQUARE_ARRAY, movementCoord);
+        return (eagleTurn ? EAGLE_PLAYER : SHARK_PLAYER).getMOVABLEPIECE_LIST().get(index).updatePieceRowColumn(EAGLE_PLAYER, SHARK_PLAYER, SQUARE_ARRAY, movementCoord);
 
     }
 
-    public MovablePiece stunPiece(int index) {
-
-        MovablePiece movablePiece = (isEagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST()).get(index);
-        movablePiece.setStunned(true);
-        return movablePiece;
+    private MovablePiece getEnemyMovablePiece(int index) {
+        return (eagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST()).get(index);
     }
 
-    public MovablePiece speedPiece(int index) {
-
-        MovablePiece movablePiece = (isEagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST()).get(index);
-        movablePiece.getMOVEMENT_COORD().clear();
-        movablePiece.addMovementCoord(3);
-
-        return movablePiece;
+    private MovablePiece getAllyMovablePiece(int index) {
+        return (eagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST()).get(index);
     }
 
-    public MovablePiece slowPiece(int index) {
+    private void resetPieceMovementStatus() {
 
-        MovablePiece movablePiece = (isEagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST()).get(index);
-        movablePiece.getMOVEMENT_COORD().clear();
-        movablePiece.addMovementCoord(1);
-        movablePiece.setSlowed(true);
-
-        return movablePiece;
-    }
-
-    public void resetPieceMovementStatus() {
-
-        List<? extends MovablePiece> movablePieceList;
-
-        if (isEagleTurn) {
-            movablePieceList = SHARK_PLAYER.getMOVABLEPIECE_LIST();
-        } else {
-            movablePieceList = EAGLE_PLAYER.getMOVABLEPIECE_LIST();
-        }
+        List<? extends MovablePiece> movablePieceList = eagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST();
+        boolean resetShield = true;
 
         for (MovablePiece movablePiece : movablePieceList) {
 
+            if (movablePiece.getAbility() == Abilities.SHIELD) {
+                resetShield = false;
+            }
+
             movablePiece.getMOVEMENT_COORD().clear();
             movablePiece.addMovementCoord(MovablePiece.DEFAULT_MOVEMENT_DISTANCE);
+            movablePiece.setStunned(false);
+            movablePiece.setSlowed(false);
 
-            if (movablePiece.isStunned()) {
-                movablePiece.setStunned(false);
-            }
+        }
 
-            if (movablePiece.isSlowed()) {
-                movablePiece.setSlowed(false);
-            }
+        if (resetShield) {
+            resetShield(movablePieceList);
+        }
+
+    }
+
+    private void resetShield(List<? extends MovablePiece> movablePieceList) {
+        for (MovablePiece movablePiece : movablePieceList) {
+            movablePiece.setShielded(false);
         }
     }
 
@@ -180,16 +169,37 @@ public class GameModel {
     }
 
     public boolean isEagleTurn() {
-        return isEagleTurn;
+        return eagleTurn;
+    }
+
+    public void setEagleTurn(boolean eagleTurn) {
+        this.eagleTurn = eagleTurn;
     }
 
     public List<? extends MovablePiece> getCurrentPieceList() {
-
-        return isEagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST();
+        return eagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST();
     }
 
     public List<? extends MovablePiece> getOtherPieceList() {
+        return eagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST();
+    }
 
-        return isEagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST();
+    public Player getCurrentPlayer() {
+        return eagleTurn ? EAGLE_PLAYER : SHARK_PLAYER;
+    }
+
+    public void setPieceMoved() {
+        getCurrentPlayer().setPieceMoved(true);
+    }
+
+    public void updateNextTurn() {
+        getCurrentPlayer().setPieceMoved(false);
+        getCurrentPlayer().setAbilityUsed(null);
+        getCurrentPlayer().setPieceModeToggled(false);
+        getCurrentPlayer().setPieceModeToggledIndex(-1);
+
+        changePlayerTurn();
+        resetPieceMovementStatus();
+
     }
 }
