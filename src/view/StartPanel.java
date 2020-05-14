@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import controller.GameController;
-import model.GameModel;
 
 public class StartPanel extends JPanel {
 
@@ -71,7 +70,7 @@ public class StartPanel extends JPanel {
                 jFrame.dispose();
                 // open GameBoard
                 //new BoardSize(rowValue, columnValue);
-                new GameController(new GameModel(), new GameView());
+                new GameController();
             } else {
                 JOptionPane.showMessageDialog(null, "Numbers between 4 and 10!");
             }

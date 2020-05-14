@@ -16,12 +16,10 @@ public class SaveGame
         try {
             ObjectOutput objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             objectOutputStream.writeObject(gameModel);
-
             objectOutputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }

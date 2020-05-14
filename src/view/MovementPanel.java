@@ -56,7 +56,7 @@ public class MovementPanel
         ACTIONLISTENER.actionPerformed(actionEvent);
     }
 
-    void updateMoveJList(MovablePiece movablePiece) {
+    public void updateMoveJList(MovablePiece movablePiece) {
         if (movablePiece.isMovingMode()) {
             if (!MOVEMENT_COORD_LIST.isEmpty()) {
                 MOVEMENT_COORD_LIST.clear();
@@ -85,7 +85,7 @@ public class MovementPanel
         }
     }
 
-    int[] getMovementCoord() {
+    public int[] getMovementCoord() {
 
         int selectedIndex = MOVE_JLIST.getSelectedIndex();
         return selectedIndex == -1 ? null : MOVEMENT_COORD_LIST.get(selectedIndex);

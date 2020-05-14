@@ -121,13 +121,13 @@ public abstract class MovablePiece
             case "STUN":
                 abilityDecorator = new StunDecorator();
                 break;
-            case "SPEED":
+            case StringText.SPEED:
                 abilityDecorator = new SpeedDecorator();
                 break;
             case "SLOW":
                 abilityDecorator = new SlowDecorator();
                 break;
-            case "SHIELD":
+            case StringText.SHIELD:
                 abilityDecorator = new ShieldDecorator();
                 break;
         }

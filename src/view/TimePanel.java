@@ -7,28 +7,25 @@ import java.util.TimerTask;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
-import controller.GameController;
 
 class TimePanel
         extends JPanel {
 
     private Timer currentTimer = new Timer();
-    private GameController gameController;
+    private final JLabel timerLabel;
+    private boolean eagleTurn;
+    private int turnTimerLimit = 30;
 
     TimePanel() {
 
-        JLabel turnTimerLabel = new JLabel("Turn Timer");
-        turnTimerLabel.setPreferredSize(new Dimension(150, 20));
+        JLabel turnTimerLabel = new JLabel("Turn Timer:");
+        turnTimerLabel.setPreferredSize(new Dimension(100, 20));
         turnTimerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        turnTimerLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(turnTimerLabel);
 
-        JLabel timerLabel = new JLabel();
-        timerLabel.setPreferredSize(new Dimension(150, 20));
+        timerLabel = new JLabel();
+        timerLabel.setPreferredSize(new Dimension(20, 20));
         timerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(timerLabel);
 
         createNewTimer(currentTimer);
@@ -41,13 +38,12 @@ class TimePanel
     private void setCountdownTimer(Timer currentTimer) {
         currentTimer.scheduleAtFixedRate(new TimerTask() {
 
-            final int turnTimerLimit = Integer.parseInt("30");
-
             public void run() {
-                //timerLabel.setText(String.valueOf(turnTimerLimit--));
+                timerLabel.setText(String.valueOf((turnTimerLimit--)));
 
                 if (turnTimerLimit < 0) {
-                    gameController.updateNextTurn();
+                    currentTimer.cancel();
+                    System.out.println(eagleTurn ? "Eagle Won" : "Shark Won");
                 }
 
             }
@@ -63,8 +59,8 @@ class TimePanel
         currentTimer = newTimer;
     }
 
-    void setGameController(GameController gameController) {
-        this.gameController = gameController;
+    void setEagleTurn(boolean eagleTurn) {
+        this.eagleTurn = eagleTurn;
     }
 
 }

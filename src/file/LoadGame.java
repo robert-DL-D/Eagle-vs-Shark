@@ -13,22 +13,15 @@ public class LoadGame
         implements Serializable {
 
     private boolean saveFileExist;
-    private GameModel gameModel;
 
     public GameModel loadGame() {
         GameModel gameModel = null;
         if (file.exists()) {
             try {
-
                 saveFileExist = true;
-                FileInputStream fileInputStream = new FileInputStream(file);
-                ObjectInput objectInputStream = new ObjectInputStream(fileInputStream);
-                boolean hasObject = true;
-
+                ObjectInput objectInputStream = new ObjectInputStream(new FileInputStream(file));
                 gameModel = (GameModel) objectInputStream.readObject();
-
                 objectInputStream.close();
-
             } catch (IOException | ClassNotFoundException e) {
             }
         }

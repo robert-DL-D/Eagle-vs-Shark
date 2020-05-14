@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import model.MovablePiece;
+import model.StringText;
 
 public class AbilityPanel
         extends JPanel
@@ -27,7 +28,7 @@ public class AbilityPanel
     private final JButton useAbilityButton = new JButton(USE_ABILITY_BUTTON_TEXT);
     private final Color BACKGROUND;
     private String lastAbilityUsed;
-    private JLabel AFFECTED_PIECE;
+    private final JLabel AFFECTED_PIECE;
     private int lastAbilityUsedIndex;
 
     private final ActionListener ACTIONLISTENER;
@@ -146,24 +147,29 @@ public class AbilityPanel
 
     }
 
-    void disableAbilityUI() {
+    void updateAbilityPanelAfterAbilityUse(MovablePiece movablePiece) {
 
         for (JButton jButton : ABILITIES_JBUTTON_LIST) {
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(jButton.getText())
+                    .append(": ")
+                    .append(movablePiece.getClass().getSuperclass().getSimpleName())
+                    .append(" ")
+                    .append(movablePiece.getRow() + 1)
+                    .append(" ")
+                    .append(movablePiece.getColumn() + 1);
+
+            if (jButton.getText().equals(lastAbilityUsed)) {
+                jButton.setText(stringBuilder.toString());
+            }
+
             jButton.setEnabled(false);
+
         }
 
         PIECE_JLIST.setVisible(false);
         setUseAbilityButton(false);
-    }
-
-    void setAfterAbilityUseText(MovablePiece movablePiece) {
-        for (JButton jButton : ABILITIES_JBUTTON_LIST) {
-            if (jButton.getText().equals(lastAbilityUsed)) {
-                jButton.setText(jButton.getText() + ": "
-                        + movablePiece.getClass().getSuperclass().getSimpleName()
-                        + " " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1));
-            }
-        }
     }
 
     void changeAbilityButtonStatus(int selectedModeIndex) {
@@ -174,7 +180,7 @@ public class AbilityPanel
         return PIECE_JLIST;
     }
 
-    int getPieceJListSelectedItem() {
+    public int getPieceJListSelectedItem() {
         return PIECE_JLIST.getSelectedIndex();
     }
 
@@ -197,9 +203,9 @@ public class AbilityPanel
     void setAFFECTED_PIECE() {
 
         if (lastAbilityUsed != null) {
-            if (lastAbilityUsed.equals("SHIELD")) {
+            if (lastAbilityUsed.equals(StringText.SHIELD)) {
                 for (JButton jButton : ABILITIES_JBUTTON_LIST) {
-                    if (jButton.getText().contains("SHIELD")) {
+                    if (jButton.getText().contains(StringText.SHIELD)) {
                         AFFECTED_PIECE.setText(jButton.getText());
                     }
                 }
@@ -221,6 +227,10 @@ public class AbilityPanel
 
             }
         }
+    }
+
+    void setLastAbilityUsed(String lastAbilityUsed) {
+        this.lastAbilityUsed = lastAbilityUsed;
     }
 
     void removeLastAbilityUsed() {

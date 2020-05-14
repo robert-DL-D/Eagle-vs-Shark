@@ -175,7 +175,7 @@ public class BoardPanel
         }
     }
 
-    void showValidSquares(MovablePiece movablePiece) {
+    public void showValidSquares(MovablePiece movablePiece) {
         this.movablePiece = movablePiece;
         revalidate();
         repaint();

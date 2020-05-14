@@ -14,6 +14,7 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
 import model.MovablePiece;
+import model.StringText;
 
 public class PiecePanel
         extends JPanel
@@ -78,9 +79,12 @@ public class PiecePanel
             if (buttonCounter == 0) {
                 JToggleButton toggleModeButton = new JToggleButton();
                 MODE_BUTTON_LIST.add(toggleModeButton);
-                toggleModeButton.setText(currentPieceList.get(i).getType() + " " +
-                        currentPieceList.get(i).getClass().getSuperclass().getSimpleName() + ": " +
-                        (currentPieceList.get(i).isMovingMode() ? "Moving Mode" : "Ability Mode"));
+                toggleModeButton.setText(new StringBuilder()
+                        .append(currentPieceList.get(i).getType())
+                        .append(" ")
+                        .append(currentPieceList.get(i).getClass().getSuperclass().getSimpleName())
+                        .append(": ")
+                        .append((currentPieceList.get(i).isMovingMode() ? StringText.MOVING_MODE : StringText.ABILITY_MODE)).toString());
                 toggleModeButton.addActionListener(this);
                 toggleModeButton.setPreferredSize(new Dimension(200, 30));
                 toggleModeButton.setLocation(10, 30 * i);
@@ -105,27 +109,30 @@ public class PiecePanel
     }
 
     void changeButtonMode(List<? extends MovablePiece> currentPieceList) {
+        MovablePiece movablePiece = currentPieceList.get(selectedButtonIndex * 2);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(movablePiece.getType())
+                .append(" ")
+                .append(movablePiece.getClass().getSuperclass().getSimpleName())
+                .append(": ");
+
         JToggleButton jToggleButton = MODE_BUTTON_LIST.get(selectedButtonIndex);
 
-        int i = selectedButtonIndex * 2;
-        MovablePiece movablePiece = currentPieceList.get(i);
-        String s = movablePiece.getType() + " " +
-                movablePiece.getClass().getSuperclass().getSimpleName() + ": ";
-
-        if (jToggleButton.getText().contains("Moving Mode")) {
-            jToggleButton.setText(s + "Ability Mode");
+        if (jToggleButton.getText().contains(StringText.MOVING_MODE)) {
+            jToggleButton.setText(stringBuilder.append(StringText.ABILITY_MODE).toString());
         } else {
-            jToggleButton.setText(s + "Moving Mode");
+            jToggleButton.setText(stringBuilder.append(StringText.MOVING_MODE).toString());
         }
 
         jToggleButton.setEnabled(false);
-        PIECE_BUTTON_LIST.get(i).setEnabled(false);
-        PIECE_BUTTON_LIST.get(i + 1).setEnabled(false);
+        PIECE_BUTTON_LIST.get(selectedButtonIndex * 2).setEnabled(false);
+        PIECE_BUTTON_LIST.get(selectedButtonIndex * 2 + 1).setEnabled(false);
 
     }
 
     void updateTurnText(boolean isEagleTurn) {
-        turnLabel.setText((isEagleTurn ? "Eagle" : "Shark") + "'s turn");
+        turnLabel.setText((isEagleTurn ? StringText.EAGLE : StringText.SHARK) + "'s turn");
     }
 
     void disableAllButton() {
@@ -141,13 +148,14 @@ public class PiecePanel
     private void setEnabledButton(List<? extends MovablePiece> currentPieceList) {
 
         for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
+            JButton jButton = PIECE_BUTTON_LIST.get(i);
+            jButton.setEnabled(!currentPieceList.get(i).isStunned());
 
-            JButton button = PIECE_BUTTON_LIST.get(i);
-
-            if (currentPieceList.get(i).isStunned()) {
-                button.setEnabled(false);
+            if (i % 2 == 0) {
+                jButton.setEnabled(MODE_BUTTON_LIST.get(i / 2).getText().contains(StringText.MOVING_MODE));
             } else {
-                button.setEnabled(true);
+                jButton.setEnabled(MODE_BUTTON_LIST.get(i - ((i + 1) / 2)).getText().contains(StringText.MOVING_MODE));
+
             }
         }
     }
@@ -166,30 +174,36 @@ public class PiecePanel
     void setButtonText(List<? extends MovablePiece> currentPieceList) {
 
         for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
-
             MovablePiece movablePiece = currentPieceList.get(i);
 
-            String s = movablePiece.getType() + " " + movablePiece.getClass().getSuperclass().getSimpleName()
-                    + " " + (i + 1) + ": " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(movablePiece.getType())
+                    .append(" ")
+                    .append(movablePiece.getClass().getSuperclass().getSimpleName())
+                    .append(": ")
+                    .append(movablePiece.getRow() + 1)
+                    .append(" ")
+                    .append(movablePiece.getColumn() + 1)
+                    .append(" ");
 
             if (movablePiece.isStunned()) {
-                s += " STUNNED";
+                stringBuilder.append("STUNNED");
             } else if (movablePiece.isSlowed()) {
-                s += " SLOWED";
+                stringBuilder.append("SLOWED");
             } else if (movablePiece.isShielded()) {
-                s += " SHIELDED";
+                stringBuilder.append("SHIELDED");
             }
 
-            PIECE_BUTTON_LIST.get(i).setText(s);
+            PIECE_BUTTON_LIST.get(i).setText(stringBuilder.toString());
 
         }
     }
 
-    int getSelectedButtonIndex() {
+    public int getSelectedButtonIndex() {
         return selectedButtonIndex;
     }
 
-    public void setSelectedButtonIndex(int selectedButtonIndex) {
+    void setSelectedButtonIndex(int selectedButtonIndex) {
         this.selectedButtonIndex = selectedButtonIndex;
     }
 }

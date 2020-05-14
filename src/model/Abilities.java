@@ -12,13 +12,13 @@ enum Abilities {
                 return "STUN";
 
             case SPEED:
-                return "SPEED";
+                return StringText.SPEED;
 
             case SLOW:
                 return "SLOW";
 
             case SHIELD:
-                return "SHIELD";
+                return StringText.SHIELD;
 
             case PH2:
                 return "PH2";

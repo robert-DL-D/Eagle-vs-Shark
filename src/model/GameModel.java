@@ -18,22 +18,22 @@ public class GameModel implements Serializable {
     public GameModel() {
         initializeSquare();
 
-        addMovablePiece(Types.RED, "Eagle", 38);
-        addMovablePiece(Types.RED, "Eagle", 33);
-        addMovablePiece(Types.GREEN, "Eagle", 59);
-        addMovablePiece(Types.GREEN, "Eagle", 77);
-        addMovablePiece(Types.BLUE, "Eagle", 14);
-        addMovablePiece(Types.BLUE, "Eagle", 29);
+        addMovablePiece(Types.RED, StringText.EAGLE, 38);
+        addMovablePiece(Types.RED, StringText.EAGLE, 33);
+        addMovablePiece(Types.GREEN, StringText.EAGLE, 59);
+        addMovablePiece(Types.GREEN, StringText.EAGLE, 77);
+        addMovablePiece(Types.BLUE, StringText.EAGLE, 14);
+        addMovablePiece(Types.BLUE, StringText.EAGLE, 29);
 
-        addMovablePiece(Types.RED, "Shark", 30);
-        addMovablePiece(Types.RED, "Shark", 50);
-        addMovablePiece(Types.GREEN, "Shark", 39);
-        addMovablePiece(Types.GREEN, "Shark", 42);
-        addMovablePiece(Types.BLUE, "Shark", 40);
-        addMovablePiece(Types.BLUE, "Shark", 61);
+        addMovablePiece(Types.RED, StringText.SHARK, 30);
+        addMovablePiece(Types.RED, StringText.SHARK, 50);
+        addMovablePiece(Types.GREEN, StringText.SHARK, 39);
+        addMovablePiece(Types.GREEN, StringText.SHARK, 42);
+        addMovablePiece(Types.BLUE, StringText.SHARK, 40);
+        addMovablePiece(Types.BLUE, StringText.SHARK, 61);
 
-        addFlag(5, EAGLE_PLAYER, "Eagle");
-        addFlag(86, SHARK_PLAYER, "Shark");
+        addFlag(5, EAGLE_PLAYER, StringText.EAGLE);
+        addFlag(86, SHARK_PLAYER, StringText.SHARK);
 
         addIsland(1);
         addIsland(82);
@@ -67,10 +67,10 @@ public class GameModel implements Serializable {
             factory = new BluePieceFactory();
         }
 
-        if (playerString.equals("Eagle")) {
+        if (playerString.equals(StringText.EAGLE)) {
             player = EAGLE_PLAYER;
             movablePiece = factory.getEaglePiece(position);
-        } else if (playerString.equals("Shark")) {
+        } else if (playerString.equals(StringText.SHARK)) {
             player = SHARK_PLAYER;
             movablePiece = factory.getSharkPiece(position);
         }
@@ -110,12 +110,15 @@ public class GameModel implements Serializable {
 
     }
 
-    private MovablePiece getEnemyMovablePiece(int index) {
-        return (eagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST()).get(index);
-    }
+    public void updateNextTurn() {
+        getCurrentPlayer().setPieceMoved(false);
+        getCurrentPlayer().setAbilityUsed(null);
+        getCurrentPlayer().setPieceModeToggled(false);
+        getCurrentPlayer().setPieceModeToggledIndex(-1);
 
-    private MovablePiece getAllyMovablePiece(int index) {
-        return (eagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST()).get(index);
+        changePlayerTurn();
+        resetPieceMovementStatus();
+
     }
 
     private void resetPieceMovementStatus() {
@@ -176,15 +179,15 @@ public class GameModel implements Serializable {
         this.eagleTurn = eagleTurn;
     }
 
-    public List<? extends MovablePiece> getCurrentPieceList() {
+    public List<? extends MovablePiece> getAllyPieceList() {
         return eagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST();
     }
 
-    public List<? extends MovablePiece> getOtherPieceList() {
+    public List<? extends MovablePiece> getEnemyPieceList() {
         return eagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST();
     }
 
-    public Player getCurrentPlayer() {
+    public Player<? extends MovablePiece> getCurrentPlayer() {
         return eagleTurn ? EAGLE_PLAYER : SHARK_PLAYER;
     }
 
@@ -192,14 +195,5 @@ public class GameModel implements Serializable {
         getCurrentPlayer().setPieceMoved(true);
     }
 
-    public void updateNextTurn() {
-        getCurrentPlayer().setPieceMoved(false);
-        getCurrentPlayer().setAbilityUsed(null);
-        getCurrentPlayer().setPieceModeToggled(false);
-        getCurrentPlayer().setPieceModeToggledIndex(-1);
 
-        changePlayerTurn();
-        resetPieceMovementStatus();
-
-    }
 }
