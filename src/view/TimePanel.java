@@ -8,13 +8,16 @@ import java.util.TimerTask;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import model.StringText;
+
 class TimePanel
         extends JPanel {
 
     private Timer currentTimer = new Timer();
     private final JLabel timerLabel;
     private boolean eagleTurn;
-    private int turnTimerLimit = 30;
+    private static final String TURN_TIMER_LIMIT = "30";
+    private int turnTime;
 
     TimePanel() {
 
@@ -23,7 +26,8 @@ class TimePanel
         turnTimerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         add(turnTimerLabel);
 
-        timerLabel = new JLabel();
+        timerLabel = new JLabel(TURN_TIMER_LIMIT);
+        turnTime = Integer.parseInt(TURN_TIMER_LIMIT);
         timerLabel.setPreferredSize(new Dimension(20, 20));
         timerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         add(timerLabel);
@@ -33,17 +37,18 @@ class TimePanel
 
     private void createNewTimer(Timer currentTimer) {
         setCountdownTimer(currentTimer);
+
     }
 
     private void setCountdownTimer(Timer currentTimer) {
         currentTimer.scheduleAtFixedRate(new TimerTask() {
 
             public void run() {
-                timerLabel.setText(String.valueOf((turnTimerLimit--)));
+                timerLabel.setText(String.valueOf((turnTime--)));
 
-                if (turnTimerLimit < 0) {
+                if (turnTime < 0) {
                     currentTimer.cancel();
-                    System.out.println(eagleTurn ? "Eagle Won" : "Shark Won");
+                    System.out.println(!eagleTurn ? StringText.EAGLE_WON : StringText.SHARK_WON);
                 }
 
             }
@@ -57,10 +62,19 @@ class TimePanel
         setCountdownTimer(newTimer);
 
         currentTimer = newTimer;
+        turnTime = Integer.parseInt(TURN_TIMER_LIMIT);
+
+    }
+
+    int getTurnTime() {
+        return turnTime;
     }
 
     void setEagleTurn(boolean eagleTurn) {
         this.eagleTurn = eagleTurn;
     }
 
+    void setTurnTime(int turnTime) {
+        this.turnTime = turnTime;
+    }
 }

@@ -10,7 +10,6 @@ public class Player<T extends MovablePiece> implements Serializable {
 
     private boolean pieceMoved;
     private String abilityUsed;
-    private boolean pieceModeToggled;
     private int pieceModeToggledIndex = -1;
 
     void addMovablePiece(T movablePiece) {
@@ -37,19 +36,11 @@ public class Player<T extends MovablePiece> implements Serializable {
         this.abilityUsed = abilityUsed;
     }
 
-    public boolean isPieceModeToggled() {
-        return pieceModeToggled;
-    }
-
-    public void setPieceModeToggled(boolean pieceModeToggled) {
-        this.pieceModeToggled = pieceModeToggled;
-    }
-
     public int getPieceModeToggledIndex() {
         return pieceModeToggledIndex;
     }
 
-    public void setPieceModeToggledIndex(int pieceModeToggledIndex) {
+    void setPieceModeToggledIndex(int pieceModeToggledIndex) {
         this.pieceModeToggledIndex = pieceModeToggledIndex;
     }
 }

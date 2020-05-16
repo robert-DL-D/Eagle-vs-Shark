@@ -6,8 +6,8 @@ import java.util.List;
 public abstract class MovablePiece
         extends Piece {
 
-    final List<int[]> MOVEMENT_COORD = new LinkedList<>();
-    Enum ability;
+    private final List<int[]> MOVEMENT_COORD = new LinkedList<>();
+    private final Enum ability;
     static final int DEFAULT_MOVEMENT_DISTANCE = 2;
 
     private boolean movingMode;
@@ -48,83 +48,18 @@ public abstract class MovablePiece
         return 0;
     }
 
-    boolean updatePieceRowColumn(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer,
-                                 Square[][] squares, int[] movementCoord) {
-
-        Square currentSquare = squares[row][column];
-        Square newSquare = squares[row + movementCoord[0]][column + movementCoord[1]];
-
-        if (checkValidNewSquare(currentSquare, newSquare)) {
-
-            row += movementCoord[0];
-            column += movementCoord[1];
-            changePieceOnSquare(eaglePlayer, sharkPlayer, currentSquare, newSquare);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean checkValidNewSquare(Square currentSquare, Square newSquare) {
-
-        if (newSquare.getPiece() == null && newSquare.getMovablePiece() == null) {
-            return true;
-        } else {
-            MovablePiece movablePieceOnCurrentSquare = currentSquare.getMovablePiece();
-            Piece pieceOnNewSquare = newSquare.getPiece();
-
-            if (pieceOnNewSquare instanceof Island) {
-                return false;
-            } else if (pieceOnNewSquare instanceof Flag) {
-                return !((Flag) pieceOnNewSquare).getPLAYER().getMOVABLEPIECE_LIST().contains(movablePieceOnCurrentSquare);
-            } else {
-                MovablePiece movablePieceOnNewSquare = newSquare.getMovablePiece();
-
-                if (movablePieceOnNewSquare.shielded) {
-                    return false;
-                }
-
-                Enum movablePieceOnCurrentSquareType = movablePieceOnCurrentSquare.getType();
-                Enum movablePieceOnNewSquareType = movablePieceOnNewSquare.getType();
-
-                return (movablePieceOnCurrentSquare.getClass().getSuperclass() != movablePieceOnNewSquare.getClass().getSuperclass())
-                        && ((movablePieceOnCurrentSquareType == Types.RED && movablePieceOnNewSquareType == Types.GREEN)
-                        || (movablePieceOnCurrentSquareType == Types.GREEN && movablePieceOnNewSquareType == Types.BLUE)
-                        || (movablePieceOnCurrentSquareType == Types.BLUE && movablePieceOnNewSquareType == Types.RED));
-            }
-        }
-    }
-
-    private void changePieceOnSquare(Player<Eagle> eaglePlayer, Player<Shark> sharkPlayer,
-                                     Square currentSquare, Square newSquare) {
-
-        if (newSquare.getMovablePiece() != null) {
-
-            Player<? extends MovablePiece> player = currentSquare.getMovablePiece() instanceof Eagle ? sharkPlayer : eaglePlayer;
-
-            player.getMOVABLEPIECE_LIST().remove(newSquare.getMovablePiece());
-
-            newSquare.removeMovablePiece();
-
-        }
-
-        currentSquare.removeMovablePiece();
-        newSquare.addMovablePiece(this);
-    }
-
     public void useAbility(MovablePiece targetedMovablePiece) {
 
         AbilityDecorator abilityDecorator = null;
 
         switch (ability.toString()) {
-            case "STUN":
+            case StringText.STUN:
                 abilityDecorator = new StunDecorator();
                 break;
             case StringText.SPEED:
                 abilityDecorator = new SpeedDecorator();
                 break;
-            case "SLOW":
+            case StringText.SLOW:
                 abilityDecorator = new SlowDecorator();
                 break;
             case StringText.SHIELD:
@@ -164,7 +99,7 @@ public abstract class MovablePiece
         return movingMode;
     }
 
-    public void setMovingMode(boolean movingMode) {
+    void setMovingMode(boolean movingMode) {
         this.movingMode = movingMode;
     }
 

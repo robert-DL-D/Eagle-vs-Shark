@@ -9,13 +9,13 @@ enum Abilities {
         switch (this) {
 
             case STUN:
-                return "STUN";
+                return StringText.STUN;
 
             case SPEED:
                 return StringText.SPEED;
 
             case SLOW:
-                return "SLOW";
+                return StringText.SLOW;
 
             case SHIELD:
                 return StringText.SHIELD;

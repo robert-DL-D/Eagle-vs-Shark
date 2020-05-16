@@ -27,4 +27,12 @@ public abstract class Piece implements Serializable {
     public Enum getType() {
         return type;
     }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
 }

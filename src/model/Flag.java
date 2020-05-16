@@ -4,21 +4,15 @@ import java.io.Serializable;
 
 public class Flag extends Piece implements Serializable {
 
-    private final Player PLAYER;
-    private final String PLAYER_STRING;
+    private final Player<? extends MovablePiece> PLAYER;
 
-    Flag(int position, Player player, String playerString) {
+    public Flag(int position, Player<? extends MovablePiece> player) {
         super(Types.FLAG, position);
-
         PLAYER = player;
-        PLAYER_STRING = playerString;
     }
 
-    public Player getPLAYER() {
+    Player<? extends MovablePiece> getPLAYER() {
         return PLAYER;
     }
 
-    public String getPLAYERSTRING() {
-        return PLAYER_STRING;
-    }
 }

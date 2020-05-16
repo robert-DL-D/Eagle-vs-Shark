@@ -18,6 +18,7 @@ import model.MovablePiece;
 import model.Player;
 import model.Shark;
 import model.Square;
+import model.StringText;
 
 public class GameView
         extends JFrame {
@@ -52,21 +53,21 @@ public class GameView
         contentPane.add(addPanel(TIME_PANEL, timePanelX, BoardPanel.getBoardMargin(), 150, 30));
 
         int nexTurnButtonX = timePanelX + TIME_PANEL.getWidth() + panelMargin;
-        JButton nextTurnButton = new JButton("Next Turn");
+        JButton nextTurnButton = new JButton(StringText.NEXT_TURN);
         nextTurnButton.setLocation(nexTurnButtonX, BoardPanel.getBoardMargin());
         nextTurnButton.setSize(130, 30);
         nextTurnButton.addActionListener(actionListener);
         contentPane.add(nextTurnButton);
 
         int saveGameButtonX = nexTurnButtonX + nextTurnButton.getWidth() + panelMargin;
-        JButton saveGameButton = new JButton("Save Game");
+        JButton saveGameButton = new JButton(StringText.SAVE_GAME);
         saveGameButton.setLocation(saveGameButtonX, BoardPanel.getBoardMargin());
         saveGameButton.setSize(130, 30);
         saveGameButton.addActionListener(actionListener);
         contentPane.add(saveGameButton);
 
         int loadGameButtonX = saveGameButtonX + saveGameButton.getWidth() + panelMargin;
-        JButton loadGameButton = new JButton("Load Game");
+        JButton loadGameButton = new JButton(StringText.LOAD_GAME);
         loadGameButton.setLocation(loadGameButtonX, BoardPanel.getBoardMargin());
         loadGameButton.setSize(130, 30);
         loadGameButton.addActionListener(actionListener);
@@ -115,7 +116,6 @@ public class GameView
         PIECE_PANEL.setButtonText(currentPieceList);
 
         ABILITY_PANEL.createButtons(currentPieceList);
-        ABILITY_PANEL.setAbilityButtonText(currentPieceList);
 
         TIME_PANEL.setEagleTurn(eagleTurn);
 
@@ -123,13 +123,12 @@ public class GameView
         repaint();
     }
 
-    public void updateViewAfterPieceMove(List<? extends MovablePiece> currentPieceList, MovablePiece movablePiece) {
+    public void updateViewAfterPieceMove(List<? extends MovablePiece> currentPieceList, int selectedButtonIndex) {
         BOARD_PANEL.removeMovablePiece();
         PIECE_PANEL.disableAllButton();
-
         PIECE_PANEL.setButtonText(currentPieceList);
         MOVEMENT_PANEL.hideMovementUI();
-        ABILITY_PANEL.updateButtonText(movablePiece);
+        ABILITY_PANEL.updateButtonText(currentPieceList.get(selectedButtonIndex));
 
         revalidate();
         repaint();
@@ -149,8 +148,7 @@ public class GameView
         ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
         ABILITY_PANEL.createButtons(currentPieceList);
         ABILITY_PANEL.resetUseAbilityButtonText();
-        ABILITY_PANEL.setUseAbilityButton(false);
-        ABILITY_PANEL.enableAbilityUI(currentPieceList);
+        ABILITY_PANEL.setUSE_ABILITY_BUTTON(false);
 
         TIME_PANEL.setEagleTurn(eagleTurn);
         TIME_PANEL.resetTimer();
@@ -175,28 +173,31 @@ public class GameView
         ABILITY_PANEL.selectedAbility(actionCommand, movablePieceList);
     }
 
-    public void loadGame(Player<? extends MovablePiece> player) {
+    public void loadGame(Player<? extends MovablePiece> player, int turnTime) {
         if (player.isPieceMoved()) {
             PIECE_PANEL.disableAllButton();
         }
 
         if (player.getAbilityUsed() != null) {
             for (MovablePiece movablePiece : player.getMOVABLEPIECE_LIST()) {
-
                 if (player.getAbilityUsed().equals(movablePiece.getAbility().toString())) {
                     ABILITY_PANEL.setLastAbilityUsed(player.getAbilityUsed());
                     updateViewAfterAbilityUse(movablePiece, player.getAbilityUsed(), player.getMOVABLEPIECE_LIST());
                     break;
                 }
-
             }
 
         }
 
-        if (player.getPieceModeToggledIndex() != -1) {
-            PIECE_PANEL.setSelectedButtonIndex(player.getPieceModeToggledIndex());
+        int pieceModeToggledIndex = player.getPieceModeToggledIndex();
+
+        if (pieceModeToggledIndex != -1) {
+            PIECE_PANEL.setSelectedButtonIndex(pieceModeToggledIndex);
             PIECE_PANEL.changeButtonMode(player.getMOVABLEPIECE_LIST());
+            ABILITY_PANEL.setAbilityButtonStatus(pieceModeToggledIndex);
         }
+
+        TIME_PANEL.setTurnTime(turnTime);
     }
 
     public void movePiece(MovablePiece movablePiece) {
@@ -214,22 +215,18 @@ public class GameView
 
     public void togglePieceMode(int selectedButtonIndex, List<? extends MovablePiece> movablePieceList) {
         PIECE_PANEL.changeButtonMode(movablePieceList);
-        ABILITY_PANEL.changeAbilityButtonStatus(selectedButtonIndex);
-    }
-
-    public AbilityPanel getABILITY_PANEL() {
-        return ABILITY_PANEL;
-    }
-
-    public PiecePanel getPIECE_PANEL() {
-        return PIECE_PANEL;
-    }
-
-    public MovementPanel getMOVEMENT_PANEL() {
-        return MOVEMENT_PANEL;
+        ABILITY_PANEL.setAbilityButtonStatus(selectedButtonIndex);
     }
 
     public int getPieceJListSelectedItem() {
         return ABILITY_PANEL.getPieceJListSelectedItem();
+    }
+
+    public int[] getMovementCoord() {
+        return MOVEMENT_PANEL.getMovementCoord();
+    }
+
+    public int getTurnTime() {
+        return TIME_PANEL.getTurnTime();
     }
 }

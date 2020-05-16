@@ -17,6 +17,7 @@ import javax.swing.border.LineBorder;
 
 import model.BoardSize;
 import model.MovablePiece;
+import model.StringText;
 
 public class MovementPanel
         extends JPanel
@@ -43,7 +44,7 @@ public class MovementPanel
         MOVE_JLIST.setLocation(10, 50);
         add(MOVE_JLIST);
 
-        MOVE_BUTTON = new JButton("Move");
+        MOVE_BUTTON = new JButton(StringText.MOVE);
         MOVE_BUTTON.setPreferredSize(new Dimension(80, 30));
         MOVE_BUTTON.addActionListener(this);
         MOVE_BUTTON.setVisible(false);
@@ -56,7 +57,7 @@ public class MovementPanel
         ACTIONLISTENER.actionPerformed(actionEvent);
     }
 
-    public void updateMoveJList(MovablePiece movablePiece) {
+    void updateMoveJList(MovablePiece movablePiece) {
         if (movablePiece.isMovingMode()) {
             if (!MOVEMENT_COORD_LIST.isEmpty()) {
                 MOVEMENT_COORD_LIST.clear();
@@ -85,7 +86,7 @@ public class MovementPanel
         }
     }
 
-    public int[] getMovementCoord() {
+    int[] getMovementCoord() {
 
         int selectedIndex = MOVE_JLIST.getSelectedIndex();
         return selectedIndex == -1 ? null : MOVEMENT_COORD_LIST.get(selectedIndex);

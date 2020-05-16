@@ -1,199 +1,133 @@
 package model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class GameModel implements Serializable {
 
-    private final Square[][] SQUARE_ARRAY = new Square[BoardSize.BOARD_ROWS][BoardSize.BOARD_COLUMNS];
-    private final Player<Eagle> EAGLE_PLAYER = new Player<>();
-    private final Player<Shark> SHARK_PLAYER = new Player<>();
-    private final List<Flag> FLAG_LIST = new ArrayList<>();
-    private final List<Island> ISLAND_LIST = new ArrayList<>();
+    private final SquaresModel SQUARES_MODEL = new SquaresModel();
+    private final PlayerModel PLAYER_MODEL = new PlayerModel();
+    private final AddPieceModel PIECE_MODEL = new AddPieceModel(PLAYER_MODEL, SQUARES_MODEL);
 
-    private boolean eagleTurn;
+    public boolean movePiece(int selectedButtonIndex, int[] movementCoord) {
 
-    public GameModel() {
-        initializeSquare();
+        if (movementCoord != null) {
+            MovablePiece movablePiece = PLAYER_MODEL.getOwnPieceList().get(selectedButtonIndex);
 
-        addMovablePiece(Types.RED, StringText.EAGLE, 38);
-        addMovablePiece(Types.RED, StringText.EAGLE, 33);
-        addMovablePiece(Types.GREEN, StringText.EAGLE, 59);
-        addMovablePiece(Types.GREEN, StringText.EAGLE, 77);
-        addMovablePiece(Types.BLUE, StringText.EAGLE, 14);
-        addMovablePiece(Types.BLUE, StringText.EAGLE, 29);
+            int row = movablePiece.getRow();
+            int column = movablePiece.getColumn();
 
-        addMovablePiece(Types.RED, StringText.SHARK, 30);
-        addMovablePiece(Types.RED, StringText.SHARK, 50);
-        addMovablePiece(Types.GREEN, StringText.SHARK, 39);
-        addMovablePiece(Types.GREEN, StringText.SHARK, 42);
-        addMovablePiece(Types.BLUE, StringText.SHARK, 40);
-        addMovablePiece(Types.BLUE, StringText.SHARK, 61);
+            Square currentSquare = SQUARES_MODEL.getSQUARE_ARRAY()[row][column];
+            Square newSquare = SQUARES_MODEL.getSQUARE_ARRAY()[row + movementCoord[0]][column + movementCoord[1]];
 
-        addFlag(5, EAGLE_PLAYER, StringText.EAGLE);
-        addFlag(86, SHARK_PLAYER, StringText.SHARK);
+            if (checkValidNewSquare(movablePiece, newSquare.getMovablePiece(), newSquare.getPiece())) {
 
-        addIsland(1);
-        addIsland(82);
+                // set the new coord for moveablepiece
+                movablePiece.setRow(movablePiece.getRow() + movementCoord[0]);
+                movablePiece.setColumn(movablePiece.getColumn() + movementCoord[1]);
 
-        eagleTurn = ThreadLocalRandom.current().nextInt(0, 2) == 0;
+                // if the newsquare has a piece, remove it from the moveablepiecelist of the player
+                // and remove it from the square
+                if (newSquare.getMovablePiece() != null) {
+                    PLAYER_MODEL.getEnemyPieceList().remove(newSquare.getMovablePiece());
+                    newSquare.removeMovablePiece();
+                }
+
+                currentSquare.removeMovablePiece(); // remove the piece from the currentsquare
+                newSquare.addMovablePiece(movablePiece); // set the piece to the newsquare
+
+                // Checks if a piece is on the same square as the enemy flag
+                for (Flag flag : PIECE_MODEL.getFLAG_LIST()) {
+                    Square flagSquare = SQUARES_MODEL.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
+                    if (flagSquare.getMovablePiece() != null) {
+                        System.out.println(flagSquare.getMovablePiece() instanceof Eagle ? StringText.EAGLE_WON : StringText.SHARK_WON);
+                    }
+                }
+
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
-    private void initializeSquare() {
+    private boolean checkValidNewSquare(MovablePiece currentSquareMovableP, MovablePiece newSquareMovableP, Piece newSquarePiece) {
 
-        int increment = 1;
+        // Can move to a square that is empty
+        if (newSquarePiece == null && newSquareMovableP == null) {
+            return true;
+        } else {
 
-        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
-            for (int j = 0; j < BoardSize.BOARD_COLUMNS; j++) {
-                SQUARE_ARRAY[i][j] = new Square(increment);
-                increment++;
+            if (newSquarePiece instanceof Island) { // Cannot move to a square that has an island
+                return false;
+            } else if (newSquarePiece instanceof Flag) { // Cannot move to a flag on the same team
+                return !((Flag) newSquarePiece).getPLAYER().getMOVABLEPIECE_LIST().contains(currentSquareMovableP);
+            } else {
+
+                // Cannot move to a square with a piece that's shielded
+                if (newSquareMovableP.isShielded()) {
+                    return false;
+                }
+
+                Enum currentSquareMovablePType = currentSquareMovableP.getType();
+                Enum newSquareMovablePType = newSquareMovableP.getType();
+
+                // This checks the two pieces must be on different team,
+                // Red can move to a Green piece, 
+                // Green can move to a Blue piece, 
+                // Blue can move to a Red piece   
+                return (currentSquareMovableP.getClass().getSuperclass() != newSquareMovableP.getClass().getSuperclass())
+                        && ((currentSquareMovablePType == Types.RED && newSquareMovablePType == Types.GREEN)
+                        || (currentSquareMovablePType == Types.GREEN && newSquareMovablePType == Types.BLUE)
+                        || (currentSquareMovablePType == Types.BLUE && newSquareMovablePType == Types.RED));
             }
         }
-    }
-
-    private void addMovablePiece(Enum type, String playerString, int position) {
-
-        AbstractFactory factory = null;
-        Player player = null;
-        MovablePiece movablePiece = null;
-
-        if (type == Types.RED) {
-            factory = new RedPieceFactory();
-        } else if (type == Types.GREEN) {
-            factory = new GreenPieceFactory();
-        } else if (type == Types.BLUE) {
-            factory = new BluePieceFactory();
-        }
-
-        if (playerString.equals(StringText.EAGLE)) {
-            player = EAGLE_PLAYER;
-            movablePiece = factory.getEaglePiece(position);
-        } else if (playerString.equals(StringText.SHARK)) {
-            player = SHARK_PLAYER;
-            movablePiece = factory.getSharkPiece(position);
-        }
-
-        player.addMovablePiece(movablePiece);
-        Square square = getSQUARE_ARRAY()[movablePiece.getRow()][movablePiece.getColumn()];
-        square.addMovablePiece(movablePiece);
-
-    }
-
-    private void addFlag(int position, Player player, String playerString) {
-
-        Flag flag = new Flag(position, player, playerString);
-        FLAG_LIST.add(flag);
-
-        Square square = getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
-        square.addPiece(flag);
-    }
-
-    private void addIsland(int position) {
-
-        Island island = new Island(position);
-        ISLAND_LIST.add(island);
-
-        Square square = getSQUARE_ARRAY()[island.getRow()][island.getColumn()];
-        square.addPiece(island);
-    }
-
-    private void changePlayerTurn() {
-        eagleTurn = !eagleTurn;
-
-    }
-
-    public boolean movePiece(int index, int[] movementCoord) {
-
-        return (eagleTurn ? EAGLE_PLAYER : SHARK_PLAYER).getMOVABLEPIECE_LIST().get(index).updatePieceRowColumn(EAGLE_PLAYER, SHARK_PLAYER, SQUARE_ARRAY, movementCoord);
-
-    }
-
-    public void updateNextTurn() {
-        getCurrentPlayer().setPieceMoved(false);
-        getCurrentPlayer().setAbilityUsed(null);
-        getCurrentPlayer().setPieceModeToggled(false);
-        getCurrentPlayer().setPieceModeToggledIndex(-1);
-
-        changePlayerTurn();
-        resetPieceMovementStatus();
-
-    }
-
-    private void resetPieceMovementStatus() {
-
-        List<? extends MovablePiece> movablePieceList = eagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST();
-        boolean resetShield = true;
-
-        for (MovablePiece movablePiece : movablePieceList) {
-
-            if (movablePiece.getAbility() == Abilities.SHIELD) {
-                resetShield = false;
-            }
-
-            movablePiece.getMOVEMENT_COORD().clear();
-            movablePiece.addMovementCoord(MovablePiece.DEFAULT_MOVEMENT_DISTANCE);
-            movablePiece.setStunned(false);
-            movablePiece.setSlowed(false);
-
-        }
-
-        if (resetShield) {
-            resetShield(movablePieceList);
-        }
-
-    }
-
-    private void resetShield(List<? extends MovablePiece> movablePieceList) {
-        for (MovablePiece movablePiece : movablePieceList) {
-            movablePiece.setShielded(false);
-        }
-    }
-
-    public Player<Eagle> getEAGLE_PLAYER() {
-        return EAGLE_PLAYER;
-    }
-
-    public Player<Shark> getSHARK_PLAYER() {
-        return SHARK_PLAYER;
-    }
-
-    public Square[][] getSQUARE_ARRAY() {
-        return SQUARE_ARRAY;
-    }
-
-    public List<Flag> getFLAG_LIST() {
-        return FLAG_LIST;
-    }
-
-    public List<Island> getISLAND_LIST() {
-        return ISLAND_LIST;
-    }
-
-    public boolean isEagleTurn() {
-        return eagleTurn;
-    }
-
-    public void setEagleTurn(boolean eagleTurn) {
-        this.eagleTurn = eagleTurn;
-    }
-
-    public List<? extends MovablePiece> getAllyPieceList() {
-        return eagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST();
     }
 
     public List<? extends MovablePiece> getEnemyPieceList() {
-        return eagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST();
+        return PLAYER_MODEL.getEnemyPieceList();
+    }
+
+    public List<? extends MovablePiece> getAllyPieceList() {
+        return PLAYER_MODEL.getOwnPieceList();
     }
 
     public Player<? extends MovablePiece> getCurrentPlayer() {
-        return eagleTurn ? EAGLE_PLAYER : SHARK_PLAYER;
+        return PLAYER_MODEL.getCurrentPlayer();
     }
 
-    public void setPieceMoved() {
-        getCurrentPlayer().setPieceMoved(true);
+    public Player<Eagle> getEAGLE_PLAYER() {
+        return PLAYER_MODEL.getEAGLE_PLAYER();
     }
 
+    public Player<Shark> getSHARK_PLAYER() {
+        return PLAYER_MODEL.getSHARK_PLAYER();
+    }
+
+    public void updateNextTurn() {
+        PLAYER_MODEL.updateNextTurn();
+    }
+
+    public void updateMovingMode(String actionCommand, int selectedButtonIndex) {
+        PLAYER_MODEL.updateMovingMode(actionCommand, selectedButtonIndex);
+    }
+
+    public boolean isEagleTurn() {
+        return PLAYER_MODEL.isEagleTurn();
+    }
+
+    public List<Flag> getFLAG_LIST() {
+        return PIECE_MODEL.getFLAG_LIST();
+    }
+
+    public List<Island> getISLAND_LIST() {
+        return PIECE_MODEL.getISLAND_LIST();
+    }
+
+    public Square[][] getSQUARE_ARRAY() {
+        return SQUARES_MODEL.getSQUARE_ARRAY();
+    }
 
 }

@@ -1,7 +1,7 @@
 package model;
 
 public class Island extends Piece {
-    Island(int position) {
+    public Island(int position) {
         super(Types.ISLAND, position);
     }
 }
