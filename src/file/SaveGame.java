@@ -19,6 +19,7 @@ public class SaveGame
         try {
             ObjectOutput objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             objectOutputStream.writeObject(gameModel);
+            objectOutputStream.writeObject(turnLimit);
             objectOutputStream.writeObject(turnTime);
             objectOutputStream.close();
 
