@@ -11,19 +11,20 @@ import view.GameView;
 public class GameController
         implements ActionListener {
 
+    private GameModel gameModel = new GameModel();
     private final GameView GAME_VIEW = new GameView(this);
     private final AbilityController ABILITY_CONTROLLER = new AbilityController();
     private final GameStateController gameStateController = new GameStateController();
-    private GameModel gameModel = new GameModel();
 
-    public GameController() {
+    public GameController(String turnLimit) {
         GAME_VIEW.initializeGameView(gameModel.getSQUARE_ARRAY(),
                 gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST(),
                 gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST(),
                 gameModel.getFLAG_LIST(),
                 gameModel.getISLAND_LIST(),
                 gameModel.getAllyPieceList(),
-                gameModel.isEagleTurn());
+                gameModel.isEagleTurn(),
+                turnLimit);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class GameController
             }
         } else if (StringText.SAVE_GAME.equals(actionCommand)) {
 
-            gameStateController.saveGame(gameModel, GAME_VIEW.getTurnTime());
+            gameStateController.saveGame(gameModel, GAME_VIEW.getTURN_LIMIT(), GAME_VIEW.getTurnTime());
 
         } else if (StringText.LOAD_GAME.equals(actionCommand)) {
 

@@ -108,7 +108,7 @@ public class GameView
                                    List<Eagle> eagleList, List<Shark> sharkList,
                                    List<Flag> flagList, List<Island> islandList,
                                    List<? extends MovablePiece> currentPieceList,
-                                   boolean eagleTurn) {
+                                   boolean eagleTurn, String turnLimit) {
         BOARD_PANEL.setBoard(squareArray, eagleList, sharkList, flagList, islandList);
 
         PIECE_PANEL.updateTurnText(eagleTurn);
@@ -118,6 +118,7 @@ public class GameView
         ABILITY_PANEL.createButtons(currentPieceList);
 
         TIME_PANEL.setEagleTurn(eagleTurn);
+        TIME_PANEL.setTurnLimit(turnLimit);
 
         revalidate();
         repaint();
@@ -228,5 +229,9 @@ public class GameView
 
     public int getTurnTime() {
         return TIME_PANEL.getTurnTime();
+    }
+
+    public String getTURN_LIMIT() {
+        return TIME_PANEL.getTurnLimit();
     }
 }

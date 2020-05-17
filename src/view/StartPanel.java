@@ -10,10 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import controller.GameController;
+import model.BoardSize;
 
 public class StartPanel extends JPanel {
 
-    public StartPanel(JFrame jFrame) {
+    StartPanel(JFrame jFrame) {
 
         setLayout(null);
 
@@ -29,7 +30,7 @@ public class StartPanel extends JPanel {
 
         JLabel rowLabel = new JLabel("Row：");
         rowLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        rowLabel.setBounds(60, 100, 80, 30);
+        rowLabel.setBounds(80, 100, 80, 30);
         add(rowLabel);
 
         JTextField rowText = new JTextField();
@@ -40,7 +41,7 @@ public class StartPanel extends JPanel {
 
         JLabel columnLabel = new JLabel("Column：");
         columnLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        columnLabel.setBounds(60, 150, 80, 30);
+        columnLabel.setBounds(58, 150, 80, 30);
         add(columnLabel);
 
         JTextField columnText = new JTextField();
@@ -49,17 +50,30 @@ public class StartPanel extends JPanel {
         columnText.setBounds(120, 150, 100, 30);
         add(columnText);
 
+        JLabel timerLabel = new JLabel("Turn Time (sec)：");
+        timerLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+        timerLabel.setBounds(5, 200, 120, 30);
+        add(timerLabel);
+
+        JTextField timerText = new JTextField();
+        timerText.setText("30");
+        timerText.setFont(new Font("TimesRoman", Font.PLAIN, 15));
+        timerText.setBounds(120, 200, 100, 30);
+        add(timerText);
+
         JButton button = new JButton("Start");
         button.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        button.setBounds(120, 200, 100, 30);
+        button.setBounds(120, 250, 100, 30);
         add(button);
 
         button.addActionListener(arg0 -> {
             int rowValue;
             int columnValue;
+            String turnLimit;
             try {
-                rowValue = Integer.valueOf(rowText.getText());
-                columnValue = Integer.valueOf(columnText.getText());
+                rowValue = Integer.parseInt(rowText.getText());
+                columnValue = Integer.parseInt(columnText.getText());
+                turnLimit = timerText.getText();
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Numbers only!");
                 return;
@@ -69,8 +83,9 @@ public class StartPanel extends JPanel {
                     && 4 <= columnValue && columnValue <= 10) {
                 jFrame.dispose();
                 // open GameBoard
-                //new BoardSize(rowValue, columnValue);
-                new GameController();
+                BoardSize.setBoardRows(rowValue);
+                BoardSize.setBoardColumns(columnValue);
+                new GameController(turnLimit);
             } else {
                 JOptionPane.showMessageDialog(null, "Numbers between 4 and 10!");
             }

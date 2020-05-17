@@ -13,10 +13,10 @@ import model.StringText;
 class TimePanel
         extends JPanel {
 
-    private Timer currentTimer = new Timer();
+    private Timer currentTimer;
     private final JLabel timerLabel;
     private boolean eagleTurn;
-    private static final String TURN_TIMER_LIMIT = "30";
+    private String turnLimit;
     private int turnTime;
 
     TimePanel() {
@@ -26,18 +26,18 @@ class TimePanel
         turnTimerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         add(turnTimerLabel);
 
-        timerLabel = new JLabel(TURN_TIMER_LIMIT);
-        turnTime = Integer.parseInt(TURN_TIMER_LIMIT);
+        timerLabel = new JLabel();
         timerLabel.setPreferredSize(new Dimension(20, 20));
         timerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         add(timerLabel);
 
-        createNewTimer(currentTimer);
     }
 
-    private void createNewTimer(Timer currentTimer) {
-        setCountdownTimer(currentTimer);
+    private void createNewTimer() {
 
+        currentTimer = new Timer();
+
+        setCountdownTimer(currentTimer);
     }
 
     private void setCountdownTimer(Timer currentTimer) {
@@ -48,7 +48,7 @@ class TimePanel
 
                 if (turnTime < 0) {
                     currentTimer.cancel();
-                    System.out.println(!eagleTurn ? StringText.EAGLE_WON : StringText.SHARK_WON);
+                    System.out.println(eagleTurn ? StringText.SHARK_WON : StringText.EAGLE_WON);
                 }
 
             }
@@ -62,7 +62,7 @@ class TimePanel
         setCountdownTimer(newTimer);
 
         currentTimer = newTimer;
-        turnTime = Integer.parseInt(TURN_TIMER_LIMIT);
+        turnTime = Integer.parseInt(turnLimit);
 
     }
 
@@ -74,7 +74,19 @@ class TimePanel
         this.eagleTurn = eagleTurn;
     }
 
+    String getTurnLimit() {
+        return turnLimit;
+    }
+
+    void setTurnLimit(String turnLimit) {
+        this.turnLimit = turnLimit;
+        turnTime = Integer.parseInt(turnLimit);
+
+        createNewTimer();
+    }
+
     void setTurnTime(int turnTime) {
         this.turnTime = turnTime;
     }
+
 }

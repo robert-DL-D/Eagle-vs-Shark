@@ -7,8 +7,8 @@ import view.GameView;
 
 class GameStateController {
 
-    void saveGame(GameModel gameModel, int turnTime) {
-        new SaveGame().saveGame(gameModel, turnTime);
+    void saveGame(GameModel gameModel, String turnLimit, int turnTime) {
+        new SaveGame().saveGame(gameModel, turnLimit, turnTime);
     }
 
     GameModel loadGame(GameView gameView) {
@@ -16,6 +16,7 @@ class GameStateController {
         loadGame.loadGame();
 
         GameModel gameModel = loadGame.getGameModel();
+        String turnLimit = loadGame.getTurnLimit();
         int turnTime = loadGame.getTurnTime();
 
         if (loadGame.isSaveFileExist()) {
@@ -25,7 +26,7 @@ class GameStateController {
                     gameModel.getFLAG_LIST(),
                     gameModel.getISLAND_LIST(),
                     gameModel.getAllyPieceList(),
-                    gameModel.isEagleTurn());
+                    gameModel.isEagleTurn(), turnLimit);
 
             gameView.loadGame(gameModel.getCurrentPlayer(), turnTime);
         }

@@ -15,7 +15,7 @@ public class SaveGame
         extends FileGame
         implements Serializable {
 
-    public void saveGame(GameModel gameModel, int turnTime) {
+    public void saveGame(GameModel gameModel, String turnLimit, int turnTime) {
         try {
             ObjectOutput objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             objectOutputStream.writeObject(gameModel);
