@@ -8,11 +8,11 @@ class AddPieceModel implements Serializable {
     private final List<Flag> FLAG_LIST = new ArrayList<>();
     private final List<Island> ISLAND_LIST = new ArrayList<>();
     private final PlayerModel PLAYER_MODEL;
-    private final SquaresModel SQUARES_MODEL;
+    private final BoardModel SQUARES_MODEL;
 
-    AddPieceModel(PlayerModel playerModel, SquaresModel squaresModel) {
+    AddPieceModel(PlayerModel playerModel, BoardModel boardModel) {
         PLAYER_MODEL = playerModel;
-        SQUARES_MODEL = squaresModel;
+        SQUARES_MODEL = boardModel;
 
         addMovablePiece(Types.RED, StringText.EAGLE, 38);
         addMovablePiece(Types.RED, StringText.EAGLE, 33);

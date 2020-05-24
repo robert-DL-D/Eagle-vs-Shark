@@ -69,23 +69,25 @@ public class StartPanel extends JPanel {
         button.addActionListener(arg0 -> {
             int rowValue;
             int columnValue;
-            String turnLimit;
+            int turnLimit;
             try {
                 rowValue = Integer.parseInt(rowText.getText());
                 columnValue = Integer.parseInt(columnText.getText());
-                turnLimit = timerText.getText();
+                turnLimit = Integer.parseInt(timerText.getText());
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Numbers only!");
                 return;
             }
 
+            // TODO: Validations need to be updated
             if (4 <= rowValue && rowValue <= 10
-                    && 4 <= columnValue && columnValue <= 10) {
+                    && 4 <= columnValue && columnValue <= 10
+                    && turnLimit > 0) {
                 jFrame.dispose();
                 // open GameBoard
                 BoardSize.setBoardRows(rowValue);
                 BoardSize.setBoardColumns(columnValue);
-                new GameController(turnLimit);
+                new GameController(String.valueOf(turnLimit));
             } else {
                 JOptionPane.showMessageDialog(null, "Numbers between 4 and 10!");
             }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class GameModel implements Serializable {
 
-    private final SquaresModel SQUARES_MODEL = new SquaresModel();
+    private final BoardModel SQUARES_MODEL = BoardModel.getInstance();
     private final PlayerModel PLAYER_MODEL = new PlayerModel();
     private final AddPieceModel PIECE_MODEL = new AddPieceModel(PLAYER_MODEL, SQUARES_MODEL);
 
