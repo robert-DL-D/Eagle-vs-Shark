@@ -87,10 +87,42 @@ public class GameView
         contentPane.add(addPanel(ABILITY_PANEL, abilityPanelX, turnPanelY, 180, PIECE_PANEL.getHeight()));
 
         int rulesTextAreaX = abilityPanelX + ABILITY_PANEL.getWidth() + panelMargin;
-        TextArea rulesTextArea = new TextArea("placeholder text - to be added", 1, 1);
+        TextArea rulesTextArea = new TextArea("\n" +
+        		"Pieces Movement\n" + 
+        		"\n" + 
+        		"Red Shark \n" + 
+        		"- move ↖↙↗↘ by 1, \n" + 
+        		"and either ↑↓←→ by 1\n" + 
+        		"\n" + 
+        		"Green Shark \n" + 
+        		"- move ↖↙↗↘ by 1 or 2 \n" + 
+        		"\n" + 
+        		"\n" + 
+        		"Blue Shark \n" + 
+        		"- move ↑↓←→ by 1 or 2, \n" + 
+        		"but ↖↙↗↘ by 1\n" + 
+        		"\n" + 
+        		"\n" + 
+        		"Red Eagle \n" + 
+        		"- move ↑↓←→ by 1 or 2\n" + 
+        		"\n" + 
+        		"\n" + 
+        		"Green Eagle \n" + 
+        		"- move ↖↙↗↘ by 2, \n" + 
+        		"or move ↑↓←→ by 1 \n" + 
+        		"\n" + 
+        		"\n" + 
+        		"Blue Shark \n" + 
+        		"- move 1 space \n" + 
+        		"to any direction\n" + 
+        		"\n" + 
+        		"\n" + 
+        		"Dont’t forget \n" + 
+        		"your clock is ticking! ;)", 1, 1);
         rulesTextArea.setSize(220, PIECE_PANEL.getHeight());
         rulesTextArea.setLocation(rulesTextAreaX, turnPanelY);
         rulesTextArea.setEditable(false);
+        rulesTextArea.setForeground(Color.white);
         contentPane.add(rulesTextArea);
 
         setVisible(true);
