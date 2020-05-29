@@ -23,8 +23,8 @@ enum Abilities {
             case PH2:
                 return "PH2";
 
-            case PH3:
-                return "PH3";
+//            case PH3:
+//                return "PH3";
 
             default:
                 return "NONE";

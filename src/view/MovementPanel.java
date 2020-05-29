@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-import model.BoardSize;
+import model.BoardConfig;
 import model.MovablePiece;
 import model.StringText;
 
@@ -71,8 +71,8 @@ public class MovementPanel
                 validCoord[0] = movablePiece.getRow() + movablecoord[0] + 1;
                 validCoord[1] = movablePiece.getColumn() + movablecoord[1] + 1;
 
-                if (!(validCoord[0] < 1 || validCoord[0] > BoardSize.BOARD_ROWS
-                        || validCoord[1] < 1 || validCoord[1] > BoardSize.BOARD_COLUMNS)) {
+                if (!(validCoord[0] < 1 || validCoord[0] > BoardConfig.BOARD_ROWS
+                        || validCoord[1] < 1 || validCoord[1] > BoardConfig.BOARD_COLUMNS)) {
                     pieceCoordList.add(validCoord[0] + " " + validCoord[1]);
                     MOVEMENT_COORD_LIST.add(movablecoord);
                 }

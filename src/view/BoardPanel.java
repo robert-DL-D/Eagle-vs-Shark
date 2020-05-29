@@ -10,7 +10,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import model.BoardSize;
+import model.BoardConfig;
 import model.Eagle;
 import model.Flag;
 import model.Island;
@@ -51,13 +51,13 @@ public class BoardPanel
         g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
 
         // draw the rows
-        for (int i = 0; i < BoardSize.BOARD_ROWS + 1; i++) {
-            g.drawLine(BOARD_MARGIN, gridCoord(i), BoardSize.BOARD_COLUMNS * SQUARE_SIZE + BOARD_MARGIN, gridCoord(i));
+        for (int i = 0; i < BoardConfig.BOARD_ROWS + 1; i++) {
+            g.drawLine(BOARD_MARGIN, gridCoord(i), BoardConfig.BOARD_COLUMNS * SQUARE_SIZE + BOARD_MARGIN, gridCoord(i));
         }
 
         // draw the columns
-        for (int i = 0; i < BoardSize.BOARD_COLUMNS + 1; i++) {
-            g.drawLine(gridCoord(i), BOARD_MARGIN, gridCoord(i), BoardSize.BOARD_ROWS * SQUARE_SIZE + BOARD_MARGIN);
+        for (int i = 0; i < BoardConfig.BOARD_COLUMNS + 1; i++) {
+            g.drawLine(gridCoord(i), BOARD_MARGIN, gridCoord(i), BoardConfig.BOARD_ROWS * SQUARE_SIZE + BOARD_MARGIN);
         }
 
     }
@@ -84,12 +84,12 @@ public class BoardPanel
 
     private void drawSquare(Graphics g) {
 
-        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
-            for (int j = 0; j < BoardSize.BOARD_COLUMNS; j++) {
+        for (int i = 0; i < BoardConfig.BOARD_ROWS; i++) {
+            for (int j = 0; j < BoardConfig.BOARD_COLUMNS; j++) {
 
-                if (i == BoardSize.BOARD_ROWS / 2 - 1 || i == BoardSize.BOARD_ROWS / 2) {
+                if (i == BoardConfig.BOARD_ROWS / 2 - 1 || i == BoardConfig.BOARD_ROWS / 2) {
                     g.setColor(Color.WHITE);
-                } else if (squares[i][j].getSQUARE_NUMBER() - 1 < BoardSize.BOARD_ROWS / 2 * BoardSize.BOARD_COLUMNS) {
+                } else if (squares[i][j].getSQUARE_NUMBER() - 1 < BoardConfig.BOARD_ROWS / 2 * BoardConfig.BOARD_COLUMNS) {
                     g.setColor(new Color(135, 206, 235));
                 } else {
                     g.setColor(new Color(0, 105, 148));
@@ -108,7 +108,7 @@ public class BoardPanel
                 int j = movablePiece.getColumn() + movableCoord[1];
 
                 if ((i >= 0 && j >= 0)
-                        && (i <= BoardSize.BOARD_COLUMNS && j <= BoardSize.BOARD_ROWS)) {
+                        && (i <= BoardConfig.BOARD_COLUMNS && j <= BoardConfig.BOARD_ROWS)) {
                     g.fillRect(gridCoord(j), gridCoord(i), SQUARE_SIZE, SQUARE_SIZE);
                 }
             }
@@ -131,20 +131,20 @@ public class BoardPanel
 
     private void drawNumber(Graphics g) {
         // Draw the square number
-        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
-            for (int j = 0; j < BoardSize.BOARD_COLUMNS; j++) {
+        for (int i = 0; i < BoardConfig.BOARD_ROWS; i++) {
+            for (int j = 0; j < BoardConfig.BOARD_COLUMNS; j++) {
                 g.drawString(Integer.toString(squares[i][j].getSQUARE_NUMBER()), j * SQUARE_SIZE + 30, i * SQUARE_SIZE + 40);
             }
         }
 
         // Draw the Y-axis number
-        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
+        for (int i = 0; i < BoardConfig.BOARD_ROWS; i++) {
             g.drawString(Integer.toString(i + 1), 5, i * SQUARE_SIZE + AXIS_NUMBER_MARGIN);
 
         }
 
         // Draw the X-axis number
-        for (int i = 0; i < BoardSize.BOARD_COLUMNS; i++) {
+        for (int i = 0; i < BoardConfig.BOARD_COLUMNS; i++) {
             g.setColor(Color.BLACK);
             g.drawString(Integer.toString(i + 1), i * SQUARE_SIZE + AXIS_NUMBER_MARGIN, 18);
         }

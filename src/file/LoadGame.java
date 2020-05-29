@@ -17,6 +17,9 @@ public class LoadGame
 
     private boolean saveFileExist;
     private GameModel gameModel;
+    private int rowValue;
+    private int columnValue;
+    private int pieceNum;
     private String turnLimit;
     private int turnTime;
 
@@ -26,6 +29,9 @@ public class LoadGame
                 saveFileExist = true;
                 ObjectInput objectInputStream = new ObjectInputStream(new FileInputStream(file));
                 gameModel = (GameModel) objectInputStream.readObject();
+                rowValue = (int) objectInputStream.readObject();
+                columnValue = (int) objectInputStream.readObject();
+                pieceNum = (int) objectInputStream.readObject();
                 turnLimit = (String) objectInputStream.readObject();
                 turnTime = (int) objectInputStream.readObject();
                 objectInputStream.close();
@@ -48,6 +54,18 @@ public class LoadGame
 
     public GameModel getGameModel() {
         return gameModel;
+    }
+
+    public int getRowValue() {
+        return rowValue;
+    }
+
+    public int getColumnValue() {
+        return columnValue;
+    }
+
+    public int getPieceNum() {
+        return pieceNum;
     }
 
     public String getTurnLimit() {

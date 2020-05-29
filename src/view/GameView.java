@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import model.BoardConfig;
 import model.Eagle;
 import model.Flag;
 import model.Island;
@@ -88,37 +89,37 @@ public class GameView
 
         int rulesTextAreaX = abilityPanelX + ABILITY_PANEL.getWidth() + panelMargin;
         TextArea rulesTextArea = new TextArea("\n" +
-        		"Pieces Movement\n" + 
-        		"\n" + 
-        		"Red Shark \n" + 
-        		"- move ↖↙↗↘ by 1, \n" + 
-        		"and either ↑↓←→ by 1\n" + 
-        		"\n" + 
-        		"Green Shark \n" + 
-        		"- move ↖↙↗↘ by 1 or 2 \n" + 
-        		"\n" + 
-        		"\n" + 
-        		"Blue Shark \n" + 
-        		"- move ↑↓←→ by 1 or 2, \n" + 
-        		"but ↖↙↗↘ by 1\n" + 
-        		"\n" + 
-        		"\n" + 
-        		"Red Eagle \n" + 
-        		"- move ↑↓←→ by 1 or 2\n" + 
-        		"\n" + 
-        		"\n" + 
-        		"Green Eagle \n" + 
-        		"- move ↖↙↗↘ by 2, \n" + 
-        		"or move ↑↓←→ by 1 \n" + 
-        		"\n" + 
-        		"\n" + 
-        		"Blue Shark \n" + 
-        		"- move 1 space \n" + 
-        		"to any direction\n" + 
-        		"\n" + 
-        		"\n" + 
-        		"Dont’t forget \n" + 
-        		"your clock is ticking! ;)", 1, 1);
+                "Pieces Movement\n" +
+                "\n" +
+                "Red Shark \n" +
+                "- move ↖↙↗↘ by 1, \n" +
+                "and either ↑↓←→ by 1\n" +
+                "\n" +
+                "Green Shark \n" +
+                "- move ↖↙↗↘ by 1 or 2 \n" +
+                "\n" +
+                "\n" +
+                "Blue Shark \n" +
+                "- move ↑↓←→ by 1 or 2, \n" +
+                "but ↖↙↗↘ by 1\n" +
+                "\n" +
+                "\n" +
+                "Red Eagle \n" +
+                "- move ↑↓←→ by 1 or 2\n" +
+                "\n" +
+                "\n" +
+                "Green Eagle \n" +
+                "- move ↖↙↗↘ by 2, \n" +
+                "or move ↑↓←→ by 1 \n" +
+                "\n" +
+                "\n" +
+                "Blue Shark \n" +
+                "- move 1 space \n" +
+                "to any direction\n" +
+                "\n" +
+                "\n" +
+                "Dont’t forget \n" +
+                "your clock is ticking! ;)", 1, 1);
         rulesTextArea.setSize(220, PIECE_PANEL.getHeight());
         rulesTextArea.setLocation(rulesTextAreaX, turnPanelY);
         rulesTextArea.setEditable(false);
@@ -140,7 +141,7 @@ public class GameView
                                    List<Eagle> eagleList, List<Shark> sharkList,
                                    List<Flag> flagList, List<Island> islandList,
                                    List<? extends MovablePiece> currentPieceList,
-                                   boolean eagleTurn, String turnLimit) {
+                                   boolean eagleTurn) {
         BOARD_PANEL.setBoard(squareArray, eagleList, sharkList, flagList, islandList);
 
         PIECE_PANEL.updateTurnText(eagleTurn);
@@ -150,7 +151,7 @@ public class GameView
         ABILITY_PANEL.createButtons(currentPieceList);
 
         TIME_PANEL.setEagleTurn(eagleTurn);
-        TIME_PANEL.setTurnLimit(turnLimit);
+        TIME_PANEL.setTurnLimit(BoardConfig.TURN_LIMIT);
 
         revalidate();
         repaint();

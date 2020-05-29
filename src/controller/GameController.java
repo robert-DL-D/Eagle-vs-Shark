@@ -16,15 +16,14 @@ public class GameController
     private final AbilityController ABILITY_CONTROLLER = new AbilityController();
     private final GameStateController gameStateController = new GameStateController();
 
-    public GameController(String turnLimit) {
+    public GameController() {
         GAME_VIEW.initializeGameView(gameModel.getSQUARE_ARRAY(),
                 gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST(),
                 gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST(),
                 gameModel.getFLAG_LIST(),
                 gameModel.getISLAND_LIST(),
                 gameModel.getAllyPieceList(),
-                gameModel.isEagleTurn(),
-                turnLimit);
+                gameModel.isEagleTurn());
     }
 
     @Override
@@ -66,7 +65,7 @@ public class GameController
             }
         } else if (StringText.SAVE_GAME.equals(actionCommand)) {
 
-            gameStateController.saveGame(gameModel, GAME_VIEW.getTURN_LIMIT(), GAME_VIEW.getTurnTime());
+            gameStateController.saveGame(gameModel, GAME_VIEW.getTurnTime());
 
         } else if (StringText.LOAD_GAME.equals(actionCommand)) {
 
@@ -76,6 +75,10 @@ public class GameController
             }
 
         }
+    }
+
+    public GameView getGAME_VIEW() {
+        return GAME_VIEW;
     }
 
 }
