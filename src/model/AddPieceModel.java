@@ -34,7 +34,7 @@ class AddPieceModel implements Serializable {
             // range:[m,n]
             int eaglePosition = (int) (Math.random() * (n - m + 1) + m);
             if (!positionSet.contains(eaglePosition) && eaglePosition != BoardConfig.BOARD_COLUMNS / 2) {
-                addMovablePiece(Types.values()[count % 3], StringText.EAGLE, eaglePosition);
+                addMovablePiece(Types.values()[count / BoardConfig.PIECE_NUMBER], StringText.EAGLE, eaglePosition);
                 positionSet.add(eaglePosition);
                 count++;
             }
@@ -62,7 +62,7 @@ class AddPieceModel implements Serializable {
             // range:[m,n]
             int sharkPosition = (int) (Math.random() * (n - m + 1) + m);
             if (!positionSet.contains(sharkPosition) && sharkPosition != BoardConfig.BOARD_COLUMNS / 2) {
-                addMovablePiece(Types.values()[count % 3], StringText.SHARK, sharkPosition);
+                addMovablePiece(Types.values()[count / BoardConfig.PIECE_NUMBER], StringText.SHARK, sharkPosition);
                 positionSet.add(sharkPosition);
                 count++;
             }
