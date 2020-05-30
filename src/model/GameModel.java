@@ -5,9 +5,9 @@ import java.util.List;
 
 public class GameModel implements Serializable {
 
-    private final BoardModel SQUARES_MODEL = BoardModel.getInstance();
+    private final BoardModel BOARD_MODEL = BoardModel.getInstance();
     private final PlayerModel PLAYER_MODEL = new PlayerModel();
-    private final AddPieceModel PIECE_MODEL = new AddPieceModel(PLAYER_MODEL, SQUARES_MODEL);
+    private final AddPieceModel PIECE_MODEL = new AddPieceModel(PLAYER_MODEL, BOARD_MODEL);
 
     public boolean movePiece(int selectedButtonIndex, int[] movementCoord) {
 
@@ -17,14 +17,26 @@ public class GameModel implements Serializable {
             int row = movablePiece.getRow();
             int column = movablePiece.getColumn();
 
-            Square currentSquare = SQUARES_MODEL.getSQUARE_ARRAY()[row][column];
-            Square newSquare = SQUARES_MODEL.getSQUARE_ARRAY()[row + movementCoord[0]][column + movementCoord[1]];
+            Square currentSquare = BOARD_MODEL.getSQUARE_ARRAY()[row][column];
+            Square newSquare = BOARD_MODEL.getSQUARE_ARRAY()[row + movementCoord[0]][column + movementCoord[1]];
 
             if (checkValidNewSquare(movablePiece, newSquare.getMovablePiece(), newSquare.getPiece())) {
 
-                // set the new coord for moveablepiece
-                movablePiece.setRow(movablePiece.getRow() + movementCoord[0]);
-                movablePiece.setColumn(movablePiece.getColumn() + movementCoord[1]);
+                for (int i = 0; i < Math.abs(movementCoord[0]); i++) {
+                    if (movementCoord[0] > 0) {
+                        movablePiece.moveUp();
+                    } else if (movementCoord[0] < 0) {
+                        movablePiece.moveDown();
+                    }
+                }
+
+                for (int i = 0; i < Math.abs(movementCoord[1]); i++) {
+                    if (movementCoord[1] > 0) {
+                        movablePiece.moveRight();
+                    } else if (movementCoord[1] < 0) {
+                        movablePiece.moveLeft();
+                    }
+                }
 
                 // if the newsquare has a piece, remove it from the moveablepiecelist of the player
                 // and remove it from the square
@@ -38,7 +50,7 @@ public class GameModel implements Serializable {
 
                 // Checks if a piece is on the same square as the enemy flag
                 for (Flag flag : PIECE_MODEL.getFLAG_LIST()) {
-                    Square flagSquare = SQUARES_MODEL.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
+                    Square flagSquare = BOARD_MODEL.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
                     if (flagSquare.getMovablePiece() != null) {
                         System.out.println(flagSquare.getMovablePiece() instanceof Eagle ? StringText.EAGLE_WON : StringText.SHARK_WON);
                     }
@@ -127,7 +139,7 @@ public class GameModel implements Serializable {
     }
 
     public Square[][] getSQUARE_ARRAY() {
-        return SQUARES_MODEL.getSQUARE_ARRAY();
+        return BOARD_MODEL.getSQUARE_ARRAY();
     }
 
 }

@@ -4,7 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class MovablePiece
-        extends Piece {
+        extends Piece
+        implements MoveStrategy {
 
     private final List<int[]> MOVEMENT_COORD = new LinkedList<>();
     private final Enum ability;
@@ -113,6 +114,22 @@ public abstract class MovablePiece
 
     void setShielded(boolean shielded) {
         this.shielded = shielded;
+    }
+
+    public void moveUp() {
+        row++;
+    }
+
+    public void moveDown() {
+        row--;
+    }
+
+    public void moveLeft() {
+        column--;
+    }
+
+    public void moveRight() {
+        column++;
     }
 
     abstract void addMovementCoord(int movementDistance);
