@@ -9,18 +9,23 @@ import java.io.Serializable;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import model.BoardConfig;
 import model.GameModel;
 
 public class SaveGame
         extends FileGame
         implements Serializable {
 
-    public void saveGame(GameModel gameModel, String turnLimit, int turnTime) {
+    public void saveGame(GameModel gameModel, int turnTime) {
         try {
             ObjectOutput objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             objectOutputStream.writeObject(gameModel);
-            objectOutputStream.writeObject(turnLimit);
+            objectOutputStream.writeObject(BoardConfig.BOARD_ROWS);
+            objectOutputStream.writeObject(BoardConfig.BOARD_COLUMNS);
+            objectOutputStream.writeObject(BoardConfig.PIECE_NUMBER);
+            objectOutputStream.writeObject(BoardConfig.TURN_LIMIT);
             objectOutputStream.writeObject(turnTime);
+
             objectOutputStream.close();
 
             JOptionPane.showMessageDialog(new JFrame(), "Game Saved",

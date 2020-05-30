@@ -5,13 +5,13 @@ import java.io.Serializable;
 class BoardModel implements Serializable {
 
     private static BoardModel instance;
-    private final Square[][] SQUARE_ARRAY = new Square[BoardSize.BOARD_ROWS][BoardSize.BOARD_COLUMNS];
+    private final Square[][] SQUARE_ARRAY = new Square[BoardConfig.BOARD_ROWS][BoardConfig.BOARD_COLUMNS];
 
     private BoardModel() {
         int increment = 1;
 
-        for (int i = 0; i < BoardSize.BOARD_ROWS; i++) {
-            for (int j = 0; j < BoardSize.BOARD_COLUMNS; j++) {
+        for (int i = 0; i < BoardConfig.BOARD_ROWS; i++) {
+            for (int j = 0; j < BoardConfig.BOARD_COLUMNS; j++) {
                 SQUARE_ARRAY[i][j] = new Square(increment);
                 increment++;
             }

@@ -2,13 +2,14 @@ package controller;
 
 import file.LoadGame;
 import file.SaveGame;
+import model.BoardConfig;
 import model.GameModel;
 import view.GameView;
 
-class GameStateController {
+public class GameStateController {
 
-    void saveGame(GameModel gameModel, String turnLimit, int turnTime) {
-        new SaveGame().saveGame(gameModel, turnLimit, turnTime);
+    void saveGame(GameModel gameModel, int turnTime) {
+        new SaveGame().saveGame(gameModel, turnTime);
     }
 
     GameModel loadGame(GameView gameView) {
@@ -16,7 +17,10 @@ class GameStateController {
         loadGame.loadGame();
 
         GameModel gameModel = loadGame.getGameModel();
-        String turnLimit = loadGame.getTurnLimit();
+        BoardConfig.BOARD_ROWS = loadGame.getRowValue();
+        BoardConfig.BOARD_COLUMNS = loadGame.getColumnValue();
+        BoardConfig.PIECE_NUMBER = loadGame.getPieceNum();
+        BoardConfig.TURN_LIMIT = loadGame.getTurnLimit();
         int turnTime = loadGame.getTurnTime();
 
         if (loadGame.isSaveFileExist()) {
@@ -26,7 +30,7 @@ class GameStateController {
                     gameModel.getFLAG_LIST(),
                     gameModel.getISLAND_LIST(),
                     gameModel.getAllyPieceList(),
-                    gameModel.isEagleTurn(), turnLimit);
+                    gameModel.isEagleTurn());
 
             gameView.loadGame(gameModel.getCurrentPlayer(), turnTime);
         }

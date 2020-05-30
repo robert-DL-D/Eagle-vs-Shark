@@ -2,37 +2,85 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class AddPieceModel implements Serializable {
     private final List<Flag> FLAG_LIST = new ArrayList<>();
     private final List<Island> ISLAND_LIST = new ArrayList<>();
     private final PlayerModel PLAYER_MODEL;
     private final BoardModel SQUARES_MODEL;
+    private final int ISLAND_NUMBER = 2;
 
     AddPieceModel(PlayerModel playerModel, BoardModel boardModel) {
         PLAYER_MODEL = playerModel;
         SQUARES_MODEL = boardModel;
 
-        addMovablePiece(Types.RED, StringText.EAGLE, 38);
-        addMovablePiece(Types.RED, StringText.EAGLE, 33);
-        addMovablePiece(Types.GREEN, StringText.EAGLE, 59);
-        addMovablePiece(Types.GREEN, StringText.EAGLE, 77);
-        addMovablePiece(Types.BLUE, StringText.EAGLE, 14);
-        addMovablePiece(Types.BLUE, StringText.EAGLE, 29);
+        // add flags
+        addFlag((BoardConfig.BOARD_COLUMNS + 1) / 2, playerModel.getEAGLE_PLAYER());
+        addFlag(BoardConfig.BOARD_ROWS * BoardConfig.BOARD_COLUMNS - BoardConfig.BOARD_COLUMNS / 2, playerModel.getSHARK_PLAYER());
 
-        addMovablePiece(Types.RED, StringText.SHARK, 30);
-        addMovablePiece(Types.RED, StringText.SHARK, 50);
-        addMovablePiece(Types.GREEN, StringText.SHARK, 39);
-        addMovablePiece(Types.GREEN, StringText.SHARK, 42);
-        addMovablePiece(Types.BLUE, StringText.SHARK, 40);
-        addMovablePiece(Types.BLUE, StringText.SHARK, 61);
+        Set<Object> positionSet = new HashSet<>();
+        positionSet.add((BoardConfig.BOARD_COLUMNS + 1) / 2);
+        positionSet.add(BoardConfig.BOARD_ROWS * BoardConfig.BOARD_COLUMNS - BoardConfig.BOARD_COLUMNS / 2);
 
-        addFlag(5, playerModel.getEAGLE_PLAYER());
-        addFlag(86, playerModel.getSHARK_PLAYER());
+        // add eagles
+        int count = 0;
+        int m = 1;
+        int n = (BoardConfig.BOARD_ROWS - 2) * BoardConfig.BOARD_COLUMNS / 2;
+        do {
+            // calculate the random positions of eagle
+            // range:[m,n]
+            int eaglePosition = (int) (Math.random() * (n - m + 1) + m);
+            if (!positionSet.contains(eaglePosition) && eaglePosition != BoardConfig.BOARD_COLUMNS / 2) {
+                addMovablePiece(Types.values()[count / BoardConfig.PIECE_NUMBER], StringText.EAGLE, eaglePosition);
+                positionSet.add(eaglePosition);
+                count++;
+            }
+        } while (count < 3 * BoardConfig.PIECE_NUMBER);
 
-        addIsland(1);
-        addIsland(82);
+        // add the islands of eagles
+        count = 0;
+        do {
+            // calculate the random positions of island
+            // range:[m,n]
+            int islandPosition = (int) (Math.random() * (n - m + 1) + m);
+            if (!positionSet.contains(islandPosition) && islandPosition != BoardConfig.BOARD_COLUMNS / 2) {
+                addIsland(islandPosition);
+                positionSet.add(islandPosition);
+                count++;
+            }
+        } while (count < ISLAND_NUMBER);
+
+        // add sharks
+        count = 0;
+        m = (BoardConfig.BOARD_ROWS + 2) * BoardConfig.BOARD_COLUMNS / 2 + 1;
+        n = BoardConfig.BOARD_ROWS * BoardConfig.BOARD_COLUMNS;
+        do {
+            // calculate the random positions of eagle
+            // range:[m,n]
+            int sharkPosition = (int) (Math.random() * (n - m + 1) + m);
+            if (!positionSet.contains(sharkPosition) && sharkPosition != BoardConfig.BOARD_COLUMNS / 2) {
+                addMovablePiece(Types.values()[count / BoardConfig.PIECE_NUMBER], StringText.SHARK, sharkPosition);
+                positionSet.add(sharkPosition);
+                count++;
+            }
+        } while (count < 3 * BoardConfig.PIECE_NUMBER);
+
+        // add the islands of sharks
+        count = 0;
+        do {
+            // calculate the random positions of island
+            // range:[m,n]
+            int islandPosition = (int) (Math.random() * (n - m + 1) + m);
+            if (!positionSet.contains(islandPosition) && islandPosition != BoardConfig.BOARD_COLUMNS / 2) {
+                addIsland(islandPosition);
+                positionSet.add(islandPosition);
+                count++;
+            }
+        } while (count < ISLAND_NUMBER);
+
     }
 
     private void addMovablePiece(Enum type, String playerString, int position) {
