@@ -6,13 +6,12 @@ import java.util.List;
 public class GameModel implements Serializable {
 
     private final BoardModel BOARD_MODEL = BoardModel.getInstance();
-    private final PlayerModel PLAYER_MODEL = new PlayerModel();
-    private final AddPieceModel PIECE_MODEL = new AddPieceModel(PLAYER_MODEL, BOARD_MODEL);
+    private final PlayerManagement PLAYER_MANAGEMENT = new PlayerManagement();
+    private final AddPieceModel PIECE_MODEL = new AddPieceModel(PLAYER_MANAGEMENT, BOARD_MODEL);
 
-    public boolean movePiece(int selectedButtonIndex, int[] movementCoord) {
+    public boolean movePiece(MovablePiece movablePiece, int[] movementCoord) {
 
         if (movementCoord != null) {
-            MovablePiece movablePiece = PLAYER_MODEL.getOwnPieceList().get(selectedButtonIndex);
 
             int row = movablePiece.getRow();
             int column = movablePiece.getColumn();
@@ -38,10 +37,12 @@ public class GameModel implements Serializable {
                     }
                 }
 
+                getCurrentPlayer().setPieceMoved(true);
+
                 // if the newsquare has a piece, remove it from the moveablepiecelist of the player
                 // and remove it from the square
                 if (newSquare.getMovablePiece() != null) {
-                    PLAYER_MODEL.getEnemyPieceList().remove(newSquare.getMovablePiece());
+                    PLAYER_MANAGEMENT.getEnemyPieceList().remove(newSquare.getMovablePiece());
                     newSquare.removeMovablePiece();
                 }
 
@@ -99,35 +100,35 @@ public class GameModel implements Serializable {
     }
 
     public List<? extends MovablePiece> getEnemyPieceList() {
-        return PLAYER_MODEL.getEnemyPieceList();
+        return PLAYER_MANAGEMENT.getEnemyPieceList();
     }
 
     public List<? extends MovablePiece> getAllyPieceList() {
-        return PLAYER_MODEL.getOwnPieceList();
+        return PLAYER_MANAGEMENT.getOwnPieceList();
     }
 
     public Player<? extends MovablePiece> getCurrentPlayer() {
-        return PLAYER_MODEL.getCurrentPlayer();
+        return PLAYER_MANAGEMENT.getCurrentPlayer();
     }
 
     public Player<Eagle> getEAGLE_PLAYER() {
-        return PLAYER_MODEL.getEAGLE_PLAYER();
+        return PLAYER_MANAGEMENT.getEAGLE_PLAYER();
     }
 
     public Player<Shark> getSHARK_PLAYER() {
-        return PLAYER_MODEL.getSHARK_PLAYER();
+        return PLAYER_MANAGEMENT.getSHARK_PLAYER();
     }
 
     public void updateNextTurn() {
-        PLAYER_MODEL.updateNextTurn();
+        PLAYER_MANAGEMENT.updateNextTurn();
     }
 
     public void updateMovingMode(String actionCommand, int selectedButtonIndex) {
-        PLAYER_MODEL.updateMovingMode(actionCommand, selectedButtonIndex);
+        PLAYER_MANAGEMENT.updateMovingMode(actionCommand, selectedButtonIndex);
     }
 
     public boolean isEagleTurn() {
-        return PLAYER_MODEL.isEagleTurn();
+        return PLAYER_MANAGEMENT.isEagleTurn();
     }
 
     public List<Flag> getFLAG_LIST() {
@@ -142,4 +143,7 @@ public class GameModel implements Serializable {
         return BOARD_MODEL.getSQUARE_ARRAY();
     }
 
+    public PlayerManagement getPLAYER_MANAGEMENT() {
+        return PLAYER_MANAGEMENT;
+    }
 }

@@ -22,7 +22,6 @@ class AbilityController {
                 abilityUsed = StringText.STUN;
             } else if (actionCommand.contains(StringText.SPEED)) {
                 targetMovablePieceList = gameModel.getAllyPieceList();
-                gameView.hideMovementUI();
                 gameView.removeMoveablePiece();
                 abilityUsed = StringText.SPEED;
             } else if (actionCommand.contains(StringText.SLOW)) {

@@ -1,15 +1,24 @@
 package view;
 
 import java.awt.Font;
+import java.util.Enumeration;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 import controller.GameController;
 import file.LoadGame;
 import model.BoardConfig;
 import model.GameModel;
 
-public class StartPanel extends JPanel {
+class StartPanel extends JPanel {
 
     StartPanel(JFrame jFrame) {
 
@@ -17,52 +26,52 @@ public class StartPanel extends JPanel {
 
         JLabel label = new JLabel("Game setting");
         label.setFont(new Font("TimesRoman", Font.PLAIN, 22));
-        label.setBounds(150, 50, 200, 20);
+        label.setBounds(135, 20, 200, 25);
         add(label);
 
         JLabel rowLabel = new JLabel("<html><body>" + "Board Rows:" + "<br>" + "(even number not less than 8)" + "<body></html>");
         rowLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        rowLabel.setBounds(50, 100, 200, 30);
+        rowLabel.setBounds(50, 70, 200, 40);
         add(rowLabel);
 
         JTextField rowText = new JTextField();
         rowText.setText("10");
         rowText.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        rowText.setBounds(250, 100, 100, 30);
+        rowText.setBounds(250, 70, 100, 30);
         add(rowText);
 
         JLabel columnLabel = new JLabel("<html><body>" + "Board Columns:" + "<br>" + "(odd number not less than 5)" + "<body></html>");
         columnLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        columnLabel.setBounds(50, 150, 200, 30);
+        columnLabel.setBounds(50, 120, 200, 40);
         add(columnLabel);
 
         JTextField columnText = new JTextField();
         columnText.setText("9");
         columnText.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        columnText.setBounds(250, 150, 100, 30);
+        columnText.setBounds(250, 120, 100, 30);
         add(columnText);
 
         JLabel timerLabel = new JLabel("Turn Time (sec):");
         timerLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        timerLabel.setBounds(50, 200, 200, 30);
+        timerLabel.setBounds(50, 170, 200, 30);
         add(timerLabel);
 
         JTextField timerText = new JTextField();
         timerText.setText("30");
         timerText.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        timerText.setBounds(250, 200, 100, 30);
+        timerText.setBounds(250, 170, 100, 30);
         add(timerText);
 
-        JLabel pieceNumLabel = new JLabel("Number of pieces of each type:");
+        JLabel pieceNumLabel = new JLabel("Number of each piece type:");
         pieceNumLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        pieceNumLabel.setBounds(50, 250, 200, 30);
+        pieceNumLabel.setBounds(50, 220, 200, 30);
         add(pieceNumLabel);
 
         ButtonGroup buttonGroup = new ButtonGroup();
-        JRadioButton type1 = new JRadioButton("1", true);
-        type1.setBounds(250, 250, 40, 30);
-        JRadioButton type2 = new JRadioButton("2");
-        type2.setBounds(300, 250, 40, 30);
+        JRadioButton type1 = new JRadioButton("1");
+        type1.setBounds(250, 220, 40, 30);
+        JRadioButton type2 = new JRadioButton("2", true);
+        type2.setBounds(300, 220, 40, 30);
         buttonGroup.add(type1);
         buttonGroup.add(type2);
         add(type1);
@@ -70,16 +79,16 @@ public class StartPanel extends JPanel {
 
         JButton startButton = new JButton("Start");
         startButton.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        startButton.setBounds(80, 300, 80, 30);
+        startButton.setBounds(150, 270, 80, 30);
         add(startButton);
 
-        JButton resumeButton = new JButton("Resume");
+        JButton resumeButton = new JButton("Load Game");
         resumeButton.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        resumeButton.setBounds(240, 300, 80, 30);
+        resumeButton.setBounds(120, 310, 150, 30);
         add(resumeButton);
 
         startButton.addActionListener(arg0 -> {
-            if (validationAndSetValue(jFrame, rowText, columnText, timerText, type1, type2)) {
+            if (validationAndSetValue(jFrame, rowText, columnText, timerText, type1, type2, buttonGroup)) {
                 jFrame.dispose();
                 new GameController();
             }
@@ -115,7 +124,7 @@ public class StartPanel extends JPanel {
         });
     }
 
-    private boolean validationAndSetValue(JFrame jFrame, JTextField rowText, JTextField columnText, JTextField timerText, JRadioButton type1, JRadioButton type2) {
+    private boolean validationAndSetValue(JFrame jFrame, JTextField rowText, JTextField columnText, JTextField timerText, JRadioButton type1, JRadioButton type2, ButtonGroup buttonGroup) {
         int rowValue;
         int columnValue;
         int turnLimit;
@@ -143,12 +152,13 @@ public class StartPanel extends JPanel {
             return false;
         }
 
-        // default value : 1
-        int pieceNum = 1;
-        if (type1.isSelected()) {
-            pieceNum = 1;
-        } else if (type2.isSelected()) {
-            pieceNum = 2;
+        int pieceNum = 0;
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements(); ) {
+            AbstractButton button = buttons.nextElement();
+
+            if (button.isSelected()) {
+                pieceNum = Integer.parseInt(button.getText());
+            }
         }
 
         BoardConfig.BOARD_ROWS = rowValue;

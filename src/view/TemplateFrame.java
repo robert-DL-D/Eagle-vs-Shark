@@ -18,7 +18,7 @@ public class TemplateFrame extends JFrame {
         con.setLayout(null);
 
         StartPanel startPanel = new StartPanel(this);
-        startPanel.setLocation(50, 50);
+        startPanel.setLocation(50, 30);
         startPanel.setSize(400, 400);
         startPanel.setBorder(new LineBorder(Color.BLACK));
 

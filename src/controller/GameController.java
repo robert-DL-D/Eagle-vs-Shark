@@ -2,17 +2,21 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.List;
 
+import model.BoardConfig;
 import model.GameModel;
 import model.MovablePiece;
 import model.StringText;
 import view.GameView;
 
 public class GameController
-        implements ActionListener {
+        implements ActionListener, MouseListener {
 
     private GameModel gameModel = new GameModel();
-    private final GameView GAME_VIEW = new GameView(this);
+    private final GameView GAME_VIEW = new GameView(this, this);
     private final AbilityController ABILITY_CONTROLLER = new AbilityController();
     private final GameStateController gameStateController = new GameStateController();
 
@@ -53,16 +57,6 @@ public class GameController
             GAME_VIEW.togglePieceMode(selectedButtonIndex, gameModel.getAllyPieceList());
             gameModel.updateMovingMode(actionCommand, selectedButtonIndex);
 
-        } else if (actionCommand.contains(StringText.EAGLE) || actionCommand.contains(StringText.SHARK)) {
-
-            MovablePiece movablePiece = gameModel.getCurrentPlayer().getMOVABLEPIECE_LIST().get(GAME_VIEW.getSelectedButtonIndex());
-            GAME_VIEW.movePiece(movablePiece);
-
-        } else if (StringText.MOVE.equals(actionCommand)) {
-
-            if (gameModel.movePiece(GAME_VIEW.getSelectedButtonIndex(), GAME_VIEW.getMovementCoord())) {
-                GAME_VIEW.updateViewAfterPieceMove(gameModel.getAllyPieceList(), GAME_VIEW.getSelectedButtonIndex());
-            }
         } else if (StringText.SAVE_GAME.equals(actionCommand)) {
 
             gameStateController.saveGame(gameModel, GAME_VIEW.getTurnTime());
@@ -81,4 +75,91 @@ public class GameController
         return GAME_VIEW;
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+        if (!gameModel.getCurrentPlayer().isPieceMoved()) {
+
+            MovablePiece selectedMovablePiece = GAME_VIEW.getSelectedMovablePiece();
+
+            List<int[]> movablePieceCoord = GAME_VIEW.getMovablePieceCoord();
+
+            for (int i = 0; i < movablePieceCoord.size(); i++) {
+                int[] ints = movablePieceCoord.get(i);
+                int picSize = GAME_VIEW.getPicSize();
+
+                if ((ints[0] <= e.getY() && e.getY() <= ints[0] + picSize)
+                        && (ints[1] <= e.getX() && e.getX() <= ints[1] + picSize)) {
+
+                    MovablePiece movablePiece = GAME_VIEW.getMovablePieceList().get(i);
+
+                    if (selectedMovablePiece == null) {
+                        String movablePieceTeam = movablePiece.getClass().getSuperclass().getSimpleName();
+
+                        if (gameModel.isEagleTurn() ? "Eagle".equals(movablePieceTeam) : "Shark".equals(movablePieceTeam)) {
+                            GAME_VIEW.showValidSquares(movablePiece);
+                            for (int[] movableCoord : movablePiece.getMovableCoords()) {
+
+                                int[] validCoord = new int[2];
+                                validCoord[0] = movablePiece.getRow() + movableCoord[0] + 1;
+                                validCoord[1] = movablePiece.getColumn() + movableCoord[1] + 1;
+
+                                if (!(validCoord[0] < 1 || validCoord[0] > BoardConfig.BOARD_ROWS
+                                        || validCoord[1] < 1 || validCoord[1] > BoardConfig.BOARD_COLUMNS)) {
+                                    GAME_VIEW.getMovableSquareCoord().add(movableCoord);
+                                }
+
+                            }
+
+                            break;
+                        }
+
+                    } else {
+                        if (selectedMovablePiece == movablePiece) {
+                            GAME_VIEW.removeMovablePiece();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (selectedMovablePiece != null) {
+                int squareSize = GAME_VIEW.getSquareSize();
+
+                for (int[] ints2 : GAME_VIEW.getMovableSquareCoord()) {
+
+                    int row = GAME_VIEW.gridCoord(ints2[0] + selectedMovablePiece.getRow());
+                    int column = GAME_VIEW.gridCoord(ints2[1] + selectedMovablePiece.getColumn());
+
+                    if ((row <= e.getY() && e.getY() <= row + squareSize)
+                            && (column <= e.getX() && e.getX() <= column + squareSize)) {
+                        if (gameModel.movePiece(selectedMovablePiece, ints2)) {
+                            GAME_VIEW.updateViewAfterPieceMove(gameModel.getAllyPieceList(), GAME_VIEW.getSelectedMovablePiece());
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent mouseEvent) {
+
+    }
 }

@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -21,7 +20,7 @@ public class PiecePanel
         implements ActionListener {
 
     private final JLabel turnLabel;
-    private final List<JButton> PIECE_BUTTON_LIST = new ArrayList<>();
+    private final List<JLabel> PIECE_LABEL_LIST = new ArrayList<>();
     private final List<JToggleButton> MODE_BUTTON_LIST = new ArrayList<>();
 
     private final ActionListener ACTIONLISTENER;
@@ -46,23 +45,16 @@ public class PiecePanel
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-
-        if (actionEvent.getSource().getClass().getSimpleName().equals("JButton")) {
-            selectedButtonIndex = PIECE_BUTTON_LIST.indexOf(actionEvent.getSource());
-        } else {
-            selectedButtonIndex = MODE_BUTTON_LIST.indexOf(actionEvent.getSource());
-        }
-
         ACTIONLISTENER.actionPerformed(actionEvent);
     }
 
     void createButtons(List<? extends MovablePiece> currentPieceList) {
 
-        if (!PIECE_BUTTON_LIST.isEmpty()) {
-            for (JButton jButton : PIECE_BUTTON_LIST) {
-                remove(jButton);
+        if (!PIECE_LABEL_LIST.isEmpty()) {
+            for (JLabel jLabel : PIECE_LABEL_LIST) {
+                remove(jLabel);
             }
-            PIECE_BUTTON_LIST.clear();
+            PIECE_LABEL_LIST.clear();
         }
 
         if (!MODE_BUTTON_LIST.isEmpty()) {
@@ -100,22 +92,20 @@ public class PiecePanel
                 add(toggleModeButton);
             }
 
-            JButton pieceButton = new JButton();
-            PIECE_BUTTON_LIST.add(pieceButton);
-            pieceButton.setPreferredSize(new Dimension(220, 30));
-            pieceButton.setLocation(70, 30 * i);
-            pieceButton.setEnabled(true);
-            pieceButton.addActionListener(this);
-            add(pieceButton);
+            JLabel pieceLabel = new JLabel();
+            PIECE_LABEL_LIST.add(pieceLabel);
+            pieceLabel.setPreferredSize(new Dimension(220, 30));
+            pieceLabel.setFont(new Font("Arial", Font.PLAIN, 15));
+            pieceLabel.setLocation(70, 30 * i);
+            add(pieceLabel);
         }
 
-        setButtonText(currentPieceList);
-        setEnabledButton(currentPieceList);
+        setLabelText(currentPieceList);
     }
 
-    void setButtonText(List<? extends MovablePiece> currentPieceList) {
+    void setLabelText(List<? extends MovablePiece> currentPieceList) {
 
-        for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
+        for (int i = 0; i < PIECE_LABEL_LIST.size(); i++) {
             MovablePiece movablePiece = currentPieceList.get(i);
 
             StringBuilder stringBuilder = new StringBuilder();
@@ -136,19 +126,7 @@ public class PiecePanel
                 stringBuilder.append("SHIELDED");
             }
 
-            PIECE_BUTTON_LIST.get(i).setText(stringBuilder.toString());
-
-        }
-    }
-
-    private void setEnabledButton(List<? extends MovablePiece> currentPieceList) {
-        for (int i = 0; i < PIECE_BUTTON_LIST.size(); i++) {
-            MovablePiece movablePiece = currentPieceList.get(i);
-
-            if (!movablePiece.isMovingMode() || movablePiece.isStunned()) {
-                PIECE_BUTTON_LIST.get(i).setEnabled(false);
-
-            }
+            PIECE_LABEL_LIST.get(i).setText(stringBuilder.toString());
 
         }
     }
@@ -178,12 +156,6 @@ public class PiecePanel
 
         jToggleButton.setEnabled(false);
 
-        for (JButton jButton : PIECE_BUTTON_LIST) {
-            if (jButton.getText().contains(movablePiece.getType().toString())) {
-                jButton.setEnabled(false);
-            }
-
-        }
     }
 
     void updateTurnText(boolean isEagleTurn) {
@@ -191,24 +163,13 @@ public class PiecePanel
     }
 
     void disableAllButton() {
-        for (JButton jButton : PIECE_BUTTON_LIST) {
-            jButton.setEnabled(false);
-        }
-
         for (JToggleButton jToggleButton : MODE_BUTTON_LIST) {
             jToggleButton.setEnabled(false);
         }
     }
 
     void hideUnmovablePiece(String abilityUsed, List<? extends MovablePiece> currentPieceList, int lastAbilityUsedIndex) {
-
         MODE_BUTTON_LIST.get(lastAbilityUsedIndex).setEnabled(false);
-
-        for (int i = 0; i < currentPieceList.size(); i++) {
-            if (currentPieceList.get(i).getAbility().toString().equals(abilityUsed)) {
-                PIECE_BUTTON_LIST.get(i).setEnabled(false);
-            }
-        }
     }
 
     int getSelectedButtonIndex() {

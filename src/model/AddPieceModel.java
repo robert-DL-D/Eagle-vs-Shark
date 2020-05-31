@@ -9,11 +9,11 @@ import java.util.Set;
 class AddPieceModel implements Serializable {
     private final List<Flag> FLAG_LIST = new ArrayList<>();
     private final List<Island> ISLAND_LIST = new ArrayList<>();
-    private final PlayerModel PLAYER_MODEL;
+    private final PlayerManagement PLAYER_MODEL;
     private final BoardModel SQUARES_MODEL;
     private final int ISLAND_NUMBER = 2;
 
-    AddPieceModel(PlayerModel playerModel, BoardModel boardModel) {
+    AddPieceModel(PlayerManagement playerModel, BoardModel boardModel) {
         PLAYER_MODEL = playerModel;
         SQUARES_MODEL = boardModel;
 

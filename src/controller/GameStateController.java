@@ -6,7 +6,7 @@ import model.BoardConfig;
 import model.GameModel;
 import view.GameView;
 
-public class GameStateController {
+class GameStateController {
 
     void saveGame(GameModel gameModel, int turnTime) {
         new SaveGame().saveGame(gameModel, turnTime);

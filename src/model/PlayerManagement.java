@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
-public class PlayerModel implements Serializable {
+class PlayerManagement implements Serializable {
 
     private final Player<Eagle> EAGLE_PLAYER = new Player<>();
     private final Player<Shark> SHARK_PLAYER = new Player<>();
@@ -103,16 +103,8 @@ public class PlayerModel implements Serializable {
         return eagleTurn ? EAGLE_PLAYER : SHARK_PLAYER;
     }
 
-    public void setPieceMoved() {
-        getCurrentPlayer().setPieceMoved(true);
-    }
-
     boolean isEagleTurn() {
         return eagleTurn;
-    }
-
-    public void setEagleTurn(boolean eagleTurn) {
-        this.eagleTurn = eagleTurn;
     }
 
 }

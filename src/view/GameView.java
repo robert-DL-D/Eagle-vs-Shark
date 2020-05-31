@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.TextArea;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -19,18 +19,16 @@ import model.MovablePiece;
 import model.Player;
 import model.Shark;
 import model.Square;
-import model.StringText;
 
 public class GameView
         extends JFrame {
 
     private final BoardPanel BOARD_PANEL;
     private final PiecePanel PIECE_PANEL;
-    private final MovementPanel MOVEMENT_PANEL;
     private final AbilityPanel ABILITY_PANEL;
-    private final TimePanel TIME_PANEL;
+    private final TopPanel TOP_PANEL;
 
-    public GameView(ActionListener actionListener) {
+    public GameView(ActionListener actionListener, MouseListener mouseListener) {
         super("Eagle vs Shark");
 
         int panelMargin = 5;
@@ -42,50 +40,25 @@ public class GameView
 
         Container contentPane = getContentPane();
 
-        BOARD_PANEL = new BoardPanel();
+        BOARD_PANEL = new BoardPanel(mouseListener);
         BOARD_PANEL.setLocation(0, 0);
         BOARD_PANEL.setSize(590, 650);
         contentPane.add(BOARD_PANEL);
 
         int boardViewX = BOARD_PANEL.getWidth();
 
-        int timePanelX = boardViewX + panelMargin;
-        TIME_PANEL = new TimePanel();
-        contentPane.add(addPanel(TIME_PANEL, timePanelX, BoardPanel.getBoardMargin(), 150, 30));
+        int topPanelX = boardViewX + panelMargin;
+        TOP_PANEL = new TopPanel(actionListener);
+        contentPane.add(addPanel(TOP_PANEL, topPanelX, BoardPanel.getBoardMargin(), 450, 40));
 
-        int nexTurnButtonX = timePanelX + TIME_PANEL.getWidth() + panelMargin;
-        JButton nextTurnButton = new JButton(StringText.NEXT_TURN);
-        nextTurnButton.setLocation(nexTurnButtonX, BoardPanel.getBoardMargin());
-        nextTurnButton.setSize(130, 30);
-        nextTurnButton.addActionListener(actionListener);
-        contentPane.add(nextTurnButton);
-
-        int saveGameButtonX = nexTurnButtonX + nextTurnButton.getWidth() + panelMargin;
-        JButton saveGameButton = new JButton(StringText.SAVE_GAME);
-        saveGameButton.setLocation(saveGameButtonX, BoardPanel.getBoardMargin());
-        saveGameButton.setSize(130, 30);
-        saveGameButton.addActionListener(actionListener);
-        contentPane.add(saveGameButton);
-
-        int loadGameButtonX = saveGameButtonX + saveGameButton.getWidth() + panelMargin;
-        JButton loadGameButton = new JButton(StringText.LOAD_GAME);
-        loadGameButton.setLocation(loadGameButtonX, BoardPanel.getBoardMargin());
-        loadGameButton.setSize(130, 30);
-        loadGameButton.addActionListener(actionListener);
-        contentPane.add(loadGameButton);
-
-        int turnPanelX = boardViewX + panelMargin;
-        int turnPanelY = BoardPanel.getBoardMargin() + TIME_PANEL.getHeight() + panelMargin;
+        int piecePanelX = boardViewX + panelMargin;
+        int piecePanelY = BoardPanel.getBoardMargin() + TOP_PANEL.getHeight() + panelMargin;
         PIECE_PANEL = new PiecePanel(actionListener);
-        contentPane.add(addPanel(PIECE_PANEL, turnPanelX, turnPanelY, 280, 660));
+        contentPane.add(addPanel(PIECE_PANEL, piecePanelX, piecePanelY, 240, 500));
 
-        int movementPanelX = turnPanelX + PIECE_PANEL.getWidth() + panelMargin;
-        MOVEMENT_PANEL = new MovementPanel(actionListener, getBackground());
-        contentPane.add(addPanel(MOVEMENT_PANEL, movementPanelX, turnPanelY, 140, PIECE_PANEL.getHeight()));
-
-        int abilityPanelX = movementPanelX + MOVEMENT_PANEL.getWidth() + panelMargin;
+        int abilityPanelX = piecePanelX + PIECE_PANEL.getWidth() + panelMargin;
         ABILITY_PANEL = new AbilityPanel(actionListener, getBackground());
-        contentPane.add(addPanel(ABILITY_PANEL, abilityPanelX, turnPanelY, 180, PIECE_PANEL.getHeight()));
+        contentPane.add(addPanel(ABILITY_PANEL, abilityPanelX, piecePanelY, 180, PIECE_PANEL.getHeight()));
 
         int rulesTextAreaX = abilityPanelX + ABILITY_PANEL.getWidth() + panelMargin;
         TextArea rulesTextArea = new TextArea("\n" +
@@ -121,9 +94,8 @@ public class GameView
                 "Dont’t forget \n" +
                 "your clock is ticking! ;)", 1, 1);
         rulesTextArea.setSize(220, PIECE_PANEL.getHeight());
-        rulesTextArea.setLocation(rulesTextAreaX, turnPanelY);
+        rulesTextArea.setLocation(rulesTextAreaX, piecePanelY);
         rulesTextArea.setEditable(false);
-        rulesTextArea.setForeground(Color.white);
         contentPane.add(rulesTextArea);
 
         setVisible(true);
@@ -146,23 +118,24 @@ public class GameView
 
         PIECE_PANEL.updateTurnText(eagleTurn);
         PIECE_PANEL.createButtons(currentPieceList);
-        PIECE_PANEL.setButtonText(currentPieceList);
+        PIECE_PANEL.setLabelText(currentPieceList);
 
         ABILITY_PANEL.createButtons(currentPieceList);
 
-        TIME_PANEL.setEagleTurn(eagleTurn);
-        TIME_PANEL.setTurnLimit(BoardConfig.TURN_LIMIT);
+        TOP_PANEL.setEagleTurn(eagleTurn);
+        TOP_PANEL.setTurnLimit(BoardConfig.TURN_LIMIT);
 
         revalidate();
         repaint();
     }
 
-    public void updateViewAfterPieceMove(List<? extends MovablePiece> currentPieceList, int selectedButtonIndex) {
+    public void updateViewAfterPieceMove(List<? extends MovablePiece> currentPieceList, MovablePiece movablePiece) {
+
         BOARD_PANEL.removeMovablePiece();
+        BOARD_PANEL.updateMovablePieceCoord();
         PIECE_PANEL.disableAllButton();
-        PIECE_PANEL.setButtonText(currentPieceList);
-        MOVEMENT_PANEL.hideMovementUI();
-        ABILITY_PANEL.updateButtonText(currentPieceList.get(selectedButtonIndex));
+        PIECE_PANEL.setLabelText(currentPieceList);
+        ABILITY_PANEL.updateButtonText(movablePiece);
 
         revalidate();
         repaint();
@@ -175,8 +148,6 @@ public class GameView
         PIECE_PANEL.updateTurnText(eagleTurn);
         PIECE_PANEL.createButtons(currentPieceList);
 
-        MOVEMENT_PANEL.hideMovementUI();
-
         ABILITY_PANEL.setAFFECTED_PIECE();
         ABILITY_PANEL.removeLastAbilityUsed();
         ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
@@ -184,8 +155,8 @@ public class GameView
         ABILITY_PANEL.resetUseAbilityButtonText();
         ABILITY_PANEL.setUSE_ABILITY_BUTTON(false);
 
-        TIME_PANEL.setEagleTurn(eagleTurn);
-        TIME_PANEL.resetTimer();
+        TOP_PANEL.setEagleTurn(eagleTurn);
+        TOP_PANEL.resetTimer();
 
         revalidate();
         repaint();
@@ -194,13 +165,6 @@ public class GameView
     public void updateViewAfterAbilityUse(MovablePiece movablePiece, String abilityUsed, List<? extends MovablePiece> allyPieceList) {
         PIECE_PANEL.hideUnmovablePiece(abilityUsed, allyPieceList, ABILITY_PANEL.getLastAbilityUsedIndex());
         ABILITY_PANEL.updateAbilityPanelAfterAbilityUse(movablePiece);
-    }
-
-    public void hideMovementUI() {
-        MOVEMENT_PANEL.hideMovementUI();
-
-        revalidate();
-        repaint();
     }
 
     public void selectedAbility(String actionCommand, List<? extends MovablePiece> movablePieceList) {
@@ -231,11 +195,10 @@ public class GameView
             ABILITY_PANEL.setAbilityButtonStatus(pieceModeToggledIndex);
         }
 
-        TIME_PANEL.setTurnTime(turnTime);
+        TOP_PANEL.setTurnTime(turnTime);
     }
 
     public void movePiece(MovablePiece movablePiece) {
-        MOVEMENT_PANEL.updateMoveJList(movablePiece);
         BOARD_PANEL.showValidSquares(movablePiece);
     }
 
@@ -256,15 +219,47 @@ public class GameView
         return ABILITY_PANEL.getPieceJListSelectedItem();
     }
 
-    public int[] getMovementCoord() {
-        return MOVEMENT_PANEL.getMovementCoord();
-    }
-
     public int getTurnTime() {
-        return TIME_PANEL.getTurnTime();
+        return TOP_PANEL.getTurnTime();
     }
 
     public String getTURN_LIMIT() {
-        return TIME_PANEL.getTurnLimit();
+        return TOP_PANEL.getTurnLimit();
+    }
+
+    public List<int[]> getMovablePieceCoord() {
+        return BOARD_PANEL.getMovablePieceCoord();
+    }
+
+    public int getPicSize() {
+        return BOARD_PANEL.getPicSize();
+    }
+
+    public int getSquareSize() {
+        return BOARD_PANEL.getSquareSize();
+    }
+
+    public List<MovablePiece> getMovablePieceList() {
+        return BOARD_PANEL.getMovablePieceList();
+    }
+
+    public MovablePiece getSelectedMovablePiece() {
+        return BOARD_PANEL.getSelectedMovablePiece();
+    }
+
+    public List<int[]> getMovableSquareCoord() {
+        return BOARD_PANEL.getMovableSquareCoord();
+    }
+
+    public void removeMovablePiece() {
+        BOARD_PANEL.removeMovablePiece();
+    }
+
+    public void showValidSquares(MovablePiece movablePiece) {
+        BOARD_PANEL.showValidSquares(movablePiece);
+    }
+
+    public int gridCoord(int i) {
+        return BOARD_PANEL.gridCoord(i);
     }
 }

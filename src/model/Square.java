@@ -35,4 +35,5 @@ public class Square implements Serializable {
     public int getSQUARE_NUMBER() {
         return SQUARE_NUMBER;
     }
+
 }
