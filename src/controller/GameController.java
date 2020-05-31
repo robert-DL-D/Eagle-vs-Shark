@@ -123,7 +123,8 @@ public class GameController
                 }
             }
 
-            if (selectedMovablePiece != null) {
+            if (selectedMovablePiece != null && selectedMovablePiece.isMovingMode()
+                    && !selectedMovablePiece.isStunned()) {
                 int squareSize = GAME_VIEW.getSquareSize();
 
                 for (int[] ints2 : GAME_VIEW.getMovableSquareCoord()) {
