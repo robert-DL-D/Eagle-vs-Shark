@@ -6,14 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class AddPieceModel implements Serializable {
+class PieceManagement implements Serializable {
     private final List<Flag> FLAG_LIST = new ArrayList<>();
     private final List<Island> ISLAND_LIST = new ArrayList<>();
     private final PlayerManagement PLAYER_MODEL;
     private final BoardModel SQUARES_MODEL;
     private final int ISLAND_NUMBER = 2;
 
-    AddPieceModel(PlayerManagement playerModel, BoardModel boardModel) {
+    PieceManagement(PlayerManagement playerModel, BoardModel boardModel) {
         PLAYER_MODEL = playerModel;
         SQUARES_MODEL = boardModel;
 

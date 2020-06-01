@@ -96,6 +96,7 @@ public class GameView
         rulesTextArea.setSize(220, PIECE_PANEL.getHeight());
         rulesTextArea.setLocation(rulesTextAreaX, piecePanelY);
         rulesTextArea.setEditable(false);
+        rulesTextArea.setBackground(getBackground());
         contentPane.add(rulesTextArea);
 
         setVisible(true);

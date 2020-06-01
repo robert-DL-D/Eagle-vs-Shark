@@ -7,7 +7,7 @@ public class GameModel implements Serializable {
 
     private final BoardModel BOARD_MODEL = BoardModel.getInstance();
     private final PlayerManagement PLAYER_MANAGEMENT = new PlayerManagement();
-    private final AddPieceModel PIECE_MODEL = new AddPieceModel(PLAYER_MANAGEMENT, BOARD_MODEL);
+    private final PieceManagement PIECE_MANAGEMENT = new PieceManagement(PLAYER_MANAGEMENT, BOARD_MODEL);
 
     public boolean movePiece(MovablePiece movablePiece, int[] movementCoord) {
 
@@ -50,7 +50,7 @@ public class GameModel implements Serializable {
                 newSquare.addMovablePiece(movablePiece); // set the piece to the newsquare
 
                 // Checks if a piece is on the same square as the enemy flag
-                for (Flag flag : PIECE_MODEL.getFLAG_LIST()) {
+                for (Flag flag : PIECE_MANAGEMENT.getFLAG_LIST()) {
                     Square flagSquare = BOARD_MODEL.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
                     if (flagSquare.getMovablePiece() != null) {
                         System.out.println(flagSquare.getMovablePiece() instanceof Eagle ? StringText.EAGLE_WON : StringText.SHARK_WON);
@@ -132,11 +132,11 @@ public class GameModel implements Serializable {
     }
 
     public List<Flag> getFLAG_LIST() {
-        return PIECE_MODEL.getFLAG_LIST();
+        return PIECE_MANAGEMENT.getFLAG_LIST();
     }
 
     public List<Island> getISLAND_LIST() {
-        return PIECE_MODEL.getISLAND_LIST();
+        return PIECE_MANAGEMENT.getISLAND_LIST();
     }
 
     public Square[][] getSQUARE_ARRAY() {
