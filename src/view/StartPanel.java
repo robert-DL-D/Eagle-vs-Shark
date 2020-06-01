@@ -137,13 +137,15 @@ class StartPanel extends JPanel {
             return false;
         }
 
-        if (rowValue % 2 != 0 || rowValue < 8) {
-            JOptionPane.showMessageDialog(null, "Please check the row number!Even number not less than 8!");
+        if (rowValue % 2 != 0 || rowValue < 8 || rowValue > 10) {
+//            JOptionPane.showMessageDialog(null, "Please check the row number!Even number not less than 8!");
+            JOptionPane.showMessageDialog(null, "Please check the row number! 8 <= Even number <=10 !");
+
             return false;
         }
 
-        if (columnValue % 2 == 0 || columnValue < 5) {
-            JOptionPane.showMessageDialog(null, "Please check the column number!Odd number not less than 5!");
+        if (columnValue % 2 == 0 || columnValue < 5 || columnValue > 9) {
+            JOptionPane.showMessageDialog(null, "Please check the column number! 5 <=Odd number <= 9!");
             return false;
         }
 

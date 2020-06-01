@@ -47,6 +47,10 @@ public class GameController
 
             GAME_VIEW.selectedAbility(actionCommand, gameModel.getAllyPieceList());
 
+        } else if (StringText.CLEANSE.equals(actionCommand)) {
+
+            GAME_VIEW.selectedAbility(actionCommand, gameModel.getStunnedPieceList());
+
         } else if (actionCommand.contains(StringText.USE)) {
 
             ABILITY_CONTROLLER.useAbility(GAME_VIEW.getPieceJListSelectedItem(), actionCommand, gameModel, GAME_VIEW);

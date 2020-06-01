@@ -164,6 +164,7 @@ public class GameView
 
     public void updateViewAfterAbilityUse(MovablePiece movablePiece, String abilityUsed, List<? extends MovablePiece> allyPieceList) {
         PIECE_PANEL.hideUnmovablePiece(abilityUsed, allyPieceList, ABILITY_PANEL.getLastAbilityUsedIndex());
+        PIECE_PANEL.setLabelText(allyPieceList);
         ABILITY_PANEL.updateAbilityPanelAfterAbilityUse(movablePiece);
     }
 

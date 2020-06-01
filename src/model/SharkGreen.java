@@ -3,7 +3,7 @@ package model;
 class SharkGreen extends Shark {
 
     SharkGreen(int position) {
-        super(Types.GREEN, position, Abilities.PH3);
+        super(Types.GREEN, position, Abilities.CLEANSE);
 
         addMovementCoord(DEFAULT_MOVEMENT_DISTANCE);
     }
