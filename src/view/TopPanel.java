@@ -14,10 +14,10 @@ class TopPanel
     private final TimePanel TIME_PANEL;
     private final ActionListener ACTIONLISTENER;
 
-    TopPanel(ActionListener actionListener) {
+    TopPanel(GameView gameview, ActionListener actionListener) {
         ACTIONLISTENER = actionListener;
 
-        TIME_PANEL = new TimePanel();
+        TIME_PANEL = new TimePanel(gameview);
         TIME_PANEL.setSize(150, 30);
         add(TIME_PANEL);
 

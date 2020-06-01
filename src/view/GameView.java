@@ -48,7 +48,7 @@ public class GameView
         int boardViewX = BOARD_PANEL.getWidth();
 
         int topPanelX = boardViewX + panelMargin;
-        TOP_PANEL = new TopPanel(actionListener);
+        TOP_PANEL = new TopPanel(this,actionListener);
         contentPane.add(addPanel(TOP_PANEL, topPanelX, BoardPanel.getBoardMargin(), 450, 40));
 
         int piecePanelX = boardViewX + panelMargin;
