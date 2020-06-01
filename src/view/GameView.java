@@ -36,13 +36,13 @@ public class GameView
         setLayout(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1500, 820);
+        setSize(1500, 900);
 
         Container contentPane = getContentPane();
 
         BOARD_PANEL = new BoardPanel(mouseListener);
         BOARD_PANEL.setLocation(0, 0);
-        BOARD_PANEL.setSize(590, 650);
+        BOARD_PANEL.setSize(720, 900);
         contentPane.add(BOARD_PANEL);
 
         int boardViewX = BOARD_PANEL.getWidth();
