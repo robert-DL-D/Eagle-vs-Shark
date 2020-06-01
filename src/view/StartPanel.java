@@ -29,7 +29,7 @@ class StartPanel extends JPanel {
         label.setBounds(135, 20, 200, 25);
         add(label);
 
-        JLabel rowLabel = new JLabel("<html><body>" + "Board Rows:" + "<br>" + "(even number not less than 8)" + "<body></html>");
+        JLabel rowLabel = new JLabel("<html><body>" + "Board Rows:" + "<br>" + "(even number: [8,10])" + "<body></html>");
         rowLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
         rowLabel.setBounds(50, 70, 200, 40);
         add(rowLabel);
@@ -40,7 +40,7 @@ class StartPanel extends JPanel {
         rowText.setBounds(250, 70, 100, 30);
         add(rowText);
 
-        JLabel columnLabel = new JLabel("<html><body>" + "Board Columns:" + "<br>" + "(odd number not less than 5)" + "<body></html>");
+        JLabel columnLabel = new JLabel("<html><body>" + "Board Columns:" + "<br>" + "(odd number:[5,7,9])" + "<body></html>");
         columnLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
         columnLabel.setBounds(50, 120, 200, 40);
         add(columnLabel);
