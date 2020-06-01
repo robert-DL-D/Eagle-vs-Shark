@@ -3,6 +3,7 @@ package model;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 class PlayerManagement implements Serializable {
 
@@ -97,6 +98,13 @@ class PlayerManagement implements Serializable {
 
     List<? extends MovablePiece> getEnemyPieceList() {
         return eagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST();
+    }
+
+    List<? extends MovablePiece> getStunnedPieceList() {
+        return SHARK_PLAYER.getMOVABLEPIECE_LIST()
+                .stream()
+                .filter(shark -> shark.isStunned())
+                .collect(Collectors.toList());
     }
 
     Player<? extends MovablePiece> getCurrentPlayer() {

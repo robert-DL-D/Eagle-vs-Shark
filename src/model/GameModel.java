@@ -107,6 +107,10 @@ public class GameModel implements Serializable {
         return PLAYER_MANAGEMENT.getOwnPieceList();
     }
 
+    public List<? extends MovablePiece> getStunnedPieceList() {
+        return PLAYER_MANAGEMENT.getStunnedPieceList();
+    }
+
     public Player<? extends MovablePiece> getCurrentPlayer() {
         return PLAYER_MANAGEMENT.getCurrentPlayer();
     }

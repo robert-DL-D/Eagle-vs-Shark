@@ -66,6 +66,9 @@ public abstract class MovablePiece
             case StringText.SHIELD:
                 abilityDecorator = new ShieldDecorator();
                 break;
+            case StringText.CLEANSE:
+                abilityDecorator = new CleanseDecorator();
+                break;
         }
 
         abilityDecorator.useAbility(targetedMovablePiece);

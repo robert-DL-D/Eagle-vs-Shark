@@ -30,10 +30,15 @@ class AbilityController {
             } else if (actionCommand.contains(StringText.SHIELD)) {
                 targetMovablePieceList = gameModel.getAllyPieceList();
                 abilityUsed = StringText.SHIELD;
+            } else if (actionCommand.contains(StringText.CLEANSE)) {
+                targetMovablePieceList = gameModel.getStunnedPieceList();
+                abilityUsed = StringText.CLEANSE;
             }
 
             for (MovablePiece movablePiece : gameModel.getAllyPieceList()) {
-                if (movablePiece.getAbility().toString().equals(abilityUsed)) {
+                if (movablePiece.getAbility().toString().equals(abilityUsed)
+                        && null != targetMovablePieceList
+                        && targetMovablePieceList.size() > 0) {
                     targetedMovablePiece = targetMovablePieceList.get(index);
                     movablePiece.useAbility(targetedMovablePiece);
 
