@@ -29,7 +29,7 @@ class StartPanel extends JPanel {
         label.setBounds(135, 20, 200, 25);
         add(label);
 
-        JLabel rowLabel = new JLabel("<html><body>" + "Board Rows:" + "<br>" + "(even number: [8,10])" + "<body></html>");
+        JLabel rowLabel = new JLabel("<html><body>" + "Board Rows:" + "<br>" + "(even number: [8,10,12,14])" + "<body></html>");
         rowLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
         rowLabel.setBounds(50, 70, 200, 40);
         add(rowLabel);
@@ -40,7 +40,7 @@ class StartPanel extends JPanel {
         rowText.setBounds(250, 70, 100, 30);
         add(rowText);
 
-        JLabel columnLabel = new JLabel("<html><body>" + "Board Columns:" + "<br>" + "(odd number:[5,7,9])" + "<body></html>");
+        JLabel columnLabel = new JLabel("<html><body>" + "Board Columns:" + "<br>" + "(odd number:[5,7,9,11])" + "<body></html>");
         columnLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
         columnLabel.setBounds(50, 120, 200, 40);
         add(columnLabel);
@@ -137,15 +137,15 @@ class StartPanel extends JPanel {
             return false;
         }
 
-        if (rowValue % 2 != 0 || rowValue < 8 || rowValue > 10) {
+        if (rowValue % 2 != 0 || rowValue < 8 || rowValue > 14) {
 //            JOptionPane.showMessageDialog(null, "Please check the row number!Even number not less than 8!");
-            JOptionPane.showMessageDialog(null, "Please check the row number! 8 <= Even number <=10 !");
+            JOptionPane.showMessageDialog(null, "Please check the row number! 8 <= Even number <=14 !");
 
             return false;
         }
 
-        if (columnValue % 2 == 0 || columnValue < 5 || columnValue > 9) {
-            JOptionPane.showMessageDialog(null, "Please check the column number! 5 <=Odd number <= 9!");
+        if (columnValue % 2 == 0 || columnValue < 5 || columnValue > 13) {
+            JOptionPane.showMessageDialog(null, "Please check the column number! 5 <=Odd number <= 11!");
             return false;
         }
 

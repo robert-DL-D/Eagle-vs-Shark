@@ -36,19 +36,19 @@ public class GameView
         setLayout(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1500, 820);
+        setSize(1500, 900);
 
         Container contentPane = getContentPane();
 
         BOARD_PANEL = new BoardPanel(mouseListener);
         BOARD_PANEL.setLocation(0, 0);
-        BOARD_PANEL.setSize(590, 650);
+        BOARD_PANEL.setSize(720, 900);
         contentPane.add(BOARD_PANEL);
 
         int boardViewX = BOARD_PANEL.getWidth();
 
         int topPanelX = boardViewX + panelMargin;
-        TOP_PANEL = new TopPanel(actionListener);
+        TOP_PANEL = new TopPanel(this,actionListener);
         contentPane.add(addPanel(TOP_PANEL, topPanelX, BoardPanel.getBoardMargin(), 450, 40));
 
         int piecePanelX = boardViewX + panelMargin;

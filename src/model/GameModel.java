@@ -2,6 +2,8 @@ package model;
 
 import java.io.Serializable;
 import java.util.List;
+import view.TemplateFrame;
+import view.GameView;
 
 public class GameModel implements Serializable {
 
@@ -9,7 +11,7 @@ public class GameModel implements Serializable {
     private final PlayerManagement PLAYER_MANAGEMENT = new PlayerManagement();
     private final PieceManagement PIECE_MANAGEMENT = new PieceManagement(PLAYER_MANAGEMENT, BOARD_MODEL);
 
-    public boolean movePiece(MovablePiece movablePiece, int[] movementCoord) {
+    public boolean movePiece(GameView gameView, MovablePiece movablePiece, int[] movementCoord) {
 
         if (movementCoord != null) {
 
@@ -52,11 +54,17 @@ public class GameModel implements Serializable {
                 // Checks if a piece is on the same square as the enemy flag
                 for (Flag flag : PIECE_MANAGEMENT.getFLAG_LIST()) {
                     Square flagSquare = BOARD_MODEL.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
+                    TemplateFrame frame = new TemplateFrame();
                     if (flagSquare.getMovablePiece() != null) {
-                        System.out.println(flagSquare.getMovablePiece() instanceof Eagle ? StringText.EAGLE_WON : StringText.SHARK_WON);
+                        gameView.dispose();
+                        if(flagSquare.getMovablePiece() instanceof Eagle){
+                            frame.showEndView( "Eagle");
+                        }else{
+                            frame.showEndView("Shark");
+                        }
+//                        System.out.println(flagSquare.getMovablePiece() instanceof Eagle ? StringText.EAGLE_WON : StringText.SHARK_WON);
                     }
                 }
-
                 return true;
             } else {
                 return false;

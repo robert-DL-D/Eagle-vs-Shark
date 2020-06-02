@@ -138,7 +138,7 @@ public class GameController
 
                     if ((row <= e.getY() && e.getY() <= row + squareSize)
                             && (column <= e.getX() && e.getX() <= column + squareSize)) {
-                        if (gameModel.movePiece(selectedMovablePiece, ints2)) {
+                        if (gameModel.movePiece(GAME_VIEW, selectedMovablePiece, ints2)) {
                             GAME_VIEW.updateViewAfterPieceMove(gameModel.getAllyPieceList(), GAME_VIEW.getSelectedMovablePiece());
                         }
                     }
