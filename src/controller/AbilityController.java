@@ -33,17 +33,22 @@ class AbilityController {
             } else if (actionCommand.contains(StringText.CLEANSE)) {
                 targetMovablePieceList = gameModel.getStunnedPieceList();
                 abilityUsed = StringText.CLEANSE;
+            } else if (actionCommand.contains(StringText.JUMP)) {
+                targetMovablePieceList = gameModel.getAllyPieceList();
+                abilityUsed = StringText.JUMP;
             }
 
             for (MovablePiece movablePiece : gameModel.getAllyPieceList()) {
                 if (movablePiece.getAbility().toString().equals(abilityUsed)
                         && null != targetMovablePieceList
-                        && targetMovablePieceList.size() > 0) {
-                    targetedMovablePiece = targetMovablePieceList.get(index);
-                    movablePiece.useAbility(targetedMovablePiece);
+                        && !targetMovablePieceList.isEmpty()) {
 
-                    gameModel.getCurrentPlayer().setAbilityUsed(abilityUsed);
-                    gameView.updateViewAfterAbilityUse(targetedMovablePiece, abilityUsed, gameModel.getAllyPieceList());
+                    targetedMovablePiece = targetMovablePieceList.get(index);
+                    movablePiece.useAbility(targetedMovablePiece, gameModel);
+
+                    gameModel.getCurrentPlayer().setAbilityUsed(actionCommand);
+                    gameView.updateViewAfterAbilityUse(targetedMovablePiece, actionCommand, gameModel.getAllyPieceList());
+                    break;
                 }
             }
 

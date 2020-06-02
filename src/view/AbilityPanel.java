@@ -57,7 +57,7 @@ public class AbilityPanel
         ACTIONLISTENER.actionPerformed(actionEvent);
     }
 
-    void displayTargetList() {
+    private void displayTargetList() {
 
         PIECE_JLIST.setBackground(BACKGROUND);
         PIECE_JLIST.setBorder(new LineBorder(Color.BLACK));
@@ -98,7 +98,7 @@ public class AbilityPanel
             if (!matchingButton) {
                 JButton abilityButton = new JButton();
                 ABILITIES_JBUTTON_LIST.add(abilityButton);
-                abilityButton.setPreferredSize(new Dimension(135, 30));
+                abilityButton.setPreferredSize(new Dimension(190, 30));
                 abilityButton.setEnabled(true);
                 abilityButton.addActionListener(this);
 
@@ -135,8 +135,16 @@ public class AbilityPanel
         for (int i = 0; i < listForEnemy.size(); i++) {
             MovablePiece movablePiece = listForEnemy.get(i);
 
-            pieceCoordArray[i] = (movablePiece.getType() + " " + movablePiece.getClass().getSuperclass().getSimpleName()
-                    + " " + (i + 1) + ": " + (movablePiece.getRow() + 1) + " " + (movablePiece.getColumn() + 1));
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(movablePiece.getType())
+                    .append(" ")
+                    .append(movablePiece.getClass().getSuperclass().getSimpleName())
+                    .append(" ")
+                    .append(movablePiece.getRow() + 1)
+                    .append(" ")
+                    .append(movablePiece.getColumn() + 1);
+
+            pieceCoordArray[i] = (stringBuilder.toString());
         }
 
         PIECE_JLIST.setListData(pieceCoordArray);
@@ -165,6 +173,8 @@ public class AbilityPanel
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(jButton.getText())
                     .append(": ")
+                    .append(movablePiece.getType())
+                    .append(" ")
                     .append(movablePiece.getClass().getSuperclass().getSimpleName())
                     .append(" ")
                     .append(movablePiece.getRow() + 1)
@@ -199,6 +209,23 @@ public class AbilityPanel
         }
     }
 
+    void setAFFECTED_PIECE() {
+
+        if (lastAbilityUsed != null) {
+            if (lastAbilityUsed.equals(StringText.SHIELD)) {
+                for (JButton jButton : ABILITIES_JBUTTON_LIST) {
+                    if (jButton.getText().contains(StringText.SHIELD)) {
+                        AFFECTED_PIECE.setText(jButton.getText());
+                    }
+                }
+            }
+
+        } else {
+            AFFECTED_PIECE.setText("");
+        }
+
+    }
+
     void removeLastAbilityUsed() {
         lastAbilityUsed = null;
     }
@@ -221,23 +248,6 @@ public class AbilityPanel
 
     void setUSE_ABILITY_BUTTON(boolean status) {
         USE_ABILITY_BUTTON.setVisible(status);
-    }
-
-    void setAFFECTED_PIECE() {
-
-        if (lastAbilityUsed != null) {
-            if (lastAbilityUsed.equals(StringText.SHIELD)) {
-                for (JButton jButton : ABILITIES_JBUTTON_LIST) {
-                    if (jButton.getText().contains(StringText.SHIELD)) {
-                        AFFECTED_PIECE.setText(jButton.getText());
-                    }
-                }
-            }
-
-        } else {
-            AFFECTED_PIECE.setText("");
-        }
-
     }
 
     void setLastAbilityUsed(String lastAbilityUsed) {

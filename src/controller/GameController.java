@@ -43,7 +43,8 @@ public class GameController
 
             GAME_VIEW.selectedAbility(actionCommand, gameModel.getEnemyPieceList());
 
-        } else if (StringText.SPEED.equals(actionCommand) || StringText.SHIELD.equals(actionCommand)) {
+        } else if (StringText.SPEED.equals(actionCommand) || StringText.SHIELD.equals(actionCommand)
+                || StringText.JUMP.equals(actionCommand)) {
 
             GAME_VIEW.selectedAbility(actionCommand, gameModel.getAllyPieceList());
 
@@ -82,6 +83,7 @@ public class GameController
     @Override
     public void mouseClicked(MouseEvent e) {
 
+        // Select a piece
         if (!gameModel.getCurrentPlayer().isPieceMoved()) {
 
             MovablePiece selectedMovablePiece = GAME_VIEW.getSelectedMovablePiece();
@@ -92,6 +94,7 @@ public class GameController
                 int[] ints = movablePieceCoord.get(i);
                 int picSize = GAME_VIEW.getPicSize();
 
+                // Check clicked coord with piece coord
                 if ((ints[0] <= e.getY() && e.getY() <= ints[0] + picSize)
                         && (ints[1] <= e.getX() && e.getX() <= ints[1] + picSize)) {
 
@@ -100,25 +103,27 @@ public class GameController
                     if (selectedMovablePiece == null) {
                         String movablePieceTeam = movablePiece.getClass().getSuperclass().getSimpleName();
 
-                        if (gameModel.isEagleTurn() ? "Eagle".equals(movablePieceTeam) : "Shark".equals(movablePieceTeam)) {
-                            GAME_VIEW.showValidSquares(movablePiece);
-                            for (int[] movableCoord : movablePiece.getMovableCoords()) {
+                        if (gameModel.isEagleTurn() ? StringText.EAGLE.equals(movablePieceTeam) : StringText.SHARK.equals(movablePieceTeam)) {
+                            if (movablePiece.isMovingMode()) {
+                                GAME_VIEW.showValidSquares(movablePiece);
+                                for (int[] movableCoord : movablePiece.getMovableCoords()) {
 
-                                int[] validCoord = new int[2];
-                                validCoord[0] = movablePiece.getRow() + movableCoord[0] + 1;
-                                validCoord[1] = movablePiece.getColumn() + movableCoord[1] + 1;
+                                    int[] validCoord = new int[2];
+                                    validCoord[0] = movablePiece.getRow() + movableCoord[0] + 1;
+                                    validCoord[1] = movablePiece.getColumn() + movableCoord[1] + 1;
 
-                                if (!(validCoord[0] < 1 || validCoord[0] > BoardConfig.BOARD_ROWS
-                                        || validCoord[1] < 1 || validCoord[1] > BoardConfig.BOARD_COLUMNS)) {
-                                    GAME_VIEW.getMovableSquareCoord().add(movableCoord);
+                                    if (!(validCoord[0] < 1 || validCoord[0] > BoardConfig.BOARD_ROWS
+                                            || validCoord[1] < 1 || validCoord[1] > BoardConfig.BOARD_COLUMNS)) {
+                                        GAME_VIEW.getMovableSquareCoord().add(movableCoord);
+                                    }
                                 }
-
                             }
-
-                            break;
                         }
+                        break;
 
                     } else {
+
+                        // Deselect the piece
                         if (selectedMovablePiece == movablePiece) {
                             GAME_VIEW.removeMovablePiece();
                             break;
@@ -127,6 +132,7 @@ public class GameController
                 }
             }
 
+            // Move a selected piece to a movable square
             if (selectedMovablePiece != null && selectedMovablePiece.isMovingMode()
                     && !selectedMovablePiece.isStunned()) {
                 int squareSize = GAME_VIEW.getSquareSize();
@@ -136,6 +142,7 @@ public class GameController
                     int row = GAME_VIEW.gridCoord(ints2[0] + selectedMovablePiece.getRow());
                     int column = GAME_VIEW.gridCoord(ints2[1] + selectedMovablePiece.getColumn());
 
+                    // Check clicked coord with movable square coord
                     if ((row <= e.getY() && e.getY() <= row + squareSize)
                             && (column <= e.getX() && e.getX() <= column + squareSize)) {
                         if (gameModel.movePiece(GAME_VIEW, selectedMovablePiece, ints2)) {

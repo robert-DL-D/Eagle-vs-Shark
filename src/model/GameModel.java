@@ -2,8 +2,9 @@ package model;
 
 import java.io.Serializable;
 import java.util.List;
-import view.TemplateFrame;
+
 import view.GameView;
+import view.TemplateFrame;
 
 public class GameModel implements Serializable {
 
@@ -49,7 +50,7 @@ public class GameModel implements Serializable {
                 }
 
                 currentSquare.removeMovablePiece(); // remove the piece from the currentsquare
-                newSquare.addMovablePiece(movablePiece); // set the piece to the newsquare
+                newSquare.setMovablePiece(movablePiece); // set the piece to the newsquare
 
                 // Checks if a piece is on the same square as the enemy flag
                 for (Flag flag : PIECE_MANAGEMENT.getFLAG_LIST()) {
@@ -57,10 +58,10 @@ public class GameModel implements Serializable {
                     TemplateFrame frame = new TemplateFrame();
                     if (flagSquare.getMovablePiece() != null) {
                         gameView.dispose();
-                        if(flagSquare.getMovablePiece() instanceof Eagle){
-                            frame.showEndView( "Eagle");
-                        }else{
-                            frame.showEndView("Shark");
+                        if (flagSquare.getMovablePiece() instanceof Eagle) {
+                            frame.showEndView(StringText.EAGLE);
+                        } else {
+                            frame.showEndView(StringText.SHARK);
                         }
 //                        System.out.println(flagSquare.getMovablePiece() instanceof Eagle ? StringText.EAGLE_WON : StringText.SHARK_WON);
                     }

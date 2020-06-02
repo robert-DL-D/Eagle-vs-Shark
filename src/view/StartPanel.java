@@ -17,6 +17,7 @@ import controller.GameController;
 import file.LoadGame;
 import model.BoardConfig;
 import model.GameModel;
+import model.StringText;
 
 class StartPanel extends JPanel {
 
@@ -71,24 +72,28 @@ class StartPanel extends JPanel {
         JRadioButton type1 = new JRadioButton("1");
         type1.setBounds(250, 220, 40, 30);
         JRadioButton type2 = new JRadioButton("2", true);
-        type2.setBounds(300, 220, 40, 30);
+        type2.setBounds(290, 220, 40, 30);
+        JRadioButton type3 = new JRadioButton("3");
+        type3.setBounds(330, 220, 40, 30);
         buttonGroup.add(type1);
         buttonGroup.add(type2);
+        buttonGroup.add(type3);
         add(type1);
         add(type2);
+        add(type3);
 
         JButton startButton = new JButton("Start");
         startButton.setFont(new Font("TimesRoman", Font.PLAIN, 15));
         startButton.setBounds(150, 270, 80, 30);
         add(startButton);
 
-        JButton resumeButton = new JButton("Load Game");
+        JButton resumeButton = new JButton(StringText.LOAD_GAME);
         resumeButton.setFont(new Font("TimesRoman", Font.PLAIN, 15));
         resumeButton.setBounds(120, 310, 150, 30);
         add(resumeButton);
 
         startButton.addActionListener(arg0 -> {
-            if (validationAndSetValue(jFrame, rowText, columnText, timerText, type1, type2, buttonGroup)) {
+            if (validationAndSetValue(rowText, columnText, timerText, buttonGroup)) {
                 jFrame.dispose();
                 new GameController();
             }
@@ -124,10 +129,11 @@ class StartPanel extends JPanel {
         });
     }
 
-    private boolean validationAndSetValue(JFrame jFrame, JTextField rowText, JTextField columnText, JTextField timerText, JRadioButton type1, JRadioButton type2, ButtonGroup buttonGroup) {
+    private boolean validationAndSetValue(JTextField rowText, JTextField columnText, JTextField timerText, ButtonGroup buttonGroup) {
         int rowValue;
         int columnValue;
         int turnLimit;
+
         try {
             rowValue = Integer.parseInt(rowText.getText());
             columnValue = Integer.parseInt(columnText.getText());
@@ -157,7 +163,6 @@ class StartPanel extends JPanel {
         int pieceNum = 0;
         for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements(); ) {
             AbstractButton button = buttons.nextElement();
-
             if (button.isSelected()) {
                 pieceNum = Integer.parseInt(button.getText());
             }
@@ -167,6 +172,7 @@ class StartPanel extends JPanel {
         BoardConfig.BOARD_COLUMNS = columnValue;
         BoardConfig.PIECE_NUMBER = pieceNum;
         BoardConfig.TURN_LIMIT = String.valueOf(turnLimit);
+
         return true;
     }
 

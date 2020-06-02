@@ -30,4 +30,11 @@ public abstract class Piece implements Serializable {
         return type;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
 }

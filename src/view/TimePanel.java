@@ -8,10 +8,12 @@ import java.util.TimerTask;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import model.StringText;
+
 class TimePanel
         extends JPanel {
 
-    private GameView gameView;
+    private final GameView GAME_VIEW;
     private Timer currentTimer;
     private final JLabel timerLabel;
     private boolean eagleTurn;
@@ -19,8 +21,8 @@ class TimePanel
     private int turnTime;
 
     TimePanel(GameView gameView) {
+        GAME_VIEW = gameView;
 
-        this.gameView = gameView;
         JLabel turnTimerLabel = new JLabel("Turn Timer:");
         turnTimerLabel.setPreferredSize(new Dimension(100, 20));
         turnTimerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
@@ -48,15 +50,10 @@ class TimePanel
 
                 if (turnTime < 0) {
                     currentTimer.cancel();
-                    TemplateFrame frame = new TemplateFrame();
-                    gameView.dispose();
+                    GAME_VIEW.dispose();
 
-                    if (eagleTurn) {
-                        frame.showEndView( "Shark");
-                    } else {
-                        frame.showEndView( "Eagle");
-                    }
-//                    System.out.println(eagleTurn ? StringText.SHARK_WON : StringText.EAGLE_WON);
+                    TemplateFrame frame = new TemplateFrame();
+                    frame.showEndView(eagleTurn ? StringText.SHARK : StringText.EAGLE);
                 }
             }
         }, 0, 1000);

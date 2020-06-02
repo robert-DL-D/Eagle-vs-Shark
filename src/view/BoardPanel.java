@@ -185,13 +185,6 @@ public class BoardPanel
     private void drawNumber() {
         graphics.setColor(Color.BLACK);
 
-        // Draw the square number
-        for (int i = 0; i < BoardConfig.BOARD_ROWS; i++) {
-            for (int j = 0; j < BoardConfig.BOARD_COLUMNS; j++) {
-                graphics.drawString(Integer.toString(squares[i][j].getSQUARE_NUMBER()), j * SQUARE_SIZE + 30, i * SQUARE_SIZE + 40);
-            }
-        }
-
         // Draw the Y-axis number
         for (int i = 0; i < BoardConfig.BOARD_ROWS; i++) {
             graphics.drawString(Integer.toString(i + 1), 4, i * SQUARE_SIZE + AXIS_NUMBER_MARGIN);

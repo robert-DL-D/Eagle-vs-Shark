@@ -12,11 +12,11 @@ public class Square implements Serializable {
         SQUARE_NUMBER = squareNumber;
     }
 
-    void addMovablePiece(MovablePiece movablePiece) {
+    void setMovablePiece(MovablePiece movablePiece) {
         this.movablePiece = movablePiece;
     }
 
-    void addPiece(Piece piece) {
+    void setPiece(Piece piece) {
         this.piece = piece;
     }
 

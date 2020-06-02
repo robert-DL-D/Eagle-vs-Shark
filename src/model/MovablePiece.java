@@ -49,7 +49,7 @@ public abstract class MovablePiece
         return 0;
     }
 
-    public void useAbility(MovablePiece targetedMovablePiece) {
+    public void useAbility(MovablePiece targetedMovablePiece, GameModel gameModel) {
 
         AbilityDecorator abilityDecorator = null;
 
@@ -68,6 +68,9 @@ public abstract class MovablePiece
                 break;
             case StringText.CLEANSE:
                 abilityDecorator = new CleanseDecorator();
+                break;
+            case StringText.JUMP:
+                abilityDecorator = new JumpDecorator(gameModel);
                 break;
         }
 

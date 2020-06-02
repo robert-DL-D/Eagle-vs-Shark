@@ -7,9 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class EndPanel extends JPanel {
+class EndPanel extends JPanel {
 
-    public void init(JFrame jFrame, String winnerName) {
+    void init(JFrame jFrame, String winnerName) {
         setLayout(null);
         String text = winnerName + "  WON!";
         JLabel label = new JLabel(text);
