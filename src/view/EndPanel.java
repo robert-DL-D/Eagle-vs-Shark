@@ -25,6 +25,7 @@ public class EndPanel extends JPanel {
         startButton.addActionListener(arg0 -> {
             jFrame.dispose();
             // open GameBoard
+            new TemplateFrame().showStartView();
         });
 
         JButton exitButton = new JButton("Exit");
