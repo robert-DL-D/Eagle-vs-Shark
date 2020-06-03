@@ -33,9 +33,9 @@ class AbilityController {
             } else if (actionCommand.contains(StringText.CLEANSE)) {
                 targetMovablePieceList = gameModel.getStunnedPieceList();
                 abilityUsed = StringText.CLEANSE;
-            } else if (actionCommand.contains(StringText.JUMP)) {
+            } else if (actionCommand.contains(StringText.RETREAT)) {
                 targetMovablePieceList = gameModel.getAllyPieceList();
-                abilityUsed = StringText.JUMP;
+                abilityUsed = StringText.RETREAT;
             }
 
             for (MovablePiece movablePiece : gameModel.getAllyPieceList()) {

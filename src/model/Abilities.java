@@ -2,7 +2,7 @@ package model;
 
 enum Abilities {
 
-    STUN, SPEED, SLOW, SHIELD, HIDE, CLEANSE;
+    STUN, SPEED, SLOW, SHIELD, RETREAT, CLEANSE;
 
     public String toString() {
 
@@ -20,8 +20,8 @@ enum Abilities {
             case SHIELD:
                 return StringText.SHIELD;
 
-            case HIDE:
-                return StringText.JUMP;
+            case RETREAT:
+                return StringText.RETREAT;
 
             case CLEANSE:
                 return StringText.CLEANSE;

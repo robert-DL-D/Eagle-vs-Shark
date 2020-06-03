@@ -69,8 +69,8 @@ public abstract class MovablePiece
             case StringText.CLEANSE:
                 abilityDecorator = new CleanseDecorator();
                 break;
-            case StringText.JUMP:
-                abilityDecorator = new JumpDecorator(gameModel);
+            case StringText.RETREAT:
+                abilityDecorator = new RetreatDecorator(gameModel);
                 break;
         }
 

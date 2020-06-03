@@ -76,7 +76,7 @@ public class GameView
                         "Ability: Speeds up an ally piece, it can move more spaces \n \n" +
                         "Blue Eagle \n" +
                         "Move: all directions by 1 space \n" +
-                        "Ability: Jumps an ally piece to a random empty square\n \n" +
+                        "Ability: Retreat an ally piece back to a random empty square on your side of the board \n \n" +
                         "Shark Pieces:\n" +
                         "Red Shark \n" +
                         "Move: like a Knight in chess \n" +

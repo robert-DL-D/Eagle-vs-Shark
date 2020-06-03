@@ -48,7 +48,7 @@ public class GameController extends MouseAdapter
             GAME_VIEW.selectedAbility(actionCommand, gameModel.getEnemyPieceList());
 
         } else if (StringText.SPEED.equals(actionCommand) || StringText.SHIELD.equals(actionCommand)
-                || StringText.JUMP.equals(actionCommand)) {
+                || StringText.RETREAT.equals(actionCommand)) {
 
             GAME_VIEW.selectedAbility(actionCommand, gameModel.getAllyPieceList());
 

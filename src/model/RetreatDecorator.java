@@ -2,11 +2,11 @@ package model;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-class JumpDecorator extends AbilityDecorator {
+class RetreatDecorator extends AbilityDecorator {
 
     private final Square[][] SQUARE_ARRAY;
 
-    JumpDecorator(GameModel gameModel) {
+    RetreatDecorator(GameModel gameModel) {
         SQUARE_ARRAY = gameModel.getSQUARE_ARRAY();
     }
 
