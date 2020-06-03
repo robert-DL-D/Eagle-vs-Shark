@@ -17,4 +17,6 @@ public class StringText {
     public static final String NEXT_TURN = "Next Turn";
     public static final String EAGLE_WON = "Eagle Won";
     public static final String SHARK_WON = "Shark Won";
+    public static final String UNDO = "Undo";
+    
 }

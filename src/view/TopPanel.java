@@ -35,6 +35,7 @@ class TopPanel
         loadGameButton.setSize(130, 30);
         loadGameButton.addActionListener(actionListener);
         add(loadGameButton);
+
     }
 
     void setEagleTurn(boolean eagleTurn) {
