@@ -2,18 +2,22 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.List;
 
 import model.BoardConfig;
+import model.Eagle;
+import model.Flag;
 import model.GameModel;
 import model.MovablePiece;
+import model.Square;
 import model.StringText;
 import view.GameView;
+import view.TemplateFrame;
 
-public class GameController
-        implements ActionListener, MouseListener {
+public class GameController extends MouseAdapter
+        implements ActionListener {
 
     private GameModel gameModel = new GameModel();
     private final GameView GAME_VIEW = new GameView(this, this);
@@ -83,7 +87,7 @@ public class GameController
     @Override
     public void mouseClicked(MouseEvent e) {
 
-        // Select a piece
+        // Select a piece if no piece is moved
         if (!gameModel.getCurrentPlayer().isPieceMoved()) {
 
             MovablePiece selectedMovablePiece = GAME_VIEW.getSelectedMovablePiece();
@@ -101,25 +105,8 @@ public class GameController
                     MovablePiece movablePiece = GAME_VIEW.getMovablePieceList().get(i);
 
                     if (selectedMovablePiece == null) {
-                        String movablePieceTeam = movablePiece.getClass().getSuperclass().getSimpleName();
-
-                        if (gameModel.isEagleTurn() ? StringText.EAGLE.equals(movablePieceTeam) : StringText.SHARK.equals(movablePieceTeam)) {
-                            if (movablePiece.isMovingMode()) {
-                                GAME_VIEW.showValidSquares(movablePiece);
-                                for (int[] movableCoord : movablePiece.getMovableCoords()) {
-
-                                    int[] validCoord = new int[2];
-                                    validCoord[0] = movablePiece.getRow() + movableCoord[0] + 1;
-                                    validCoord[1] = movablePiece.getColumn() + movableCoord[1] + 1;
-
-                                    if (!(validCoord[0] < 1 || validCoord[0] > BoardConfig.BOARD_ROWS
-                                            || validCoord[1] < 1 || validCoord[1] > BoardConfig.BOARD_COLUMNS)) {
-                                        GAME_VIEW.getMovableSquareCoord().add(movableCoord);
-                                    }
-                                }
-                            }
-                        }
-                        break;
+                        addValidSquareCoord(movablePiece);
+                        break; // break loop when the correct piece is found
 
                     } else {
 
@@ -132,46 +119,71 @@ public class GameController
                 }
             }
 
-            // Move a selected piece to a movable square
-            if (selectedMovablePiece != null && selectedMovablePiece.isMovingMode()
-                    && !selectedMovablePiece.isStunned()) {
-                int squareSize = GAME_VIEW.getSquareSize();
+            movePieceToSquare(e, selectedMovablePiece);
 
-                for (int[] ints2 : GAME_VIEW.getMovableSquareCoord()) {
-
-                    int row = GAME_VIEW.gridCoord(ints2[0] + selectedMovablePiece.getRow());
-                    int column = GAME_VIEW.gridCoord(ints2[1] + selectedMovablePiece.getColumn());
-
-                    // Check clicked coord with movable square coord
-                    if ((row <= e.getY() && e.getY() <= row + squareSize)
-                            && (column <= e.getX() && e.getX() <= column + squareSize)) {
-                        if (gameModel.movePiece(GAME_VIEW, selectedMovablePiece, ints2)) {
-                            GAME_VIEW.updateViewAfterPieceMove(gameModel.getAllyPieceList(), GAME_VIEW.getSelectedMovablePiece());
-                        }
-                    }
-                }
-            }
         }
 
     }
 
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {
+    private void addValidSquareCoord(MovablePiece movablePiece) {
+        String movablePieceTeam = movablePiece.getClass().getSuperclass().getSimpleName();
 
+        if (gameModel.isEagleTurn() ? StringText.EAGLE.equals(movablePieceTeam) : StringText.SHARK.equals(movablePieceTeam)) {
+            if (movablePiece.isMovingMode()) {
+                GAME_VIEW.showValidSquares(movablePiece);
+                for (int[] movableCoord : movablePiece.getMovableCoords()) {
+
+                    int[] validCoord = new int[2];
+                    validCoord[0] = movablePiece.getRow() + movableCoord[0] + 1;
+                    validCoord[1] = movablePiece.getColumn() + movableCoord[1] + 1;
+
+                    if (!(validCoord[0] < 1 || validCoord[0] > BoardConfig.BOARD_ROWS
+                            || validCoord[1] < 1 || validCoord[1] > BoardConfig.BOARD_COLUMNS)) {
+                        GAME_VIEW.getMovableSquareCoord().add(movableCoord);
+                    }
+                }
+            }
+        }
     }
 
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
+    private void movePieceToSquare(MouseEvent e, MovablePiece selectedMovablePiece) {
+        // Move a selected piece to a movable square
+        if (selectedMovablePiece != null && selectedMovablePiece.isMovingMode()
+                && !selectedMovablePiece.isStunned()) {
+            int squareSize = GAME_VIEW.getSquareSize();
 
+            for (int[] ints2 : GAME_VIEW.getMovableSquareCoord()) {
+
+                int row = GAME_VIEW.gridCoord(ints2[0] + selectedMovablePiece.getRow());
+                int column = GAME_VIEW.gridCoord(ints2[1] + selectedMovablePiece.getColumn());
+
+                // Check clicked coord with movable square coord
+                if ((row <= e.getY() && e.getY() <= row + squareSize)
+                        && (column <= e.getX() && e.getX() <= column + squareSize)) {
+                    if (gameModel.movePiece(selectedMovablePiece, ints2)) {
+                        GAME_VIEW.updateViewAfterPieceMove(gameModel.getAllyPieceList(), GAME_VIEW.getSelectedMovablePiece());
+                        checkVictory();
+                    }
+                }
+            }
+        }
     }
 
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {
+    private void checkVictory() {
 
+        // Checks if a piece is on the same square as the enemy flag
+        for (Flag flag : gameModel.getFLAG_LIST()) {
+            Square flagSquare = gameModel.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
+            TemplateFrame frame = new TemplateFrame();
+            if (flagSquare.getMovablePiece() != null) {
+                GAME_VIEW.dispose();
+                if (flagSquare.getMovablePiece() instanceof Eagle) {
+                    frame.showEndView(StringText.EAGLE);
+                } else {
+                    frame.showEndView(StringText.SHARK);
+                }
+            }
+        }
     }
 
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {
-
-    }
 }
