@@ -5,18 +5,7 @@ import java.io.Serializable;
 class BoardModel implements Serializable {
 
     private static BoardModel instance;
-    private final Square[][] SQUARE_ARRAY = new Square[BoardConfig.BOARD_ROWS][BoardConfig.BOARD_COLUMNS];
-
-    private BoardModel() {
-        int increment = 1;
-
-        for (int i = 0; i < BoardConfig.BOARD_ROWS; i++) {
-            for (int j = 0; j < BoardConfig.BOARD_COLUMNS; j++) {
-                SQUARE_ARRAY[i][j] = new Square(increment);
-                increment++;
-            }
-        }
-    }
+    private static Square[][] SQUARE_ARRAY;
 
     void addMovablePieceToSquare(MovablePiece movablePiece) {
         Square square = getSQUARE_ARRAY()[movablePiece.getRow()][movablePiece.getColumn()];
@@ -29,12 +18,26 @@ class BoardModel implements Serializable {
     }
 
     static synchronized BoardModel getInstance() {
+        initSquare();
 
         if (instance == null) {
             instance = new BoardModel();
         }
 
         return instance;
+    }
+
+    private static void initSquare() {
+        SQUARE_ARRAY = new Square[BoardConfig.BOARD_ROWS][BoardConfig.BOARD_COLUMNS];
+
+        int increment = 1;
+
+        for (int i = 0; i < BoardConfig.BOARD_ROWS; i++) {
+            for (int j = 0; j < BoardConfig.BOARD_COLUMNS; j++) {
+                SQUARE_ARRAY[i][j] = new Square(increment);
+                increment++;
+            }
+        }
     }
 
     Square[][] getSQUARE_ARRAY() {

@@ -33,7 +33,10 @@ class SharkGreen extends Shark {
 
         // Lower-Left
         addMOVEMENT_COORD(new int[]{1, -1}, movementDistance, 2);
-        
+
+        // Lower-Right
+        addMOVEMENT_COORD(new int[]{1, 1}, movementDistance, 2);
+
     }
 
 }
