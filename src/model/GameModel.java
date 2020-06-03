@@ -2,14 +2,15 @@ package model;
 
 import java.io.Serializable;
 import java.util.List;
-import view.TemplateFrame;
+
 import view.GameView;
+import view.TemplateFrame;
 
 public class GameModel implements Serializable {
 
     private final BoardModel BOARD_MODEL = BoardModel.getInstance();
     private final PlayerManagement PLAYER_MANAGEMENT = new PlayerManagement();
-    private final AddPieceModel PIECE_MODEL = new AddPieceModel(PLAYER_MANAGEMENT, BOARD_MODEL);
+    private final PieceManagement PIECE_MANAGEMENT = new PieceManagement(PLAYER_MANAGEMENT, BOARD_MODEL);
 
     public boolean movePiece(GameView gameView, MovablePiece movablePiece, int[] movementCoord) {
 
@@ -49,18 +50,18 @@ public class GameModel implements Serializable {
                 }
 
                 currentSquare.removeMovablePiece(); // remove the piece from the currentsquare
-                newSquare.addMovablePiece(movablePiece); // set the piece to the newsquare
+                newSquare.setMovablePiece(movablePiece); // set the piece to the newsquare
 
                 // Checks if a piece is on the same square as the enemy flag
-                for (Flag flag : PIECE_MODEL.getFLAG_LIST()) {
+                for (Flag flag : PIECE_MANAGEMENT.getFLAG_LIST()) {
                     Square flagSquare = BOARD_MODEL.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
                     TemplateFrame frame = new TemplateFrame();
                     if (flagSquare.getMovablePiece() != null) {
                         gameView.dispose();
-                        if(flagSquare.getMovablePiece() instanceof Eagle){
-                            frame.showEndView( "Eagle");
-                        }else{
-                            frame.showEndView("Shark");
+                        if (flagSquare.getMovablePiece() instanceof Eagle) {
+                            frame.showEndView(StringText.EAGLE);
+                        } else {
+                            frame.showEndView(StringText.SHARK);
                         }
 //                        System.out.println(flagSquare.getMovablePiece() instanceof Eagle ? StringText.EAGLE_WON : StringText.SHARK_WON);
                     }
@@ -144,11 +145,11 @@ public class GameModel implements Serializable {
     }
 
     public List<Flag> getFLAG_LIST() {
-        return PIECE_MODEL.getFLAG_LIST();
+        return PIECE_MANAGEMENT.getFLAG_LIST();
     }
 
     public List<Island> getISLAND_LIST() {
-        return PIECE_MODEL.getISLAND_LIST();
+        return PIECE_MANAGEMENT.getISLAND_LIST();
     }
 
     public Square[][] getSQUARE_ARRAY() {

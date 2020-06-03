@@ -10,8 +10,8 @@ public class StringText {
     public static final String STUN = "STUN";
     public static final String SLOW = "SLOW";
     public static final String CLEANSE = "CLEANSE";
+    public static final String JUMP = "JUMP";
     public static final String USE = "Use";
-    public static final String MOVE = "Move";
     public static final String SAVE_GAME = "Save Game";
     public static final String LOAD_GAME = "Load Game";
     public static final String NEXT_TURN = "Next Turn";

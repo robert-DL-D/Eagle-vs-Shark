@@ -45,6 +45,7 @@ public class PiecePanel
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        selectedButtonIndex = MODE_BUTTON_LIST.indexOf(actionEvent.getSource());
         ACTIONLISTENER.actionPerformed(actionEvent);
     }
 

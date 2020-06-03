@@ -20,12 +20,12 @@ class BoardModel implements Serializable {
 
     void addMovablePieceToSquare(MovablePiece movablePiece) {
         Square square = getSQUARE_ARRAY()[movablePiece.getRow()][movablePiece.getColumn()];
-        square.addMovablePiece(movablePiece);
+        square.setMovablePiece(movablePiece);
     }
 
     void addPieceToSquare(Piece piece) {
         Square square = getSQUARE_ARRAY()[piece.getRow()][piece.getColumn()];
-        square.addPiece(piece);
+        square.setPiece(piece);
     }
 
     static synchronized BoardModel getInstance() {
