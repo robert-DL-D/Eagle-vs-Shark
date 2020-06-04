@@ -1,12 +1,12 @@
 package model;
 
 class MoveCommand 
-//extends AbstractCommand 
+extends AbstractCommand 
 implements Command {
 
 
     
-	public MoveCommand(){
+	public MoveCommand(MovablePiece movablePiece){
 	    // new board state is validated
 	  }
 	  public void execute(){

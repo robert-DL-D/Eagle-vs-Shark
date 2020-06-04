@@ -9,22 +9,29 @@ import java.util.ArrayList;
 
 
 class CommandModel{
-	 private List<Command> commands = new ArrayList<Command>();
+	 private List<Command> commandList = new ArrayList<Command>();
 	 public CommandModel(){
 	 }
 	 private Command currentCommand = null;
 	 public void setCommand(Command cmd){
 	   currentCommand  = cmd;
 	   cmd.execute();
-	   commands.add(cmd);
+	   commandList.add(cmd);
 	 }
-	 public void undoAll(){
-	    for(Command cmd : commands){cmd.undo();}
+//	 public void undoAll(){
+//	    for(Command cmd : commandList){cmd.undo();}
+//	}
+	 public void undo1(){
+	 commandList.remove(commandList.size()-1);
+	 currentCommand = commandList.get(commandList.size()-1);
 	}
-	 public void undo(){
-	 commands.remove(commands.size()-1);
-	 currentCommand = commands.get(commands.size()-1);
-	}
-
+	 public void undo2(){
+		 commandList.remove(commandList.size()-2);
+		 currentCommand = commandList.get(commandList.size()-2);
+		}
+	 public void undo3(){
+		 commandList.remove(commandList.size()-3);
+		 currentCommand = commandList.get(commandList.size()-3);
+		}
 	
 }
