@@ -10,7 +10,6 @@ class SharkGreen extends Shark {
 
     @Override
     void addMovementCoord(int movementDistance) {
-
         movementDistance -= 1;
 
         // Up
@@ -26,16 +25,16 @@ class SharkGreen extends Shark {
         addMOVEMENT_COORD(new int[]{0, 2}, movementDistance, 2);
 
         // Upper-Left
-        addMOVEMENT_COORD(new int[]{-1, -1}, movementDistance, 2);
+        addMOVEMENT_COORD(new int[]{-1, -1}, movementDistance, 1);
 
         // Upper-Right
-        addMOVEMENT_COORD(new int[]{-1, 1}, movementDistance, 2);
+        addMOVEMENT_COORD(new int[]{-1, 1}, movementDistance, 1);
 
         // Lower-Left
-        addMOVEMENT_COORD(new int[]{1, -1}, movementDistance, 2);
+        addMOVEMENT_COORD(new int[]{1, -1}, movementDistance, 1);
 
         // Lower-Right
-        addMOVEMENT_COORD(new int[]{1, 1}, movementDistance, 2);
+        addMOVEMENT_COORD(new int[]{1, 1}, movementDistance, 1);
 
     }
 

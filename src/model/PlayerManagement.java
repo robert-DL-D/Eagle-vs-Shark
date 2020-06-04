@@ -62,11 +62,16 @@ class PlayerManagement implements Serializable {
 
     private void resetPieceMovementStatus() {
         boolean resetShield = true;
+        boolean resetImmune = true;
 
         for (MovablePiece movablePiece : getEnemyPieceList()) {
 
             if (movablePiece.getAbility() == Abilities.SHIELD) {
                 resetShield = false;
+            }
+
+            if (movablePiece.getAbility() == Abilities.CLEANSE) {
+                resetImmune = false;
             }
 
             movablePiece.getMOVEMENT_COORD().clear();
@@ -79,6 +84,12 @@ class PlayerManagement implements Serializable {
         if (resetShield) {
             for (MovablePiece movablePiece : getOwnPieceList()) {
                 movablePiece.setShielded(false);
+            }
+        }
+
+        if (resetImmune) {
+            for (MovablePiece movablePiece : getOwnPieceList()) {
+                movablePiece.setImmune(false);
             }
         }
 

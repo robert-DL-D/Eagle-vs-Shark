@@ -19,8 +19,10 @@ public enum Types {
 
             case FLAG:
                 return "FLAG";
+
             case ISLAND:
                 return "ISLAND";
+
             default:
                 return "NONE";
         }

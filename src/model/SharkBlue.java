@@ -12,16 +12,16 @@ class SharkBlue extends Shark {
         movementDistance -= 1;
 
         // Up
-        addMOVEMENT_COORD(new int[]{-1, 0}, movementDistance, 2);
+        addMOVEMENT_COORD(new int[]{-1, 0}, movementDistance, 1);
 
         // Down
-        addMOVEMENT_COORD(new int[]{1, 0}, movementDistance, 2);
+        addMOVEMENT_COORD(new int[]{1, 0}, movementDistance, 1);
 
         // Left
-        addMOVEMENT_COORD(new int[]{0, -1}, movementDistance, 2);
+        addMOVEMENT_COORD(new int[]{0, -1}, movementDistance, 1);
 
         // Right
-        addMOVEMENT_COORD(new int[]{0, 1}, movementDistance, 2);
+        addMOVEMENT_COORD(new int[]{0, 1}, movementDistance, 1);
 
         // Upper-Left
         addMOVEMENT_COORD(new int[]{-2, -2}, movementDistance, 2);

@@ -24,9 +24,9 @@ public class BoardPanel
         extends JPanel {
 
     private static final int BOARD_MARGIN = 25;
-    private static final int SQUARE_SIZE = 60;
+    private final int SQUARE_SIZE;
     private static final int PIC_MARGIN = 2;
-    private static final int PIC_SIZE = SQUARE_SIZE - PIC_MARGIN;
+    private final int PIC_SIZE;
     private static final int AXIS_NUMBER_MARGIN = 45;
     private static final String FOLDER_PATH = "src/images/";
 
@@ -43,8 +43,10 @@ public class BoardPanel
     private Graphics graphics;
     private MovablePiece selectedMovablePiece;
 
-    BoardPanel(MouseListener mouseListener) {
+    BoardPanel(MouseListener mouseListener, int squareSize) {
         addMouseListener(mouseListener);
+        SQUARE_SIZE = squareSize;
+        PIC_SIZE = SQUARE_SIZE - PIC_MARGIN;
     }
 
     static int getBoardMargin() {

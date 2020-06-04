@@ -10,15 +10,17 @@ class SharkRed extends Shark {
     @Override
     void addMovementCoord(int movementDistance) {
 
-        int adjustedMovementDistance = movementDistance - 1;
+        int adjustedMovementDistance = movementDistance - 2;
+        int adjustedMovementDistance2 = movementDistance - 1;
 
-        addMOVEMENT_COORD(new int[]{-adjustedMovementDistance, movementDistance}, adjustedMovementDistance, 1);
-        addMOVEMENT_COORD(new int[]{adjustedMovementDistance, movementDistance}, adjustedMovementDistance, 1);
-        addMOVEMENT_COORD(new int[]{movementDistance, adjustedMovementDistance}, adjustedMovementDistance, 1);
-        addMOVEMENT_COORD(new int[]{movementDistance, -adjustedMovementDistance}, adjustedMovementDistance, 1);
-        addMOVEMENT_COORD(new int[]{adjustedMovementDistance, -movementDistance}, adjustedMovementDistance, 1);
-        addMOVEMENT_COORD(new int[]{-adjustedMovementDistance, -movementDistance}, adjustedMovementDistance, 1);
-        addMOVEMENT_COORD(new int[]{-movementDistance, -adjustedMovementDistance}, adjustedMovementDistance, 1);
-        addMOVEMENT_COORD(new int[]{-movementDistance, adjustedMovementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{-adjustedMovementDistance, adjustedMovementDistance2}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{adjustedMovementDistance, adjustedMovementDistance2}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{adjustedMovementDistance2, adjustedMovementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{adjustedMovementDistance2, -adjustedMovementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{adjustedMovementDistance, -adjustedMovementDistance2}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{-adjustedMovementDistance, -adjustedMovementDistance2}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{-adjustedMovementDistance2, -adjustedMovementDistance}, adjustedMovementDistance, 1);
+        addMOVEMENT_COORD(new int[]{-adjustedMovementDistance2, adjustedMovementDistance}, adjustedMovementDistance, 1);
+
     }
 }

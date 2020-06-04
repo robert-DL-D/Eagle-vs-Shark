@@ -11,6 +11,7 @@ public class Player<T extends MovablePiece> implements Serializable {
     private boolean pieceMoved;
     private String abilityUsed;
     private int pieceModeToggledIndex = -1;
+    private boolean superAvailable = true;
 
     void addMovablePiece(T movablePiece) {
         MOVABLEPIECE_LIST.add(movablePiece);
@@ -42,5 +43,13 @@ public class Player<T extends MovablePiece> implements Serializable {
 
     void setPieceModeToggledIndex(int pieceModeToggledIndex) {
         this.pieceModeToggledIndex = pieceModeToggledIndex;
+    }
+
+    public boolean isSuperAvailable() {
+        return superAvailable;
+    }
+
+    void setSuperAvailable(boolean superAvailable) {
+        this.superAvailable = superAvailable;
     }
 }

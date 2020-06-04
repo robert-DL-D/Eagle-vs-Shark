@@ -29,7 +29,7 @@ class TimePanel
         add(turnTimerLabel);
 
         timerLabel = new JLabel();
-        timerLabel.setPreferredSize(new Dimension(20, 20));
+        timerLabel.setPreferredSize(new Dimension(40, 20));
         timerLabel.setFont(new Font("Arial", Font.PLAIN, 18));
         add(timerLabel);
 
@@ -76,10 +76,6 @@ class TimePanel
 
     void setEagleTurn(boolean eagleTurn) {
         this.eagleTurn = eagleTurn;
-    }
-
-    String getTurnLimit() {
-        return turnLimit;
     }
 
     void setTurnLimit(String turnLimit) {

@@ -30,9 +30,10 @@ class GameStateController {
                     gameModel.getFLAG_LIST(),
                     gameModel.getISLAND_LIST(),
                     gameModel.getAllyPieceList(),
+                    gameModel.getEnemyPieceList(),
                     gameModel.isEagleTurn());
 
-            gameView.loadGame(gameModel.getCurrentPlayer(), turnTime);
+            gameView.loadGame(gameModel.getCurrentPlayer(), gameModel.getEnemyPieceList(), turnTime);
         }
 
         return gameModel;

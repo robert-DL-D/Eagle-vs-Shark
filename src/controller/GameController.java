@@ -31,6 +31,7 @@ public class GameController extends MouseAdapter
                 gameModel.getFLAG_LIST(),
                 gameModel.getISLAND_LIST(),
                 gameModel.getAllyPieceList(),
+                gameModel.getEnemyPieceList(),
                 gameModel.isEagleTurn());
     }
 
@@ -41,14 +42,14 @@ public class GameController extends MouseAdapter
         if (StringText.NEXT_TURN.equals(actionCommand)) {
 
             gameModel.updateNextTurn();
-            GAME_VIEW.updateNextTurn(gameModel.getAllyPieceList(), gameModel.isEagleTurn());
+            GAME_VIEW.updateNextTurn(gameModel.getAllyPieceList(), gameModel.getEnemyPieceList(), gameModel.isEagleTurn(), gameModel.isSuperUsed());
 
         } else if (StringText.STUN.equals(actionCommand) || StringText.SLOW.equals(actionCommand)) {
 
             GAME_VIEW.selectedAbility(actionCommand, gameModel.getEnemyPieceList());
 
         } else if (StringText.SPEED.equals(actionCommand) || StringText.SHIELD.equals(actionCommand)
-                || StringText.RETREAT.equals(actionCommand)) {
+                || StringText.JUMP.equals(actionCommand)) {
 
             GAME_VIEW.selectedAbility(actionCommand, gameModel.getAllyPieceList());
 
@@ -58,7 +59,11 @@ public class GameController extends MouseAdapter
 
         } else if (actionCommand.contains(StringText.USE)) {
 
-            ABILITY_CONTROLLER.useAbility(GAME_VIEW.getPieceJListSelectedItem(), actionCommand, gameModel, GAME_VIEW);
+            ABILITY_CONTROLLER.setAbilityTarget(actionCommand, gameModel, GAME_VIEW);
+
+            if (GAME_VIEW.isSuperAbility()) {
+                gameModel.disableSuper();
+            }
 
         } else if (actionCommand.contains(StringText.MOVING_MODE) || actionCommand.contains(StringText.ABILITY_MODE)) {
 
@@ -129,7 +134,7 @@ public class GameController extends MouseAdapter
         String movablePieceTeam = movablePiece.getClass().getSuperclass().getSimpleName();
 
         if (gameModel.isEagleTurn() ? StringText.EAGLE.equals(movablePieceTeam) : StringText.SHARK.equals(movablePieceTeam)) {
-            if (movablePiece.isMovingMode()) {
+            if (movablePiece.isMovingMode() && !movablePiece.isStunned()) {
                 GAME_VIEW.showValidSquares(movablePiece);
                 for (int[] movableCoord : movablePiece.getMovableCoords()) {
 

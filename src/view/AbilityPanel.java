@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -24,10 +25,10 @@ public class AbilityPanel
 
     private final JList<String> PIECE_JLIST = new JList<>();
     private final List<JButton> ABILITIES_JBUTTON_LIST = new ArrayList<>();
-    private static final String USE_ABILITY_BUTTON_TEXT = StringText.USE;
-    private final JButton USE_ABILITY_BUTTON = new JButton(USE_ABILITY_BUTTON_TEXT);
+
+    private final JButton USE_ABILITY_BUTTON = new JButton(StringText.USE);
     private final Color BACKGROUND;
-    private final JLabel AFFECTED_PIECE;
+    private final JCheckBox SUPER_ABILITY;
 
     private String lastAbilityUsed;
     private int lastAbilityUsedIndex;
@@ -44,11 +45,11 @@ public class AbilityPanel
         abilityLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(abilityLabel);
 
-        AFFECTED_PIECE = new JLabel();
-        AFFECTED_PIECE.setSize(new Dimension(200, 25));
-        AFFECTED_PIECE.setFont(new Font("Arial", Font.BOLD, 16));
-        AFFECTED_PIECE.setHorizontalAlignment(SwingConstants.CENTER);
-        add(AFFECTED_PIECE);
+        SUPER_ABILITY = new JCheckBox("Super Ability");
+        SUPER_ABILITY.setSize(new Dimension(100, 25));
+        SUPER_ABILITY.setFont(new Font("Arial", Font.PLAIN, 14));
+        SUPER_ABILITY.setHorizontalAlignment(SwingConstants.CENTER);
+        add(SUPER_ABILITY);
 
     }
 
@@ -134,17 +135,7 @@ public class AbilityPanel
 
         for (int i = 0; i < listForEnemy.size(); i++) {
             MovablePiece movablePiece = listForEnemy.get(i);
-
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(movablePiece.getType())
-                    .append(" ")
-                    .append(movablePiece.getClass().getSuperclass().getSimpleName())
-                    .append(" ")
-                    .append(movablePiece.getRow() + 1)
-                    .append(" ")
-                    .append(movablePiece.getColumn() + 1);
-
-            pieceCoordArray[i] = (stringBuilder.toString());
+            pieceCoordArray[i] = (StringAppend(movablePiece, movablePiece.getType().toString()).toString());
         }
 
         PIECE_JLIST.setListData(pieceCoordArray);
@@ -153,7 +144,7 @@ public class AbilityPanel
 
     void selectedAbility(String actionCommand, List<? extends MovablePiece> pieceList) {
         updatePieceJList(pieceList);
-        USE_ABILITY_BUTTON.setText(USE_ABILITY_BUTTON_TEXT + ": " + actionCommand);
+        USE_ABILITY_BUTTON.setText(StringText.USE + ": " + actionCommand);
         setUSE_ABILITY_BUTTON(true);
         displayTargetList();
 
@@ -166,27 +157,9 @@ public class AbilityPanel
         }
     }
 
-    void updateAbilityPanelAfterAbilityUse(MovablePiece movablePiece) {
-
+    void updateAbilityPanelAfterAbilityUse() {
         for (JButton jButton : ABILITIES_JBUTTON_LIST) {
-
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(jButton.getText())
-                    .append(": ")
-                    .append(movablePiece.getType())
-                    .append(" ")
-                    .append(movablePiece.getClass().getSuperclass().getSimpleName())
-                    .append(" ")
-                    .append(movablePiece.getRow() + 1)
-                    .append(" ")
-                    .append(movablePiece.getColumn() + 1);
-
-            if (jButton.getText().equals(lastAbilityUsed)) {
-                jButton.setText(stringBuilder.toString());
-            }
-
             jButton.setEnabled(false);
-
         }
 
         PIECE_JLIST.setVisible(false);
@@ -196,34 +169,30 @@ public class AbilityPanel
     void updateButtonText(MovablePiece movablePiece) {
         for (JButton jButton : ABILITIES_JBUTTON_LIST) {
             if (jButton.getText().contains(":")) {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(lastAbilityUsed)
-                        .append(": ")
-                        .append(movablePiece.getClass().getSuperclass().getSimpleName())
-                        .append(" ")
-                        .append(movablePiece.getRow() + 1)
-                        .append(movablePiece.getColumn() + 1);
-
-                jButton.setText(stringBuilder.toString());
+                jButton.setText(StringAppend(movablePiece, lastAbilityUsed).toString());
             }
         }
     }
 
-    void setAFFECTED_PIECE() {
+    private StringBuilder StringAppend(MovablePiece movablePiece, String text) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(text)
+                .append(": ")
+                .append(movablePiece.getClass().getSuperclass().getSimpleName())
+                .append(" ")
+                .append(movablePiece.getRow() + 1)
+                .append(" ")
+                .append(movablePiece.getColumn() + 1);
 
-        if (lastAbilityUsed != null) {
-            if (lastAbilityUsed.equals(StringText.SHIELD)) {
-                for (JButton jButton : ABILITIES_JBUTTON_LIST) {
-                    if (jButton.getText().contains(StringText.SHIELD)) {
-                        AFFECTED_PIECE.setText(jButton.getText());
-                    }
-                }
-            }
+        return stringBuilder;
+    }
 
-        } else {
-            AFFECTED_PIECE.setText("");
-        }
+    void setSuperCheckBox(boolean b) {
+        SUPER_ABILITY.setEnabled(b);
+    }
 
+    void setChecked(boolean b) {
+        SUPER_ABILITY.setSelected(!b);
     }
 
     void removeLastAbilityUsed() {
@@ -231,7 +200,7 @@ public class AbilityPanel
     }
 
     void resetUseAbilityButtonText() {
-        USE_ABILITY_BUTTON.setText(USE_ABILITY_BUTTON_TEXT);
+        USE_ABILITY_BUTTON.setText(StringText.USE);
     }
 
     JList<String> getPIECE_JLIST() {
@@ -257,4 +226,9 @@ public class AbilityPanel
     void setAbilityButtonStatus(int pieceModeToggledIndex) {
         ABILITIES_JBUTTON_LIST.get(pieceModeToggledIndex).setEnabled(false);
     }
+
+    boolean isSuperAbilityCheck() {
+        return SUPER_ABILITY.isSelected();
+    }
+
 }

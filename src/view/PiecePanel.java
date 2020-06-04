@@ -54,7 +54,7 @@ public class PiecePanel
         ACTIONLISTENER.actionPerformed(actionEvent);
     }
 
-    void createButtons(List<? extends MovablePiece> currentPieceList) {
+    void createUI(List<? extends MovablePiece> currentPieceList) {
 
         if (!PIECE_LABEL_LIST.isEmpty()) {
             for (JLabel jLabel : PIECE_LABEL_LIST) {
@@ -107,8 +107,7 @@ public class PiecePanel
         }
 
         setLabelText(currentPieceList);
-        
-       
+
     }
 
     void setLabelText(List<? extends MovablePiece> currentPieceList) {
@@ -132,6 +131,8 @@ public class PiecePanel
                 stringBuilder.append("SLOWED");
             } else if (movablePiece.isShielded()) {
                 stringBuilder.append("SHIELDED");
+            } else if (movablePiece.isImmune()) {
+                stringBuilder.append("IMMUNED");
             }
 
             PIECE_LABEL_LIST.get(i).setText(stringBuilder.toString());
@@ -187,5 +188,5 @@ public class PiecePanel
     void setSelectedButtonIndex(int selectedButtonIndex) {
         this.selectedButtonIndex = selectedButtonIndex;
     }
-    
+
 }

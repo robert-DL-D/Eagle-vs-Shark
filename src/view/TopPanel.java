@@ -12,10 +12,8 @@ class TopPanel
         extends JPanel {
 
     private final TimePanel TIME_PANEL;
-    private final ActionListener ACTIONLISTENER;
 
     TopPanel(GameView gameview, ActionListener actionListener) {
-        ACTIONLISTENER = actionListener;
 
         TIME_PANEL = new TimePanel(gameview);
         TIME_PANEL.setSize(150, 30);
@@ -52,10 +50,6 @@ class TopPanel
 
     void setTurnTime(int turnTime) {
         TIME_PANEL.setTurnTime(turnTime);
-    }
-
-    String getTurnLimit() {
-        return TIME_PANEL.getTurnLimit();
     }
 
     void setTurnLimit(String turnLimit) {

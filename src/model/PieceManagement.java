@@ -11,7 +11,7 @@ class PieceManagement implements Serializable {
     private final List<Island> ISLAND_LIST = new ArrayList<>();
     private final PlayerManagement PLAYER_MODEL;
     private final BoardModel SQUARES_MODEL;
-    private final int ISLAND_NUMBER = 2;
+    private static final int ISLAND_NUMBER = 2;
 
     PieceManagement(PlayerManagement playerModel, BoardModel boardModel) {
         PLAYER_MODEL = playerModel;

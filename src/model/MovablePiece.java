@@ -9,12 +9,13 @@ public abstract class MovablePiece
 
     private final List<int[]> MOVEMENT_COORD = new LinkedList<>();
     private final Enum ability;
-    static final int DEFAULT_MOVEMENT_DISTANCE = 2;
+    static final int DEFAULT_MOVEMENT_DISTANCE = 3;
 
     private boolean movingMode;
     private boolean stunned;
     private boolean slowed;
     private boolean shielded;
+    private boolean immune;
 
     MovablePiece(Enum type, int position, Enum ability) {
         super(type, position);
@@ -49,7 +50,7 @@ public abstract class MovablePiece
         return 0;
     }
 
-    public void useAbility(MovablePiece targetedMovablePiece, GameModel gameModel) {
+    public void useAbility(MovablePiece targetedMovablePiece, GameModel gameModel, boolean superAbility) {
 
         AbilityDecorator abilityDecorator = null;
 
@@ -58,19 +59,19 @@ public abstract class MovablePiece
                 abilityDecorator = new StunDecorator();
                 break;
             case StringText.SPEED:
-                abilityDecorator = new SpeedDecorator();
+                abilityDecorator = new SpeedDecorator(superAbility);
                 break;
             case StringText.SLOW:
-                abilityDecorator = new SlowDecorator();
+                abilityDecorator = new SlowDecorator(superAbility);
                 break;
             case StringText.SHIELD:
                 abilityDecorator = new ShieldDecorator();
                 break;
             case StringText.CLEANSE:
-                abilityDecorator = new CleanseDecorator();
+                abilityDecorator = new CleanseDecorator(superAbility);
                 break;
-            case StringText.RETREAT:
-                abilityDecorator = new RetreatDecorator(gameModel);
+            case StringText.JUMP:
+                abilityDecorator = new JumpDecorator(gameModel, superAbility);
                 break;
         }
 
@@ -120,6 +121,14 @@ public abstract class MovablePiece
 
     void setShielded(boolean shielded) {
         this.shielded = shielded;
+    }
+
+    public boolean isImmune() {
+        return immune;
+    }
+
+    void setImmune(boolean immune) {
+        this.immune = immune;
     }
 
     public void moveUp() {

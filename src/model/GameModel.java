@@ -91,6 +91,10 @@ public class GameModel implements Serializable {
         }
     }
 
+    public void disableSuper() {
+        PLAYER_MANAGEMENT.getCurrentPlayer().setSuperAvailable(false);
+    }
+
     public List<? extends MovablePiece> getEnemyPieceList() {
         return PLAYER_MANAGEMENT.getEnemyPieceList();
     }
@@ -139,7 +143,8 @@ public class GameModel implements Serializable {
         return BOARD_MODEL.getSQUARE_ARRAY();
     }
 
-    public PlayerManagement getPLAYER_MANAGEMENT() {
-        return PLAYER_MANAGEMENT;
+    public boolean isSuperUsed() {
+        return PLAYER_MANAGEMENT.getCurrentPlayer().isSuperAvailable();
     }
+
 }

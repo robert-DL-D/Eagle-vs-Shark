@@ -3,7 +3,7 @@ package model;
 class EagleBlue extends Eagle {
 
     EagleBlue(int position) {
-        super(Types.BLUE, position, Abilities.RETREAT);
+        super(Types.BLUE, position, Abilities.JUMP);
 
         addMovementCoord(DEFAULT_MOVEMENT_DISTANCE);
     }

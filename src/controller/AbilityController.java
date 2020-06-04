@@ -9,12 +9,13 @@ import view.GameView;
 
 class AbilityController {
 
-    void useAbility(int index, String actionCommand, GameModel gameModel, GameView gameView) {
+    void setAbilityTarget(String actionCommand, GameModel gameModel, GameView gameView) {
+
+        int index = gameView.getPieceJListSelectedItem();
 
         if (index != -1) {
 
             List<? extends MovablePiece> targetMovablePieceList = null;
-            MovablePiece targetedMovablePiece;
             String abilityUsed = null;
 
             if (actionCommand.contains(StringText.STUN)) {
@@ -33,25 +34,49 @@ class AbilityController {
             } else if (actionCommand.contains(StringText.CLEANSE)) {
                 targetMovablePieceList = gameModel.getStunnedPieceList();
                 abilityUsed = StringText.CLEANSE;
-            } else if (actionCommand.contains(StringText.RETREAT)) {
+            } else if (actionCommand.contains(StringText.JUMP)) {
                 targetMovablePieceList = gameModel.getAllyPieceList();
-                abilityUsed = StringText.RETREAT;
+                abilityUsed = StringText.JUMP;
             }
 
-            for (MovablePiece movablePiece : gameModel.getAllyPieceList()) {
-                if (movablePiece.getAbility().toString().equals(abilityUsed)
-                        && null != targetMovablePieceList
-                        && !targetMovablePieceList.isEmpty()) {
+            setAbilityTarget(index, actionCommand, gameModel, gameView, gameView.isSuperAbility(), targetMovablePieceList, abilityUsed);
 
-                    targetedMovablePiece = targetMovablePieceList.get(index);
-                    movablePiece.useAbility(targetedMovablePiece, gameModel);
+        }
+    }
 
-                    gameModel.getCurrentPlayer().setAbilityUsed(actionCommand);
-                    gameView.updateViewAfterAbilityUse(targetedMovablePiece, actionCommand, gameModel.getAllyPieceList());
-                    break;
+    private void setAbilityTarget(int index, String actionCommand, GameModel gameModel, GameView gameView,
+                                  boolean superAbility, List<? extends MovablePiece> targetPieceList, String abilityUsed) {
+
+        MovablePiece targetPiece = targetPieceList.get(index);
+
+        for (MovablePiece abilityPiece : gameModel.getAllyPieceList()) {
+
+            if (abilityPiece.getAbility().toString().equals(abilityUsed) && !targetPieceList.isEmpty()) {
+
+                if (superAbility) {
+                    if (actionCommand.contains(StringText.STUN) || actionCommand.contains(StringText.SHIELD)) {
+                        for (MovablePiece piece : targetPieceList) {
+                            if (piece.getType() == targetPiece.getType()) {
+                                validTarget(gameModel, superAbility, abilityPiece, piece);
+                            }
+                        }
+                    } else {
+                        validTarget(gameModel, superAbility, abilityPiece, targetPiece);
+                    }
+                } else {
+                    validTarget(gameModel, superAbility, abilityPiece, targetPiece);
                 }
+                break;
             }
+        }
 
+        gameModel.getCurrentPlayer().setAbilityUsed(actionCommand);
+        gameView.updateViewAfterAbilityUse(actionCommand, gameModel.getAllyPieceList(), gameModel.getEnemyPieceList());
+    }
+
+    private void validTarget(GameModel gameModel, boolean superAbility, MovablePiece abilityPiece, MovablePiece targetPiece) {
+        if (!abilityPiece.isImmune()) {
+            abilityPiece.useAbility(targetPiece, gameModel, superAbility);
         }
     }
 

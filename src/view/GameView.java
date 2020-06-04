@@ -25,8 +25,10 @@ public class GameView
 
     private final BoardPanel BOARD_PANEL;
     private final PiecePanel PIECE_PANEL;
+    private static final int SQUARE_SIZE = 50;
     private final AbilityPanel ABILITY_PANEL;
     private final TopPanel TOP_PANEL;
+    private final EnemyPanel Enemy_PANEL;
 
     public GameView(ActionListener actionListener, MouseListener mouseListener) {
         super("Eagle vs Shark");
@@ -36,27 +38,27 @@ public class GameView
         setLayout(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1600, 950);
 
         Container contentPane = getContentPane();
 
-        BOARD_PANEL = new BoardPanel(mouseListener);
+        BOARD_PANEL = new BoardPanel(mouseListener, SQUARE_SIZE);
         BOARD_PANEL.setLocation(0, 0);
-        BOARD_PANEL.setSize(720, 900);
+        BOARD_PANEL.setSize(SQUARE_SIZE * (BoardConfig.BOARD_COLUMNS + 1), SQUARE_SIZE * (BoardConfig.BOARD_ROWS + 1));
         contentPane.add(BOARD_PANEL);
 
-        int boardViewX = BOARD_PANEL.getWidth();
-
-        int topPanelX = boardViewX + panelMargin;
+        int topPanelX = BOARD_PANEL.getWidth();
         TOP_PANEL = new TopPanel(this, actionListener);
-        contentPane.add(addPanel(TOP_PANEL, topPanelX, BoardPanel.getBoardMargin(), 450, 40));
+        contentPane.add(addPanel(TOP_PANEL, topPanelX, BoardPanel.getBoardMargin(), 500, 40));
 
-        int piecePanelX = boardViewX + panelMargin;
         int piecePanelY = BoardPanel.getBoardMargin() + TOP_PANEL.getHeight() + panelMargin;
         PIECE_PANEL = new PiecePanel(actionListener);
-        contentPane.add(addPanel(PIECE_PANEL, piecePanelX, piecePanelY, 240, 500));
+        contentPane.add(addPanel(PIECE_PANEL, topPanelX, piecePanelY, 240, 500));
 
-        int abilityPanelX = piecePanelX + PIECE_PANEL.getWidth() + panelMargin;
+        int enemyPanelX = topPanelX + PIECE_PANEL.getWidth() + panelMargin;
+        Enemy_PANEL = new EnemyPanel(actionListener);
+        contentPane.add(addPanel(Enemy_PANEL, enemyPanelX, piecePanelY, 220, PIECE_PANEL.getHeight()));
+
+        int abilityPanelX = enemyPanelX + Enemy_PANEL.getWidth() + panelMargin;
         ABILITY_PANEL = new AbilityPanel(actionListener, getBackground());
         contentPane.add(addPanel(ABILITY_PANEL, abilityPanelX, piecePanelY, 200, PIECE_PANEL.getHeight()));
 
@@ -64,36 +66,56 @@ public class GameView
         TextArea rulesTextArea = new TextArea(
                 "How to play:\n \n" +
                         "Each turn a player move one piece and use one ability\n \n" +
-                        "A piece must in the corresponding mode to perform that action \n \n" +
+                        "A piece must in the corresponding mode to perform that action\n \n" +
+                        "To move a piece, click on the picture to select it\n" +
+                        "You must deselect a piece first before selecting another piece\n" +
+                        "Abilities's affect will only last one turn\n" +
                         "Pieces can only be captured according to their colors:\n" +
                         "Red > Green > Blue > Red\n \n" +
                         "Eagle Pieces:\n" +
-                        "Red Eagle \n" +
-                        "Move: horizontally or vertically up to 2 spaces \n" +
+                        "Red Eagle\n" +
+                        "Move: horizontally or vertically up to 3 spaces\n" +
                         "Ability: Stuns an enemy piece, it cannot move\n \n" +
-                        "Green Eagle \n" +
-                        "Move: horizontally or vertically 1 space and diagonally by 2 spaces\n" +
-                        "Ability: Speeds up an ally piece, it can move more spaces \n \n" +
+                        "Green Eagle\n" +
+                        "Move: diagonally up to 3 spaces\n" +
+                        "Ability: Speeds up an ally piece, it can move an \n" +
+                        "additional space in each direction\n \n" +
                         "Blue Eagle \n" +
-                        "Move: all directions by 1 space \n" +
-                        "Ability: Retreat an ally piece back to a random empty square on your side of the board \n \n" +
+                        "Move: all directions up to 2 space \n" +
+                        "Ability: Jumps an ally piece back to a random empty square\n" +
+                        "on your side\n \n" +
                         "Shark Pieces:\n" +
-                        "Red Shark \n" +
+                        "Red Shark\n" +
                         "Move: like a Knight in chess \n" +
-                        "Ability: Slows an enemy piece, it can move less spaces \n \n" +
-                        "Green Shark \n" +
-                        "Move: diagonally up to 2 spaces\n" +
-                        "Ability: Cleanse an ally piece, remove Stun effect \n \n" +
-                        "Blue Shark \n" +
-                        "Move: horizontally or vertically by 2 spaces and diagonally 1 space \n" +
-                        "Ability: Shield an ally piece, protecting it from being captured \n"
-                , 1, 1);
-        rulesTextArea.setSize(400, 550);
+                        "Ability: Slows an enemy piece, it can move less spaces\n \n" +
+                        "Green Shark\n" +
+                        "Move: horizontally or vertically by 2 spaces\n" +
+                        "and diagonally up to 2 spaces\n" +
+                        "Ability: Cleanse an ally piece, remove Stun effect\n \n" +
+                        "Blue Shark\n" +
+                        "Move: horizontally or vertically up to 2 spaces\n" +
+                        "and diagonally by 2 spaces\n" +
+                        "Ability: Shield an ally piece, protecting it from being captured\n \n" +
+                        "A player can use a super version of any ability once\n" +
+                        "Stun: all pieces of the same selected type are stunned\n" +
+                        "Speed: piece can move 2 additional space in each direction\n" +
+                        "Jump: a random enemy piece jumps back to their side\n" +
+                        "Slow: piece will move 2 less spaces in each direction\n" +
+                        "Cleanse: piece will not be affected by ability",
+                1, 1);
+        rulesTextArea.setSize(370, PIECE_PANEL.getHeight());
         rulesTextArea.setLocation(rulesTextAreaX, piecePanelY);
         rulesTextArea.setEditable(false);
         rulesTextArea.setBackground(getBackground());
         contentPane.add(rulesTextArea);
 
+        int boardHeight = BOARD_PANEL.getHeight() + 10;
+        int panelHeight = TOP_PANEL.getHeight() + rulesTextArea.getHeight() + 75;
+
+        setSize(BOARD_PANEL.getWidth() + PIECE_PANEL.getWidth()
+                        + Enemy_PANEL.getWidth() + ABILITY_PANEL.getWidth()
+                        + rulesTextArea.getWidth() + 50,
+                (Math.max(boardHeight, panelHeight)));
         setVisible(true);
     }
 
@@ -109,12 +131,15 @@ public class GameView
                                    List<Eagle> eagleList, List<Shark> sharkList,
                                    List<Flag> flagList, List<Island> islandList,
                                    List<? extends MovablePiece> currentPieceList,
+                                   List<? extends MovablePiece> enemyPieceList,
                                    boolean eagleTurn) {
         BOARD_PANEL.setBoard(squareArray, eagleList, sharkList, flagList, islandList);
 
         PIECE_PANEL.updateTurnText(eagleTurn);
-        PIECE_PANEL.createButtons(currentPieceList);
+        PIECE_PANEL.createUI(currentPieceList);
         PIECE_PANEL.setLabelText(currentPieceList);
+
+        Enemy_PANEL.createLabels(enemyPieceList);
 
         ABILITY_PANEL.createButtons(currentPieceList);
 
@@ -137,19 +162,22 @@ public class GameView
 
     }
 
-    public void updateNextTurn(List<? extends MovablePiece> currentPieceList, boolean eagleTurn) {
+    public void updateNextTurn(List<? extends MovablePiece> currentPieceList, List<? extends MovablePiece> enemyPieceList, boolean eagleTurn, boolean superUsed) {
         BOARD_PANEL.removeMovablePiece();
         BOARD_PANEL.updateMovablePieceCoord();
 
         PIECE_PANEL.updateTurnText(eagleTurn);
-        PIECE_PANEL.createButtons(currentPieceList);
+        PIECE_PANEL.createUI(currentPieceList);
 
-        ABILITY_PANEL.setAFFECTED_PIECE();
+        Enemy_PANEL.setLabelText(enemyPieceList);
+
         ABILITY_PANEL.removeLastAbilityUsed();
         ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
         ABILITY_PANEL.createButtons(currentPieceList);
         ABILITY_PANEL.resetUseAbilityButtonText();
         ABILITY_PANEL.setUSE_ABILITY_BUTTON(false);
+        ABILITY_PANEL.setSuperCheckBox(superUsed);
+        ABILITY_PANEL.setChecked(superUsed);
 
         TOP_PANEL.setEagleTurn(eagleTurn);
         TOP_PANEL.resetTimer();
@@ -158,17 +186,22 @@ public class GameView
         repaint();
     }
 
-    public void updateViewAfterAbilityUse(MovablePiece movablePiece, String abilityUsed, List<? extends MovablePiece> allyPieceList) {
+    public void updateViewAfterAbilityUse(String abilityUsed, List<? extends MovablePiece> allyPieceList, List<? extends MovablePiece> enemyPieceList) {
         PIECE_PANEL.hideUnmovablePiece(abilityUsed, allyPieceList, ABILITY_PANEL.getLastAbilityUsedIndex());
         PIECE_PANEL.setLabelText(allyPieceList);
-        ABILITY_PANEL.updateAbilityPanelAfterAbilityUse(movablePiece);
+        Enemy_PANEL.setLabelText(enemyPieceList);
+        ABILITY_PANEL.updateAbilityPanelAfterAbilityUse();
+        ABILITY_PANEL.setSuperCheckBox(false);
+
+        revalidate();
+        repaint();
     }
 
     public void selectedAbility(String actionCommand, List<? extends MovablePiece> movablePieceList) {
         ABILITY_PANEL.selectedAbility(actionCommand, movablePieceList);
     }
 
-    public void loadGame(Player<? extends MovablePiece> player, int turnTime) {
+    public void loadGame(Player<? extends MovablePiece> player, List<? extends MovablePiece> enemyPieceList, int turnTime) {
         if (player.isPieceMoved()) {
             PIECE_PANEL.disableAllButton();
         }
@@ -177,7 +210,7 @@ public class GameView
             for (MovablePiece movablePiece : player.getMOVABLEPIECE_LIST()) {
                 if (player.getAbilityUsed().equals(movablePiece.getAbility().toString())) {
                     ABILITY_PANEL.setLastAbilityUsed(player.getAbilityUsed());
-                    updateViewAfterAbilityUse(movablePiece, player.getAbilityUsed(), player.getMOVABLEPIECE_LIST());
+                    updateViewAfterAbilityUse(player.getAbilityUsed(), player.getMOVABLEPIECE_LIST(), enemyPieceList);
                     break;
                 }
             }
@@ -193,10 +226,6 @@ public class GameView
         }
 
         TOP_PANEL.setTurnTime(turnTime);
-    }
-
-    public void movePiece(MovablePiece movablePiece) {
-        BOARD_PANEL.showValidSquares(movablePiece);
     }
 
     public int getSelectedButtonIndex() {
@@ -218,10 +247,6 @@ public class GameView
 
     public int getTurnTime() {
         return TOP_PANEL.getTurnTime();
-    }
-
-    public String getTURN_LIMIT() {
-        return TOP_PANEL.getTurnLimit();
     }
 
     public List<int[]> getMovablePieceCoord() {
@@ -259,4 +284,9 @@ public class GameView
     public int gridCoord(int i) {
         return BOARD_PANEL.gridCoord(i);
     }
+
+    public boolean isSuperAbility() {
+        return ABILITY_PANEL.isSuperAbilityCheck();
+    }
+
 }

@@ -21,6 +21,14 @@ import model.StringText;
 
 class StartPanel extends JPanel {
 
+    private static final int MIN_ROW = 8;
+    private static final int MAX_ROW = 18;
+    private static final int MIN_COLUMN = 5;
+    private static final int MAX_COLUMN = 17;
+    private static final String ROW_MESSAGE = "even number between " + MIN_ROW + " to " + MAX_ROW;
+    private static final String COLUMN_MESSAGE = "odd number between " + MIN_COLUMN + " to " + MAX_COLUMN;
+    private static final int TURN_LIMIT = 999;
+
     StartPanel(JFrame jFrame) {
 
         setLayout(null);
@@ -30,26 +38,26 @@ class StartPanel extends JPanel {
         label.setBounds(135, 20, 200, 25);
         add(label);
 
-        JLabel rowLabel = new JLabel("<html><body>" + "Board Rows:" + "<br>" + "(even number: [8,10,12,14])" + "<body></html>");
+        JLabel rowLabel = new JLabel("<html><body>" + "Board Rows:" + "<br>" + "(" + ROW_MESSAGE + ")" + "<body></html>");
         rowLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        rowLabel.setBounds(50, 70, 200, 40);
+        rowLabel.setBounds(50, 70, 200, 60);
         add(rowLabel);
 
         JTextField rowText = new JTextField();
         rowText.setText("10");
         rowText.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        rowText.setBounds(250, 70, 100, 30);
+        rowText.setBounds(250, 70, 50, 30);
         add(rowText);
 
-        JLabel columnLabel = new JLabel("<html><body>" + "Board Columns:" + "<br>" + "(odd number:[5,7,9,11])" + "<body></html>");
+        JLabel columnLabel = new JLabel("<html><body>" + "Board Columns:" + "<br>" + "(" + COLUMN_MESSAGE + ")" + "<body></html>");
         columnLabel.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        columnLabel.setBounds(50, 120, 200, 40);
+        columnLabel.setBounds(50, 120, 200, 60);
         add(columnLabel);
 
         JTextField columnText = new JTextField();
         columnText.setText("9");
         columnText.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        columnText.setBounds(250, 120, 100, 30);
+        columnText.setBounds(250, 120, 50, 30);
         add(columnText);
 
         JLabel timerLabel = new JLabel("Turn Time (sec):");
@@ -60,7 +68,7 @@ class StartPanel extends JPanel {
         JTextField timerText = new JTextField();
         timerText.setText("30");
         timerText.setFont(new Font("TimesRoman", Font.PLAIN, 15));
-        timerText.setBounds(250, 170, 100, 30);
+        timerText.setBounds(250, 170, 50, 30);
         add(timerText);
 
         JLabel pieceNumLabel = new JLabel("Number of each piece type:");
@@ -121,9 +129,9 @@ class StartPanel extends JPanel {
                         gameModel.getFLAG_LIST(),
                         gameModel.getISLAND_LIST(),
                         gameModel.getAllyPieceList(),
-                        gameModel.isEagleTurn());
+                        gameModel.getEnemyPieceList(), gameModel.isEagleTurn());
 
-                gameView.loadGame(gameModel.getCurrentPlayer(), Integer.valueOf(BoardConfig.TURN_LIMIT));
+                gameView.loadGame(gameModel.getCurrentPlayer(), gameModel.getEnemyPieceList(), Integer.valueOf(BoardConfig.TURN_LIMIT));
             }
 
         });
@@ -143,20 +151,19 @@ class StartPanel extends JPanel {
             return false;
         }
 
-        if (rowValue % 2 != 0 || rowValue < 8 || rowValue > 14) {
-//            JOptionPane.showMessageDialog(null, "Please check the row number!Even number not less than 8!");
-            JOptionPane.showMessageDialog(null, "Please check the row number! 8 <= Even number <=14 !");
+        if (rowValue % 2 != 0 || rowValue < MIN_ROW || rowValue > MAX_ROW) {
+            JOptionPane.showMessageDialog(null, "Please check the row number is " + ROW_MESSAGE);
 
             return false;
         }
 
-        if (columnValue % 2 == 0 || columnValue < 5 || columnValue > 13) {
-            JOptionPane.showMessageDialog(null, "Please check the column number! 5 <=Odd number <= 11!");
+        if (columnValue % 2 == 0 || columnValue < MIN_COLUMN || columnValue > MAX_COLUMN) {
+            JOptionPane.showMessageDialog(null, "Please check the column number is " + COLUMN_MESSAGE);
             return false;
         }
 
-        if (turnLimit <= 0) {
-            JOptionPane.showMessageDialog(null, "The number of turn time should be greater than 0!");
+        if (turnLimit <= 0 || turnLimit > TURN_LIMIT) {
+            JOptionPane.showMessageDialog(null, "The turn time limit should be greater than 0 and lower than " + TURN_LIMIT);
             return false;
         }
 
