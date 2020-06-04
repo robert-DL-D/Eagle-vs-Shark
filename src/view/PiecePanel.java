@@ -46,6 +46,16 @@ public class PiecePanel
         undoGameButton.setSize(130, 30);
         undoGameButton.addActionListener(ACTIONLISTENER);
         add(undoGameButton);
+        
+        JButton undo2GameButton = new JButton(StringText.UNDO2);
+        undoGameButton.setSize(130, 30);
+ //       undoGameButton.addActionListener(ACTIONLISTENER);
+        add(undo2GameButton);
+        
+        JButton undo3GameButton = new JButton(StringText.UNDO3);
+        undoGameButton.setSize(130, 30);
+  //      undoGameButton.addActionListener(ACTIONLISTENER);
+        add(undo3GameButton);
     }
 
     @Override

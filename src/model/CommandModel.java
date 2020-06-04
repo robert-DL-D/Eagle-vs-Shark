@@ -18,9 +18,7 @@ class CommandModel{
 	   cmd.execute();
 	   commandList.add(cmd);
 	 }
-//	 public void undoAll(){
-//	    for(Command cmd : commandList){cmd.undo();}
-//	}
+
 	 public void undo1(){
 	 commandList.remove(commandList.size()-1);
 	 currentCommand = commandList.get(commandList.size()-1);
