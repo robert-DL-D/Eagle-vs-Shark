@@ -97,8 +97,7 @@ public class GameController extends MouseAdapter
 
         } else if (StringText.UNDO.equals(actionCommand)) {
 
-            gameModel.undoMove(GAME_VIEW.getUndoTurn());
-            GAME_VIEW.addMPieceCoord(gameModel.getCapturedPiece());
+            gameModel.undoMove(GAME_VIEW);
 
         }
     }

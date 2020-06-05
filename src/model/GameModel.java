@@ -6,6 +6,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import view.GameView;
+
 public class GameModel implements Serializable {
 
     private final BoardModel BOARD_MODEL = BoardModel.getInstance();
@@ -106,7 +108,8 @@ public class GameModel implements Serializable {
         }
     }
 
-    public void undoMove(int undoTurn) {
+    public void undoMove(GameView gameView) {
+        int undoTurn = gameView.getUndoTurn();
 
         List<Command> commandList = COMMAND_MODEL.getCOMMAND_LIST();
         if (!commandList.isEmpty()) {
@@ -130,18 +133,15 @@ public class GameModel implements Serializable {
             }
 
             if (playerUndoCount == undoTurn && otherPlayerUndoCount == undoTurn) {
-                //System.out.println(loopCount);
 
-                for (int j = 1; j <= loopCount; j++) {
-                    System.out.println("start size" + COMMAND_MODEL.getCOMMAND_LIST().size());
+                for (int j = 0; j < loopCount; j++) {
 
                     MoveCommand command = (MoveCommand) COMMAND_MODEL.getCommand();
                     PLAYER_MANAGEMENT.undoMove(command);
                     BOARD_MODEL.addPieceToSquare(command.getMOVED_PIECE());
                     BOARD_MODEL.addPieceToSquare(command.getCAPTURED_PIECE());
+                    gameView.addMPieceCoord(getCapturedPiece());
                     COMMAND_MODEL.removeCommand();
-                    System.out.println("end size" + COMMAND_MODEL.getCOMMAND_LIST().size());
-
                 }
             } else {
                 JOptionPane.showMessageDialog(new JFrame(),

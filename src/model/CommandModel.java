@@ -15,7 +15,6 @@ class CommandModel implements Serializable {
         }
 
         COMMAND_LIST.add(moveCommand);
-        System.out.println("adding size" + COMMAND_LIST.size());
     }
 
     void removeCommand() {
