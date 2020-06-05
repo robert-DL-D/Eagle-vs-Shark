@@ -3,6 +3,7 @@ package view;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import model.BoardConfig;
@@ -12,6 +13,7 @@ class TopPanel
         extends JPanel {
 
     private final TimePanel TIME_PANEL;
+    private final JComboBox<Integer> numMove = new JComboBox<>();
 
     TopPanel(GameView gameview, ActionListener actionListener) {
 
@@ -23,6 +25,17 @@ class TopPanel
         nextTurnButton.setSize(130, 30);
         nextTurnButton.addActionListener(actionListener);
         add(nextTurnButton);
+
+        numMove.addItem(1);
+        numMove.addItem(2);
+        numMove.addItem(3);
+        numMove.setSize(100, 30);
+        add(numMove);
+
+        JButton undoGameButton = new JButton(StringText.UNDO);
+        undoGameButton.setSize(130, 30);
+        undoGameButton.addActionListener(actionListener);
+        add(undoGameButton);
 
         JButton saveGameButton = new JButton(StringText.SAVE_GAME);
         saveGameButton.setSize(130, 30);
@@ -40,19 +53,19 @@ class TopPanel
         TIME_PANEL.setEagleTurn(eagleTurn);
     }
 
-    void resetTimer() {
-        TIME_PANEL.resetTimer();
-    }
-
     int getTurnTime() {
         return TIME_PANEL.getTurnTime();
     }
 
-    void setTurnTime(int turnTime) {
-        TIME_PANEL.setTurnTime(turnTime);
+    int getUndoMove() {
+        return (int) numMove.getSelectedItem();
     }
 
-    void setTurnLimit(String turnLimit) {
+    void setTurnLimit(int turnLimit) {
         TIME_PANEL.setTurnLimit(BoardConfig.TURN_LIMIT);
+    }
+
+    void createNewTimer(int turnTime) {
+        TIME_PANEL.createNewTimer(turnTime);
     }
 }

@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -42,20 +41,6 @@ public class PiecePanel
         instructionLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(instructionLabel);
 
-        JButton undoGameButton = new JButton(StringText.UNDO);
-        undoGameButton.setSize(130, 30);
-        undoGameButton.addActionListener(ACTIONLISTENER);
-        add(undoGameButton);
-        
-        JButton undo2GameButton = new JButton(StringText.UNDO2);
-        undoGameButton.setSize(130, 30);
- //       undoGameButton.addActionListener(ACTIONLISTENER);
-        add(undo2GameButton);
-        
-        JButton undo3GameButton = new JButton(StringText.UNDO3);
-        undoGameButton.setSize(130, 30);
-  //      undoGameButton.addActionListener(ACTIONLISTENER);
-        add(undo3GameButton);
     }
 
     @Override

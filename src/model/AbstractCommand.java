@@ -1,14 +1,8 @@
 package model;
 
-abstract class AbstractCommand {
+import java.io.Serializable;
 
-    abstract void execute();
-
-	void execute(MovablePiece movablePiece) {
-		
-		
-	}
-
-
+abstract class AbstractCommand
+        implements Command, Serializable {
 
 }

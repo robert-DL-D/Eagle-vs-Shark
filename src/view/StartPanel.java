@@ -103,7 +103,7 @@ class StartPanel extends JPanel {
         startButton.addActionListener(arg0 -> {
             if (validationAndSetValue(rowText, columnText, timerText, buttonGroup)) {
                 jFrame.dispose();
-                new GameController();
+                new GameController().initGameView();
             }
         });
 
@@ -120,18 +120,7 @@ class StartPanel extends JPanel {
                 BoardConfig.PIECE_NUMBER = loadGame.getPieceNum();
                 BoardConfig.TURN_LIMIT = loadGame.getTurnLimit();
 
-                GameController gameController = new GameController();
-                GameView gameView = gameController.getGAME_VIEW();
-
-                gameView.initializeGameView(gameModel.getSQUARE_ARRAY(),
-                        gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST(),
-                        gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST(),
-                        gameModel.getFLAG_LIST(),
-                        gameModel.getISLAND_LIST(),
-                        gameModel.getAllyPieceList(),
-                        gameModel.getEnemyPieceList(), gameModel.isEagleTurn());
-
-                gameView.loadGame(gameModel.getCurrentPlayer(), gameModel.getEnemyPieceList(), Integer.valueOf(BoardConfig.TURN_LIMIT));
+                new GameController().loadGame(gameModel);
             }
 
         });
@@ -178,7 +167,7 @@ class StartPanel extends JPanel {
         BoardConfig.BOARD_ROWS = rowValue;
         BoardConfig.BOARD_COLUMNS = columnValue;
         BoardConfig.PIECE_NUMBER = pieceNum;
-        BoardConfig.TURN_LIMIT = String.valueOf(turnLimit);
+        BoardConfig.TURN_LIMIT = turnLimit;
 
         return true;
     }

@@ -126,4 +126,25 @@ class PlayerManagement implements Serializable {
         return eagleTurn;
     }
 
+    void undoMove(Command lastCommand) {
+        MoveCommand moveCommand = ((MoveCommand) lastCommand);
+
+        if ((moveCommand.getMOVED_PIECE() != null)) {
+
+            moveCommand.getMOVED_PIECE().setRow(moveCommand.getPREVIOUS_ROW());
+            moveCommand.getMOVED_PIECE().setColumn(moveCommand.getPREVIOUS_COLUMN());
+
+            if (moveCommand.getCAPTURED_PIECE() != null) {
+                int i = moveCommand.getCAPTURED_PIECE_INDEX();
+                MovablePiece capturedPiece = moveCommand.getCAPTURED_PIECE();
+
+                if (moveCommand.getPLAYER() == EAGLE_PLAYER) {
+                    SHARK_PLAYER.getMOVABLEPIECE_LIST().add((Shark) capturedPiece);
+                } else {
+                    EAGLE_PLAYER.getMOVABLEPIECE_LIST().add((Eagle) capturedPiece);
+                }
+            }
+        }
+
+    }
 }

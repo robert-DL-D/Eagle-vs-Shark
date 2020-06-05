@@ -6,6 +6,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import model.BoardConfig;
 import model.Eagle;
 import model.Flag;
@@ -24,8 +27,8 @@ public class GameController extends MouseAdapter
     private final AbilityController ABILITY_CONTROLLER = new AbilityController();
     private final GameStateController gameStateController = new GameStateController();
 
-    public GameController() {
-        GAME_VIEW.initializeGameView(gameModel.getSQUARE_ARRAY(),
+    public void initGameView() {
+        GAME_VIEW.initGameView(gameModel.getSQUARE_ARRAY(),
                 gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST(),
                 gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST(),
                 gameModel.getFLAG_LIST(),
@@ -35,15 +38,25 @@ public class GameController extends MouseAdapter
                 gameModel.isEagleTurn());
     }
 
+    public void loadGame(GameModel gameModel) {
+        this.gameModel = gameModel;
+        initGameView();
+        GAME_VIEW.loadGame(this.gameModel.getCurrentPlayer(), this.gameModel.getEnemyPieceList(), BoardConfig.TURN_LIMIT);
+
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         String actionCommand = actionEvent.getActionCommand();
 
         if (StringText.NEXT_TURN.equals(actionCommand)) {
-
-            gameModel.updateNextTurn();
-            GAME_VIEW.updateNextTurn(gameModel.getAllyPieceList(), gameModel.getEnemyPieceList(), gameModel.isEagleTurn(), gameModel.isSuperUsed());
-
+            if (gameModel.getCurrentPlayer().isPieceMoved()) {
+                gameModel.updateNextTurn();
+                GAME_VIEW.updateNextTurn(gameModel.getAllyPieceList(), gameModel.getEnemyPieceList(), gameModel.isEagleTurn(), gameModel.isSuperUsed());
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "Please make a move",
+                        "", JOptionPane.ERROR_MESSAGE);
+            }
         } else if (StringText.STUN.equals(actionCommand) || StringText.SLOW.equals(actionCommand)) {
 
             GAME_VIEW.selectedAbility(actionCommand, gameModel.getEnemyPieceList());
@@ -82,11 +95,12 @@ public class GameController extends MouseAdapter
                 this.gameModel = gameModel;
             }
 
-        }
-    }
+        } else if (StringText.UNDO.equals(actionCommand)) {
 
-    public GameView getGAME_VIEW() {
-        return GAME_VIEW;
+            gameModel.undoMove(GAME_VIEW.getUndoTurn());
+            GAME_VIEW.addMPieceCoord(gameModel.getCapturedPiece());
+
+        }
     }
 
     @Override
@@ -103,7 +117,7 @@ public class GameController extends MouseAdapter
                 int[] ints = movablePieceCoord.get(i);
                 int picSize = GAME_VIEW.getPicSize();
 
-                // Check clicked coord with piece coord
+                // Check if mouse clicked coord is within range of a movablepiece
                 if ((ints[0] <= e.getY() && e.getY() <= ints[0] + picSize)
                         && (ints[1] <= e.getX() && e.getX() <= ints[1] + picSize)) {
 
@@ -142,6 +156,7 @@ public class GameController extends MouseAdapter
                     validCoord[0] = movablePiece.getRow() + movableCoord[0] + 1;
                     validCoord[1] = movablePiece.getColumn() + movableCoord[1] + 1;
 
+                    // Check if mouse clicked coord is within range of a movable square
                     if (!(validCoord[0] < 1 || validCoord[0] > BoardConfig.BOARD_ROWS
                             || validCoord[1] < 1 || validCoord[1] > BoardConfig.BOARD_COLUMNS)) {
                         GAME_VIEW.getMovableSquareCoord().add(movableCoord);
@@ -167,6 +182,7 @@ public class GameController extends MouseAdapter
                         && (column <= e.getX() && e.getX() <= column + squareSize)) {
                     if (gameModel.movePiece(selectedMovablePiece, ints2)) {
                         GAME_VIEW.updateViewAfterPieceMove(gameModel.getAllyPieceList(), GAME_VIEW.getSelectedMovablePiece());
+
                         checkVictory();
                     }
                 }

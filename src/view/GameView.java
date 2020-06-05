@@ -48,7 +48,7 @@ public class GameView
 
         int topPanelX = BOARD_PANEL.getWidth();
         TOP_PANEL = new TopPanel(this, actionListener);
-        contentPane.add(addPanel(TOP_PANEL, topPanelX, BoardPanel.getBoardMargin(), 500, 40));
+        contentPane.add(addPanel(TOP_PANEL, topPanelX, BoardPanel.getBoardMargin(), 700, 40));
 
         int piecePanelY = BoardPanel.getBoardMargin() + TOP_PANEL.getHeight() + panelMargin;
         PIECE_PANEL = new PiecePanel(actionListener);
@@ -127,12 +127,12 @@ public class GameView
         return panel;
     }
 
-    public void initializeGameView(Square[][] squareArray,
-                                   List<Eagle> eagleList, List<Shark> sharkList,
-                                   List<Flag> flagList, List<Island> islandList,
-                                   List<? extends MovablePiece> currentPieceList,
-                                   List<? extends MovablePiece> enemyPieceList,
-                                   boolean eagleTurn) {
+    public void initGameView(Square[][] squareArray,
+                             List<Eagle> eagleList, List<Shark> sharkList,
+                             List<Flag> flagList, List<Island> islandList,
+                             List<? extends MovablePiece> currentPieceList,
+                             List<? extends MovablePiece> enemyPieceList,
+                             boolean eagleTurn) {
         BOARD_PANEL.setBoard(squareArray, eagleList, sharkList, flagList, islandList);
 
         PIECE_PANEL.updateTurnText(eagleTurn);
@@ -169,7 +169,7 @@ public class GameView
         PIECE_PANEL.updateTurnText(eagleTurn);
         PIECE_PANEL.createUI(currentPieceList);
 
-        Enemy_PANEL.setLabelText(enemyPieceList);
+        Enemy_PANEL.createLabels(enemyPieceList);
 
         ABILITY_PANEL.removeLastAbilityUsed();
         ABILITY_PANEL.getPIECE_JLIST().setVisible(false);
@@ -180,7 +180,7 @@ public class GameView
         ABILITY_PANEL.setChecked(superUsed);
 
         TOP_PANEL.setEagleTurn(eagleTurn);
-        TOP_PANEL.resetTimer();
+        TOP_PANEL.createNewTimer(BoardConfig.TURN_LIMIT);
 
         revalidate();
         repaint();
@@ -225,7 +225,10 @@ public class GameView
             ABILITY_PANEL.setAbilityButtonStatus(pieceModeToggledIndex);
         }
 
-        TOP_PANEL.setTurnTime(turnTime);
+        TOP_PANEL.createNewTimer(turnTime);
+
+        revalidate();
+        repaint();
     }
 
     public int getSelectedButtonIndex() {
@@ -289,4 +292,14 @@ public class GameView
         return ABILITY_PANEL.isSuperAbilityCheck();
     }
 
+    public int getUndoTurn() {
+        return TOP_PANEL.getUndoMove();
+    }
+
+    public void addMPieceCoord(MovablePiece capturedPiece) {
+        BOARD_PANEL.addMovablePieceCoord(capturedPiece);
+
+        revalidate();
+        repaint();
+    }
 }

@@ -176,8 +176,10 @@ public class BoardPanel
 
     }
 
-    private void addMovablePieceCoord(MovablePiece movablePiece) {
-        movablePieceCoord.add(new int[]{picGridCoord(movablePiece.getRow()), picGridCoord(movablePiece.getColumn())});
+    void addMovablePieceCoord(MovablePiece movablePiece) {
+        if (movablePiece != null) {
+            movablePieceCoord.add(new int[]{picGridCoord(movablePiece.getRow()), picGridCoord(movablePiece.getColumn())});
+        }
     }
 
     private int picGridCoord(int i) {

@@ -3,11 +3,15 @@ package model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class GameModel implements Serializable {
 
     private final BoardModel BOARD_MODEL = BoardModel.getInstance();
     private final PlayerManagement PLAYER_MANAGEMENT = new PlayerManagement();
     private final PieceManagement PIECE_MANAGEMENT = new PieceManagement(PLAYER_MANAGEMENT, BOARD_MODEL);
+    private final CommandModel COMMAND_MODEL = new CommandModel();
 
     public boolean movePiece(MovablePiece movablePiece, int[] movementCoord) {
 
@@ -19,7 +23,9 @@ public class GameModel implements Serializable {
             Square currentSquare = BOARD_MODEL.getSQUARE_ARRAY()[row][column];
             Square newSquare = BOARD_MODEL.getSQUARE_ARRAY()[row + movementCoord[0]][column + movementCoord[1]];
 
-            if (checkValidNewSquare(movablePiece, newSquare.getMovablePiece(), newSquare.getPiece())) {
+            MovablePiece newSquareMovablePiece = newSquare.getMovablePiece();
+
+            if (checkValidNewSquare(movablePiece, newSquareMovablePiece, newSquare.getPiece())) {
 
                 for (int i = 0; i < Math.abs(movementCoord[0]); i++) {
                     if (movementCoord[0] > 0) {
@@ -41,13 +47,19 @@ public class GameModel implements Serializable {
 
                 // if the newsquare has a piece, remove it from the moveablepiecelist of the player
                 // and remove it from the square
-                if (newSquare.getMovablePiece() != null) {
-                    PLAYER_MANAGEMENT.getEnemyPieceList().remove(newSquare.getMovablePiece());
+                int index = -1;
+                if (newSquareMovablePiece != null) {
+                    List<? extends MovablePiece> enemyPieceList = PLAYER_MANAGEMENT.getEnemyPieceList();
+                    index = enemyPieceList.indexOf(newSquareMovablePiece);
+                    enemyPieceList.remove(newSquareMovablePiece);
                     newSquare.removeMovablePiece();
                 }
 
                 currentSquare.removeMovablePiece(); // remove the piece from the currentsquare
                 newSquare.setMovablePiece(movablePiece); // set the piece to the newsquare
+
+                MoveCommand moveCommand = new MoveCommand(row, column, movablePiece, newSquareMovablePiece, index, getCurrentPlayer());
+                COMMAND_MODEL.addCommand(moveCommand);
 
                 return true;
             } else {
@@ -71,23 +83,72 @@ public class GameModel implements Serializable {
                 return !((Flag) newSquarePiece).getPLAYER().getMOVABLEPIECE_LIST().contains(currentSquareMovableP);
             } else {
 
-                // Cannot move to a square with a piece that's shielded
-                if (newSquareMovableP.isShielded()) {
-                    return false;
+                if (newSquareMovableP != null) {
+
+                    // Cannot move to a square with a piece that's shielded
+                    if (newSquareMovableP.isShielded()) {
+                        return false;
+                    }
+
+                    Enum currentSquareMovablePType = currentSquareMovableP.getType();
+                    Enum newSquareMovablePType = newSquareMovableP.getType();
+
+                    // This checks the two pieces must be on different team,
+                    // Red can move to a Green piece,
+                    // Green can move to a Blue piece,
+                    // Blue can move to a Red piece
+                    return (currentSquareMovableP.getClass().getSuperclass() != newSquareMovableP.getClass().getSuperclass())
+                            && ((currentSquareMovablePType == Types.RED && newSquareMovablePType == Types.GREEN)
+                            || (currentSquareMovablePType == Types.GREEN && newSquareMovablePType == Types.BLUE)
+                            || (currentSquareMovablePType == Types.BLUE && newSquareMovablePType == Types.RED));
+                } else return false;
+            }
+        }
+    }
+
+    public void undoMove(int undoTurn) {
+
+        List<Command> commandList = COMMAND_MODEL.getCOMMAND_LIST();
+        if (!commandList.isEmpty()) {
+
+            int playerUndoCount = 0;
+            int otherPlayerUndoCount = 0;
+            int loopCount = 0;
+
+            for (int i = commandList.size() - 1; i >= 0; i--) {
+
+                if (((MoveCommand) commandList.get(i)).getPLAYER() == getCurrentPlayer()) {
+                    playerUndoCount++;
+                } else {
+                    otherPlayerUndoCount++;
                 }
 
-                Enum currentSquareMovablePType = currentSquareMovableP.getType();
-                Enum newSquareMovablePType = newSquareMovableP.getType();
-
-                // This checks the two pieces must be on different team,
-                // Red can move to a Green piece, 
-                // Green can move to a Blue piece, 
-                // Blue can move to a Red piece   
-                return (currentSquareMovableP.getClass().getSuperclass() != newSquareMovableP.getClass().getSuperclass())
-                        && ((currentSquareMovablePType == Types.RED && newSquareMovablePType == Types.GREEN)
-                        || (currentSquareMovablePType == Types.GREEN && newSquareMovablePType == Types.BLUE)
-                        || (currentSquareMovablePType == Types.BLUE && newSquareMovablePType == Types.RED));
+                loopCount++;
+                if (playerUndoCount == undoTurn && otherPlayerUndoCount == undoTurn) {
+                    break;
+                }
             }
+
+            if (playerUndoCount == undoTurn && otherPlayerUndoCount == undoTurn) {
+                //System.out.println(loopCount);
+
+                for (int j = 1; j <= loopCount; j++) {
+                    System.out.println("start size" + COMMAND_MODEL.getCOMMAND_LIST().size());
+
+                    MoveCommand command = (MoveCommand) COMMAND_MODEL.getCommand();
+                    PLAYER_MANAGEMENT.undoMove(command);
+                    BOARD_MODEL.addPieceToSquare(command.getMOVED_PIECE());
+                    BOARD_MODEL.addPieceToSquare(command.getCAPTURED_PIECE());
+                    COMMAND_MODEL.removeCommand();
+                    System.out.println("end size" + COMMAND_MODEL.getCOMMAND_LIST().size());
+
+                }
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(),
+                        "One of the player has not performed enough move to undo",
+                        "", JOptionPane.ERROR_MESSAGE);
+            }
+
         }
     }
 
@@ -145,6 +206,14 @@ public class GameModel implements Serializable {
 
     public boolean isSuperUsed() {
         return PLAYER_MANAGEMENT.getCurrentPlayer().isSuperAvailable();
+    }
+
+    public int getCOMMAND_LISTsize() {
+        return COMMAND_MODEL.getCOMMAND_LIST().size();
+    }
+
+    public MovablePiece getCapturedPiece() {
+        return ((MoveCommand) COMMAND_MODEL.getCommand()).getCAPTURED_PIECE();
     }
 
 }

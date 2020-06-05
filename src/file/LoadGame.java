@@ -20,7 +20,7 @@ public class LoadGame
     private int rowValue;
     private int columnValue;
     private int pieceNum;
-    private String turnLimit;
+    private int turnLimit;
     private int turnTime;
 
     public void loadGame() {
@@ -32,7 +32,7 @@ public class LoadGame
                 rowValue = (int) objectInputStream.readObject();
                 columnValue = (int) objectInputStream.readObject();
                 pieceNum = (int) objectInputStream.readObject();
-                turnLimit = (String) objectInputStream.readObject();
+                turnLimit = (int) objectInputStream.readObject();
                 turnTime = (int) objectInputStream.readObject();
                 objectInputStream.close();
 
@@ -68,7 +68,7 @@ public class LoadGame
         return pieceNum;
     }
 
-    public String getTurnLimit() {
+    public int getTurnLimit() {
         return turnLimit;
     }
 

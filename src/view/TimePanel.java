@@ -17,7 +17,7 @@ class TimePanel
     private Timer currentTimer;
     private final JLabel timerLabel;
     private boolean eagleTurn;
-    private String turnLimit;
+    private int turnLimit;
     private int turnTime;
 
     TimePanel(GameView gameView) {
@@ -35,39 +35,32 @@ class TimePanel
 
     }
 
-    private void createNewTimer() {
+    void createNewTimer(int turnTime) {
+        if (currentTimer != null) {
+            currentTimer.cancel();
+        }
 
-        currentTimer = new Timer();
+        Timer newTimer = new Timer();
+        setCountdownTimer(newTimer);
 
-        setCountdownTimer(currentTimer);
+        currentTimer = newTimer;
+        this.turnTime = turnTime;
     }
 
     private void setCountdownTimer(Timer currentTimer) {
         currentTimer.scheduleAtFixedRate(new TimerTask() {
 
             public void run() {
-                timerLabel.setText(String.valueOf((turnTime--)));
+                timerLabel.setText(String.valueOf(turnTime--));
 
                 if (turnTime < 0) {
                     currentTimer.cancel();
                     GAME_VIEW.dispose();
 
-                    TemplateFrame frame = new TemplateFrame();
-                    frame.showEndView(eagleTurn ? StringText.SHARK : StringText.EAGLE);
+                    new TemplateFrame().showEndView(eagleTurn ? StringText.SHARK : StringText.EAGLE);
                 }
             }
         }, 0, 1000);
-    }
-
-    void resetTimer() {
-        currentTimer.cancel();
-
-        Timer newTimer = new Timer();
-        setCountdownTimer(newTimer);
-
-        currentTimer = newTimer;
-        turnTime = Integer.parseInt(turnLimit);
-
     }
 
     int getTurnTime() {
@@ -78,11 +71,11 @@ class TimePanel
         this.eagleTurn = eagleTurn;
     }
 
-    void setTurnLimit(String turnLimit) {
+    void setTurnLimit(int turnLimit) {
         this.turnLimit = turnLimit;
-        turnTime = Integer.parseInt(turnLimit);
+        turnTime = turnLimit;
 
-        createNewTimer();
+        createNewTimer(turnTime);
     }
 
     void setTurnTime(int turnTime) {

@@ -1,35 +1,33 @@
 package model;
 
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
-import java.util.ArrayList;
+class CommandModel implements Serializable {
 
+    private final List<Command> COMMAND_LIST = new LinkedList<>();
 
+    void addCommand(MoveCommand moveCommand) {
 
+        if (COMMAND_LIST.size() == 6) {
+            COMMAND_LIST.remove(0);
+        }
 
+        COMMAND_LIST.add(moveCommand);
+        System.out.println("adding size" + COMMAND_LIST.size());
+    }
 
-class CommandModel{
-	 private List<Command> commandList = new ArrayList<Command>();
-	 public CommandModel(){
-	 }
-	 private Command currentCommand = null;
-	 public void setCommand(Command cmd){
-	   currentCommand  = cmd;
-	   cmd.execute();
-	   commandList.add(cmd);
-	 }
+    void removeCommand() {
+        COMMAND_LIST.remove(COMMAND_LIST.size() - 1);
+    }
 
-	 public void undo1(){
-	 commandList.remove(commandList.size()-1);
-	 currentCommand = commandList.get(commandList.size()-1);
-	}
-	 public void undo2(){
-		 commandList.remove(commandList.size()-2);
-		 currentCommand = commandList.get(commandList.size()-2);
-		}
-	 public void undo3(){
-		 commandList.remove(commandList.size()-3);
-		 currentCommand = commandList.get(commandList.size()-3);
-		}
-	
+    List<Command> getCOMMAND_LIST() {
+        return COMMAND_LIST;
+    }
+
+    Command getCommand() {
+        return COMMAND_LIST.get(COMMAND_LIST.size() - 1);
+    }
+
 }
