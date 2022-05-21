@@ -12,11 +12,10 @@ import javax.swing.JOptionPane;
 import model.BoardConfig;
 import model.GameModel;
 
-public class SaveGame
-        extends FileGame
-        implements Serializable {
+public class SaveGame extends FileGame implements Serializable {
 
     public void saveGame(GameModel gameModel, int turnTime) {
+
         try {
             ObjectOutput objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
             objectOutputStream.writeObject(gameModel);
@@ -25,11 +24,11 @@ public class SaveGame
             objectOutputStream.writeObject(BoardConfig.PIECE_NUMBER);
             objectOutputStream.writeObject(BoardConfig.TURN_LIMIT);
             objectOutputStream.writeObject(turnTime);
-
             objectOutputStream.close();
 
             JOptionPane.showMessageDialog(new JFrame(), "Game Saved",
                     "Information", JOptionPane.INFORMATION_MESSAGE);
+
         } catch (IOException e) {
             JOptionPane.showMessageDialog(new JFrame(), e.toString(),
                     "IOException", JOptionPane.ERROR_MESSAGE);

@@ -26,8 +26,8 @@ class GameStateController {
             int turnTime = loadGame.getTurnTime();
 
             gameView.initGameView(gameModel.getSQUARE_ARRAY(),
-                    gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST(),
-                    gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST(),
+                    gameModel.getEAGLE_PLAYER().getMOVABLE_PIECE_LIST(),
+                    gameModel.getSHARK_PLAYER().getMOVABLE_PIECE_LIST(),
                     gameModel.getFLAG_LIST(),
                     gameModel.getISLAND_LIST(),
                     gameModel.getAllyPieceList(),

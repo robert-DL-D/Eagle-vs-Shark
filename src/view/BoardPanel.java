@@ -20,8 +20,7 @@ import model.Shark;
 import model.Square;
 import model.Types;
 
-public class BoardPanel
-        extends JPanel {
+public class BoardPanel extends JPanel {
 
     private static final int BOARD_MARGIN = 25;
     private final int SQUARE_SIZE;
@@ -38,7 +37,6 @@ public class BoardPanel
     private final List<MovablePiece> movablePieceList = new LinkedList<>();
     private final List<int[]> movablePieceCoord = new LinkedList<>();
     private final List<int[]> movableSquareCoord = new LinkedList<>();
-    private final Toolkit toolkit = Toolkit.getDefaultToolkit();
 
     private Graphics graphics;
     private MovablePiece selectedMovablePiece;
@@ -60,10 +58,10 @@ public class BoardPanel
 
         drawSquare();
         drawLines();
-        drawEagle(toolkit, eagleList);
-        drawShark(toolkit, sharkList);
-        drawFlag(toolkit, flagList);
-        drawIsland(toolkit, islandList);
+        drawEagle(eagleList);
+        drawShark(sharkList);
+        drawFlag(flagList);
+        drawIsland(islandList);
         drawNumber();
     }
 
@@ -120,7 +118,7 @@ public class BoardPanel
         return i * SQUARE_SIZE + BOARD_MARGIN;
     }
 
-    private void drawEagle(Toolkit toolkit, List<Eagle> eagleList) {
+    private void drawEagle(List<Eagle> eagleList) {
 
         for (Eagle eagle : eagleList) {
             String folderPath = "";
@@ -137,7 +135,7 @@ public class BoardPanel
         }
     }
 
-    private void drawShark(Toolkit toolkit, List<Shark> sharkList) {
+    private void drawShark(List<Shark> sharkList) {
 
         for (Shark shark : sharkList) {
             String folderPath = "";
@@ -154,20 +152,20 @@ public class BoardPanel
         }
     }
 
-    private void drawFlag(Toolkit toolkit, List<Flag> flagList) {
+    private void drawFlag(List<Flag> flagList) {
         for (Flag flag : flagList) {
             drawImage(FOLDER_PATH + "flag.png", flag);
         }
     }
 
-    private void drawIsland(Toolkit toolkit, List<Island> islandList) {
+    private void drawIsland(List<Island> islandList) {
         for (Island island : islandList) {
             drawImage(FOLDER_PATH + "island.png", island);
         }
     }
 
     private void drawImage(String folderPath, Piece piece) {
-        graphics.drawImage(toolkit.getImage(folderPath), picGridCoord(piece.getColumn()), picGridCoord(piece.getRow()), PIC_SIZE, PIC_SIZE, this);
+        graphics.drawImage(Toolkit.getDefaultToolkit().getImage(folderPath), picGridCoord(piece.getColumn()), picGridCoord(piece.getRow()), PIC_SIZE, PIC_SIZE, this);
 
         if (!movablePieceList.contains(piece) && piece instanceof MovablePiece) {
             movablePieceList.add((MovablePiece) piece);

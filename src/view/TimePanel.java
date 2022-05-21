@@ -10,14 +10,12 @@ import javax.swing.JPanel;
 
 import model.StringText;
 
-class TimePanel
-        extends JPanel {
+class TimePanel extends JPanel {
 
     private final GameView GAME_VIEW;
     private Timer currentTimer;
     private final JLabel timerLabel;
     private boolean eagleTurn;
-    private int turnLimit;
     private int turnTime;
 
     TimePanel(GameView gameView) {
@@ -36,6 +34,7 @@ class TimePanel
     }
 
     void createNewTimer(int turnTime) {
+
         if (currentTimer != null) {
             currentTimer.cancel();
         }
@@ -71,15 +70,9 @@ class TimePanel
         this.eagleTurn = eagleTurn;
     }
 
-    void setTurnLimit(int turnLimit) {
-        this.turnLimit = turnLimit;
-        turnTime = turnLimit;
-
-        createNewTimer(turnTime);
-    }
-
     void setTurnTime(int turnTime) {
         this.turnTime = turnTime;
+        createNewTimer(turnTime);
     }
 
 }

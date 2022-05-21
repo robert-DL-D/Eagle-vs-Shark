@@ -6,25 +6,12 @@ public enum Types {
 
     public String toString() {
 
-        switch (this) {
-
-            case RED:
-                return "RED";
-
-            case GREEN:
-                return "GREEN";
-
-            case BLUE:
-                return "BLUE";
-
-            case FLAG:
-                return "FLAG";
-
-            case ISLAND:
-                return "ISLAND";
-
-            default:
-                return "NONE";
-        }
+        return switch (this) {
+            case RED -> "RED";
+            case GREEN -> "GREEN";
+            case BLUE -> "BLUE";
+            case FLAG -> "FLAG";
+            case ISLAND -> "ISLAND";
+        };
     }
 }

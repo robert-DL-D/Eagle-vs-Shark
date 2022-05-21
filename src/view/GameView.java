@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -20,8 +22,7 @@ import model.Player;
 import model.Shark;
 import model.Square;
 
-public class GameView
-        extends JFrame {
+public class GameView extends JFrame {
 
     private final BoardPanel BOARD_PANEL;
     private final PiecePanel PIECE_PANEL;
@@ -144,7 +145,7 @@ public class GameView
         ABILITY_PANEL.createButtons(currentPieceList);
 
         TOP_PANEL.setEagleTurn(eagleTurn);
-        TOP_PANEL.setTurnLimit(BoardConfig.TURN_LIMIT);
+        TOP_PANEL.setTurnLimit();
 
         revalidate();
         repaint();
@@ -162,7 +163,9 @@ public class GameView
 
     }
 
-    public void updateNextTurn(List<? extends MovablePiece> currentPieceList, List<? extends MovablePiece> enemyPieceList, boolean eagleTurn, boolean superUsed) {
+    public void updateNextTurn(List<? extends MovablePiece> currentPieceList,
+                               List<? extends MovablePiece> enemyPieceList,
+                               boolean eagleTurn, boolean superUsed, boolean undoAvailable) {
         BOARD_PANEL.removeMovablePiece();
         BOARD_PANEL.updateMovablePieceCoord();
 
@@ -181,6 +184,7 @@ public class GameView
 
         TOP_PANEL.setEagleTurn(eagleTurn);
         TOP_PANEL.createNewTimer(BoardConfig.TURN_LIMIT);
+        TOP_PANEL.setUndoUI(undoAvailable);
 
         revalidate();
         repaint();
@@ -202,15 +206,16 @@ public class GameView
     }
 
     public void loadGame(Player<? extends MovablePiece> player, List<? extends MovablePiece> enemyPieceList, int turnTime) {
+
         if (player.isPieceMoved()) {
             PIECE_PANEL.disableAllButton();
         }
 
         if (player.getAbilityUsed() != null) {
-            for (MovablePiece movablePiece : player.getMOVABLEPIECE_LIST()) {
+            for (MovablePiece movablePiece : player.getMOVABLE_PIECE_LIST()) {
                 if (player.getAbilityUsed().equals(movablePiece.getAbility().toString())) {
                     ABILITY_PANEL.setLastAbilityUsed(player.getAbilityUsed());
-                    updateViewAfterAbilityUse(player.getAbilityUsed(), player.getMOVABLEPIECE_LIST(), enemyPieceList);
+                    updateViewAfterAbilityUse(player.getAbilityUsed(), player.getMOVABLE_PIECE_LIST(), enemyPieceList);
                     break;
                 }
             }
@@ -221,7 +226,7 @@ public class GameView
 
         if (pieceModeToggledIndex != -1) {
             PIECE_PANEL.setSelectedButtonIndex(pieceModeToggledIndex);
-            PIECE_PANEL.changeButtonMode(player.getMOVABLEPIECE_LIST());
+            PIECE_PANEL.changeButtonMode(player.getMOVABLE_PIECE_LIST());
             ABILITY_PANEL.setAbilityButtonStatus(pieceModeToggledIndex);
         }
 
@@ -294,6 +299,14 @@ public class GameView
 
     public int getUndoTurn() {
         return TOP_PANEL.getUndoMove();
+    }
+
+    public JComboBox<Integer> getMOVE_COMBOBOX() {
+        return TOP_PANEL.getMOVE_COMBO_BOX();
+    }
+
+    public JButton getUNDO_BUTTON() {
+        return TOP_PANEL.getUNDO_BUTTON();
     }
 
     public void addMPieceCoord(MovablePiece capturedPiece) {

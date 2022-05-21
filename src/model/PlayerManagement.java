@@ -104,17 +104,16 @@ class PlayerManagement implements Serializable {
     }
 
     List<? extends MovablePiece> getOwnPieceList() {
-        return eagleTurn ? EAGLE_PLAYER.getMOVABLEPIECE_LIST() : SHARK_PLAYER.getMOVABLEPIECE_LIST();
+        return eagleTurn ? EAGLE_PLAYER.getMOVABLE_PIECE_LIST() : SHARK_PLAYER.getMOVABLE_PIECE_LIST();
     }
 
     List<? extends MovablePiece> getEnemyPieceList() {
-        return eagleTurn ? SHARK_PLAYER.getMOVABLEPIECE_LIST() : EAGLE_PLAYER.getMOVABLEPIECE_LIST();
+        return eagleTurn ? SHARK_PLAYER.getMOVABLE_PIECE_LIST() : EAGLE_PLAYER.getMOVABLE_PIECE_LIST();
     }
 
     List<? extends MovablePiece> getStunnedPieceList() {
-        return SHARK_PLAYER.getMOVABLEPIECE_LIST()
-                .stream()
-                .filter(shark -> shark.isStunned())
+        return SHARK_PLAYER.getMOVABLE_PIECE_LIST().stream()
+                .filter(MovablePiece::isStunned)
                 .collect(Collectors.toList());
     }
 
@@ -139,9 +138,9 @@ class PlayerManagement implements Serializable {
                 MovablePiece capturedPiece = moveCommand.getCAPTURED_PIECE();
 
                 if (moveCommand.getPLAYER() == EAGLE_PLAYER) {
-                    SHARK_PLAYER.getMOVABLEPIECE_LIST().add((Shark) capturedPiece);
+                    SHARK_PLAYER.getMOVABLE_PIECE_LIST().add((Shark) capturedPiece);
                 } else {
-                    EAGLE_PLAYER.getMOVABLEPIECE_LIST().add((Eagle) capturedPiece);
+                    EAGLE_PLAYER.getMOVABLE_PIECE_LIST().add((Eagle) capturedPiece);
                 }
             }
         }

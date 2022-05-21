@@ -11,9 +11,7 @@ import javax.swing.JOptionPane;
 
 import model.GameModel;
 
-public class LoadGame
-        extends FileGame
-        implements Serializable {
+public class LoadGame extends FileGame implements Serializable {
 
     private boolean saveFileExist;
     private GameModel gameModel;
@@ -24,6 +22,7 @@ public class LoadGame
     private int turnTime;
 
     public void loadGame() {
+
         if (file.exists()) {
             try {
                 saveFileExist = true;
@@ -38,10 +37,12 @@ public class LoadGame
 
                 JOptionPane.showMessageDialog(new JFrame(), "Game Loaded",
                         "Information", JOptionPane.INFORMATION_MESSAGE);
+
             } catch (IOException | ClassNotFoundException e) {
                 JOptionPane.showMessageDialog(new JFrame(), e.toString(),
                         "IOException", JOptionPane.ERROR_MESSAGE);
             }
+
         } else {
             JOptionPane.showMessageDialog(new JFrame(), "Save File not found",
                     "Error", JOptionPane.ERROR_MESSAGE);

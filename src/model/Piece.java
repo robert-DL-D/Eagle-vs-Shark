@@ -7,7 +7,7 @@ public abstract class Piece implements Serializable {
     int row;
     int column;
 
-    Enum type;
+    private final Enum type;
 
     Piece(Enum type, int position) {
         this.type = type;

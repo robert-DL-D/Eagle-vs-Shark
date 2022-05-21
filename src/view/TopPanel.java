@@ -13,7 +13,8 @@ class TopPanel
         extends JPanel {
 
     private final TimePanel TIME_PANEL;
-    private final JComboBox<Integer> numMove = new JComboBox<>();
+    private final JComboBox<Integer> MOVE_COMBO_BOX = new JComboBox<>();
+    private final JButton UNDO_BUTTON = new JButton(StringText.UNDO);
 
     TopPanel(GameView gameview, ActionListener actionListener) {
 
@@ -26,16 +27,15 @@ class TopPanel
         nextTurnButton.addActionListener(actionListener);
         add(nextTurnButton);
 
-        numMove.addItem(1);
-        numMove.addItem(2);
-        numMove.addItem(3);
-        numMove.setSize(100, 30);
-        add(numMove);
+        MOVE_COMBO_BOX.addItem(1);
+        MOVE_COMBO_BOX.addItem(2);
+        MOVE_COMBO_BOX.addItem(3);
+        MOVE_COMBO_BOX.setSize(100, 30);
+        add(MOVE_COMBO_BOX);
 
-        JButton undoGameButton = new JButton(StringText.UNDO);
-        undoGameButton.setSize(130, 30);
-        undoGameButton.addActionListener(actionListener);
-        add(undoGameButton);
+        UNDO_BUTTON.setSize(130, 30);
+        UNDO_BUTTON.addActionListener(actionListener);
+        add(UNDO_BUTTON);
 
         JButton saveGameButton = new JButton(StringText.SAVE_GAME);
         saveGameButton.setSize(130, 30);
@@ -58,14 +58,27 @@ class TopPanel
     }
 
     int getUndoMove() {
-        return (int) numMove.getSelectedItem();
+        return (int) MOVE_COMBO_BOX.getSelectedItem();
     }
 
-    void setTurnLimit(int turnLimit) {
-        TIME_PANEL.setTurnLimit(BoardConfig.TURN_LIMIT);
+    void setTurnLimit() {
+        TIME_PANEL.setTurnTime(BoardConfig.TURN_LIMIT);
     }
 
     void createNewTimer(int turnTime) {
         TIME_PANEL.createNewTimer(turnTime);
+    }
+
+    JComboBox<Integer> getMOVE_COMBO_BOX() {
+        return MOVE_COMBO_BOX;
+    }
+
+    JButton getUNDO_BUTTON() {
+        return UNDO_BUTTON;
+    }
+
+    void setUndoUI(boolean undoAvailable) {
+        MOVE_COMBO_BOX.setEnabled(undoAvailable);
+        UNDO_BUTTON.setEnabled(undoAvailable);
     }
 }

@@ -6,19 +6,20 @@ import java.util.List;
 
 public class Player<T extends MovablePiece> implements Serializable {
 
-    private final List<T> MOVABLEPIECE_LIST = new ArrayList<>();
+    private final List<T> MOVABLE_PIECE_LIST = new ArrayList<>();
 
     private boolean pieceMoved;
     private String abilityUsed;
     private int pieceModeToggledIndex = -1;
     private boolean superAvailable = true;
+    private boolean undoAvailable = true;
 
     void addMovablePiece(T movablePiece) {
-        MOVABLEPIECE_LIST.add(movablePiece);
+        MOVABLE_PIECE_LIST.add(movablePiece);
     }
 
-    public List<T> getMOVABLEPIECE_LIST() {
-        return MOVABLEPIECE_LIST;
+    public List<T> getMOVABLE_PIECE_LIST() {
+        return MOVABLE_PIECE_LIST;
     }
 
     public boolean isPieceMoved() {
@@ -45,11 +46,19 @@ public class Player<T extends MovablePiece> implements Serializable {
         this.pieceModeToggledIndex = pieceModeToggledIndex;
     }
 
-    public boolean isSuperAvailable() {
+    boolean isSuperAvailable() {
         return superAvailable;
     }
 
     void setSuperAvailable(boolean superAvailable) {
         this.superAvailable = superAvailable;
+    }
+
+    boolean isUndoAvailable() {
+        return undoAvailable;
+    }
+
+    void setUndoAvailable(boolean undoAvailable) {
+        this.undoAvailable = undoAvailable;
     }
 }

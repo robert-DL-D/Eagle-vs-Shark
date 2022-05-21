@@ -19,8 +19,7 @@ import model.StringText;
 import view.GameView;
 import view.TemplateFrame;
 
-public class GameController extends MouseAdapter
-        implements ActionListener {
+public class GameController extends MouseAdapter implements ActionListener {
 
     private GameModel gameModel = new GameModel();
     private final GameView GAME_VIEW = new GameView(this, this);
@@ -29,8 +28,8 @@ public class GameController extends MouseAdapter
 
     public void initGameView() {
         GAME_VIEW.initGameView(gameModel.getSQUARE_ARRAY(),
-                gameModel.getEAGLE_PLAYER().getMOVABLEPIECE_LIST(),
-                gameModel.getSHARK_PLAYER().getMOVABLEPIECE_LIST(),
+                gameModel.getEAGLE_PLAYER().getMOVABLE_PIECE_LIST(),
+                gameModel.getSHARK_PLAYER().getMOVABLE_PIECE_LIST(),
                 gameModel.getFLAG_LIST(),
                 gameModel.getISLAND_LIST(),
                 gameModel.getAllyPieceList(),
@@ -41,8 +40,8 @@ public class GameController extends MouseAdapter
     public void loadGame(GameModel gameModel) {
         this.gameModel = gameModel;
         initGameView();
-        GAME_VIEW.loadGame(this.gameModel.getCurrentPlayer(), this.gameModel.getEnemyPieceList(), BoardConfig.TURN_LIMIT);
-
+        GAME_VIEW.loadGame(this.gameModel.getCurrentPlayer(),
+                this.gameModel.getEnemyPieceList(), BoardConfig.TURN_LIMIT);
     }
 
     @Override
@@ -52,7 +51,8 @@ public class GameController extends MouseAdapter
         if (StringText.NEXT_TURN.equals(actionCommand)) {
             if (gameModel.getCurrentPlayer().isPieceMoved()) {
                 gameModel.updateNextTurn();
-                GAME_VIEW.updateNextTurn(gameModel.getAllyPieceList(), gameModel.getEnemyPieceList(), gameModel.isEagleTurn(), gameModel.isSuperUsed());
+                GAME_VIEW.updateNextTurn(gameModel.getAllyPieceList(), gameModel.getEnemyPieceList(),
+                        gameModel.isEagleTurn(), gameModel.isSuperAvailable(), gameModel.isUndoAvailable());
             } else {
                 JOptionPane.showMessageDialog(new JFrame(), "Please make a move",
                         "", JOptionPane.ERROR_MESSAGE);
@@ -96,10 +96,9 @@ public class GameController extends MouseAdapter
             }
 
         } else if (StringText.UNDO.equals(actionCommand)) {
-
             gameModel.undoMove(GAME_VIEW);
-
         }
+
     }
 
     @Override
@@ -196,12 +195,15 @@ public class GameController extends MouseAdapter
             Square flagSquare = gameModel.getSQUARE_ARRAY()[flag.getRow()][flag.getColumn()];
             TemplateFrame frame = new TemplateFrame();
             if (flagSquare.getMovablePiece() != null) {
+
                 GAME_VIEW.dispose();
+
                 if (flagSquare.getMovablePiece() instanceof Eagle) {
                     frame.showEndView(StringText.EAGLE);
                 } else {
                     frame.showEndView(StringText.SHARK);
                 }
+
             }
         }
     }
