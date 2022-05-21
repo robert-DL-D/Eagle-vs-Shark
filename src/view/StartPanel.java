@@ -66,7 +66,7 @@ class StartPanel extends JPanel {
         add(timerLabel);
 
         JTextField timerText = new JTextField();
-        timerText.setText("30");
+        timerText.setText("180");
         timerText.setFont(new Font("TimesRoman", Font.PLAIN, 15));
         timerText.setBounds(250, 170, 50, 30);
         add(timerText);
@@ -79,9 +79,9 @@ class StartPanel extends JPanel {
         ButtonGroup buttonGroup = new ButtonGroup();
         JRadioButton type1 = new JRadioButton("1");
         type1.setBounds(250, 220, 40, 30);
-        JRadioButton type2 = new JRadioButton("2", true);
+        JRadioButton type2 = new JRadioButton("2");
         type2.setBounds(290, 220, 40, 30);
-        JRadioButton type3 = new JRadioButton("3");
+        JRadioButton type3 = new JRadioButton("3", true);
         type3.setBounds(330, 220, 40, 30);
         buttonGroup.add(type1);
         buttonGroup.add(type2);
@@ -101,7 +101,7 @@ class StartPanel extends JPanel {
         add(resumeButton);
 
         startButton.addActionListener(arg0 -> {
-            if (validationAndSetValue(rowText, columnText, timerText, buttonGroup)) {
+            if (isGameSettingValid(rowText, columnText, timerText, buttonGroup)) {
                 jFrame.dispose();
                 new GameController().initGameView();
             }
@@ -126,7 +126,7 @@ class StartPanel extends JPanel {
         });
     }
 
-    private boolean validationAndSetValue(JTextField rowText, JTextField columnText, JTextField timerText, ButtonGroup buttonGroup) {
+    private boolean isGameSettingValid(JTextField rowText, JTextField columnText, JTextField timerText, ButtonGroup buttonGroup) {
         int rowValue;
         int columnValue;
         int turnLimit;

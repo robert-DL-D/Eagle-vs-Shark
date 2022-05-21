@@ -10,7 +10,7 @@ public class TemplateFrame extends JFrame {
 
     public TemplateFrame() {
         setSize(500, 500);
-        setTitle("Shark And Eagle Board Game");
+        setTitle("Eagle vs Shark");
     }
 
     public void showStartView() {
