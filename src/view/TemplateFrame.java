@@ -6,11 +6,13 @@ import java.awt.Container;
 import javax.swing.JFrame;
 import javax.swing.border.LineBorder;
 
+import static model.StringText.WINDOW_TITLE;
+
 public class TemplateFrame extends JFrame {
 
     public TemplateFrame() {
         setSize(500, 500);
-        setTitle("Eagle vs Shark");
+        setTitle(WINDOW_TITLE);
     }
 
     public void showStartView() {

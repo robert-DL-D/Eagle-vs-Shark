@@ -2,6 +2,9 @@ package view;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.TextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -22,6 +25,8 @@ import model.Player;
 import model.Shark;
 import model.Square;
 
+import static model.StringText.WINDOW_TITLE;
+
 public class GameView extends JFrame {
 
     private final BoardPanel BOARD_PANEL;
@@ -32,13 +37,11 @@ public class GameView extends JFrame {
     private final EnemyPanel Enemy_PANEL;
 
     public GameView(ActionListener actionListener, MouseListener mouseListener) {
-        super("Eagle vs Shark");
+        super(WINDOW_TITLE);
 
         int panelMargin = 5;
 
         setLayout(null);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Container contentPane = getContentPane();
 
@@ -117,7 +120,23 @@ public class GameView extends JFrame {
                         + Enemy_PANEL.getWidth() + ABILITY_PANEL.getWidth()
                         + rulesTextArea.getWidth() + 50,
                 (Math.max(boardHeight, panelHeight)));
+        
         setVisible(true);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        centerFrame();
+
+    }
+
+    private void centerFrame() {
+
+        Dimension windowSize = getSize();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        Point centerPoint = ge.getCenterPoint();
+
+        int dx = centerPoint.x - windowSize.width / 2;
+        int dy = centerPoint.y - windowSize.height / 2;
+        setLocation(dx, dy);
     }
 
     private JPanel addPanel(JPanel panel, int panelX, int panelY, int width, int height) {
